@@ -61,12 +61,6 @@ class Linux:
                     "close-on-play": True
                 }, f, indent= 4)
 
-        if not os.path.exists(constants.LINUX_HOME.value + "/Nox Launcher/skins/steve.png"):
-            ...
-
-        if not os.path.exists(constants.LINUX_HOME.value + "/Nox Launcher/skins/alex.png"):
-            ...
-
         if os.path.exists(constants.LINUX_HOME.value + "/Nox Launcher/launcher_profiles.json"):
             with open(constants.LINUX_HOME.value + "/Nox Launcher/launcher_profiles.json", "r") as f:
 
@@ -112,19 +106,19 @@ class Linux:
 
                 META: Dict[str, Any] = {
                     "java": {},
-                    "close-on-play": True
+                    "close_on_play": True
                 }
 
                 if len(settings.keys()) != len(META.keys()):
                     with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/settings.json", "w") as f:
                         json.dump(META, f, indent= 4)
-                elif not "close-on-play" in settings.keys():
+                elif not "close_on_play" in settings:
                     with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/settings.json", "w") as f:
                         json.dump(META, f, indent= 4)
-                elif not "java" in settings.keys():
+                elif not "java" in settings:
                     with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/settings.json", "w") as f:
                         json.dump(META, f, indent= 4)
-                elif type(settings["close-on-play"]) is not bool:
+                elif not isinstance(settings["close_on_play"], bool):
                     with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/settings.json", "w") as f:
                         json.dump(META, f, indent= 4)
 
@@ -132,7 +126,7 @@ class Linux:
 
             settings = json.load(f)
 
-            if "path" not in settings["java"].keys() or "args" not in settings["java"].keys():
+            if "path" not in settings["java"] or "args" not in settings["java"]:
 
                 if jdk.shutil.which("java") is None:
                     showinfo("Nox Launcher", "Java is not installed. Please be patient while it is being installed. Don`t close app.", type= "ok")
@@ -162,17 +156,16 @@ class Linux:
                         with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/settings.json", "w") as f:
                             json.dump(settings, f, indent= 4)
 
-    def get_java_info() -> List[str]: 
+    def get_java_info() -> List[str] | bool: 
 
         if os.path.exists(constants.LINUX_HOME.value + "/Nox Launcher/settings/settings.json"):
             with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/settings.json", "r") as f:
 
                 settings = json.load(f)
 
-                if "java" in settings.keys():
-                    if "path" in settings["java"].keys() and "args" in settings["java"].keys():
-                        return [settings["java"]["path"], settings["java"]["args"]]
+                if "java" not in settings: return False
+                elif "path" not in settings["java"] or "args" not in settings["java"]: return False
                         
-    def get_memory_ram() -> int:
-
-        return round(0.40 * psutil.virtual_memory().total / (1024 ** 2))
+                return [settings["java"]["path"], settings["java"]["args"]]
+                        
+    def get_memory_ram() -> int: return round(0.40 * psutil.virtual_memory().total / (1024 ** 2))

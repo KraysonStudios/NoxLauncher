@@ -7,7 +7,7 @@ import minecraft_launcher_lib as mc
 from linux.fs import Linux
 from skinlib.skin import Skin, Perspective
 from constants import constants
-from typing import Dict, List
+from typing import Any, Dict, List
 from PIL import Image
 
 class NoxLauncher: 
@@ -111,7 +111,27 @@ class NoxLauncher:
 
     def settings(page: flet.Page) -> flet.View:
 
-        JAVA_INFO: List[str] = Linux.get_java_info()
+        JAVA_INFO: List[str] | bool = Linux.get_java_info()
+
+        if JAVA_INFO is False:
+
+            page.open(flet.AlertDialog(
+                modal= True,
+                icon= flet.Icon(name= flet.icons.ERROR_ROUNDED, color= flet.colors.RED_ACCENT, size= 40),
+                title= flet.Container(
+                    content= flet.Text("Corrupted Java settings", size= 25, font_family= "Minecraft"),
+                    alignment= flet.alignment.center,
+                    expand_loose= True
+                ),
+                bgcolor= "#272727",
+                content= flet.Text("Reopen the launcher for fixed the settings!", size= 20, font_family= "Minecraft"),
+                actions= [
+                    flet.TextButton(content= flet.Text("Ok", size= 20, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 120, height= 45, on_click= lambda _: page.window.destroy()),
+                ],
+                on_dismiss= lambda _: page.window.destroy()
+            ))
+
+            return flet.View()
 
         if len(JAVA_INFO[0]) >= 20: JAVA_INFO[0] = JAVA_INFO[0][:19] + "..."
         if len(JAVA_INFO[1]) >= 20: JAVA_INFO[1] = JAVA_INFO[1][:19] + "..."
@@ -472,9 +492,8 @@ class NoxLauncher:
         containers: List[flet.Container] = []
 
         for articles in mc.utils.get_minecraft_news(10).values():
-            if type(articles) is not int:
+            if not isinstance(articles, int):
                 for article in articles:
-                    
                     containers.append(flet.Container(
                         content= flet.Column(controls= [
                             flet.Text(article["default_tile"]["title"], size= 15, color= "#ffffff", font_family= "Minecraft"),
@@ -502,41 +521,27 @@ class AccountManager:
                 with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "r") as f:
                     profiles = json.load(f)
 
-                    if "profiles" in profiles.keys():
-                        if type(profiles["profiles"]) is dict:
-                            if len(profiles["profiles"]) > 0:
-                                if "default" in profiles["profiles"].keys():
-                                    if isinstance(profiles["profiles"]["default"], dict):
-                                        if "type" in profiles["profiles"]["default"].keys():
-                                            if profiles["profiles"]["default"]["type"] == "offline": return profiles["profiles"]["default"]
-                                        else:
-                                            profiles["profiles"].update({
-                                                "default": {
-                                                    "name": "Default",
-                                                    "type": "offline",
-                                                    "selected": True,
-                                                    "skin": "assets/steve.png"
-                                                }
-                                            })
-                                            with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "w") as f:
-                                                json.dump(profiles, f, indent= 4)
+                    if not "profiles" in profiles:
+                        profiles["profiles"] = {}
+                        with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "w") as f:
+                            json.dump(profiles, f, indent= 4)
 
-                                            return profiles["profiles"]["default"]
-                                            
-                                    else:
+                    elif not isinstance(profiles["profiles"], dict):
+                        profiles["profiles"] = {}
+                        with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "w") as f:
+                            json.dump(profiles, f, indent= 4)
 
-                                        profiles["profiles"].update({
-                                            "default": {
-                                                "name": "Default",
-                                                "type": "offline",
-                                                "selected": True,
-                                                "skin": constants.LINUX_HOME.value + "/Nox Launcher/skins/steve.png"
-                                            }
-                                        })
-                                        with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "w") as f:
-                                            json.dump(profiles, f, indent= 4)
+                    if len(profiles["profiles"]) > 0 and "default" in profiles["profiles"]:
 
-                                        return profiles["profiles"]["default"]        
+                        if not isinstance(profiles["profiles"]["default"], dict): return AccountManager.default_offline(profiles)
+                        elif "type" not in profiles["profiles"]["default"]: return AccountManager.default_offline(profiles)
+                        elif not isinstance(profiles["profiles"]["default"]["type"], str) or profiles["profiles"]["default"]["type"] != "offline": return AccountManager.default_offline(profiles)
+                        elif "selected" not in profiles["profiles"]["default"]: return AccountManager.default_offline(profiles)
+                        elif not isinstance(profiles["profiles"]["default"]["selected"], bool): return AccountManager.default_offline(profiles)
+                        
+                        return profiles["profiles"]["default"]
+                    
+                    return AccountManager.default_offline(profiles)
 
     def determinate() -> Dict[str, str]:
 
@@ -549,31 +554,41 @@ class AccountManager:
                 with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "r") as f:
                     profiles = json.load(f)
 
-                    if "profiles" in profiles.keys():
-                        if type(profiles["profiles"]) is dict:
-                            if len(profiles["profiles"]) > 0:
-                                for profile in profiles["profiles"].values():
-                                    if "selected" in profile:
-                                        if profile["selected"] == True:
-                                            return profile
+                    if not "profiles" in profiles:
+                        profiles["profiles"] = {}
+                        with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "w") as f:
+                            json.dump(profiles, f, indent= 4)
 
-                            else:
+                    elif not isinstance(profiles["profiles"], dict):
+                        profiles["profiles"] = {}
+                        with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "w") as f:
+                            json.dump(profiles, f, indent= 4)
 
-                                profiles["profiles"].update({
-                                    "default": {
-                                        "name": "Default",
-                                        "type": "offline",
-                                        "selected": True,
-                                        "skin": "assets/steve.png"
-                                    },
-                                    "premium": {},
-                                    "no-premium": {}
-                                })
+                    if len(profiles["profiles"]) > 0:
+                        for profile in profiles["profiles"].values():
+                            if not isinstance(profile, dict):
+                                continue
+                            elif not "selected" in profile:
+                                profile["selected"] = False
+                                continue
+                            elif profile["selected"] == True:
+                                return profile
+                    
+                    profiles["profiles"].update({
+                        "default": {
+                            "name": "Default",
+                            "type": "offline",
+                            "selected": True,
+                            "skin": "assets/steve.png"
+                        },
+                        "premium": {},
+                        "no-premium": {}
+                    })
 
-                                with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "w") as f:
-                                    json.dump(profiles, f, indent= 4)
+                    with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "w") as f:
+                        json.dump(profiles, f, indent= 4)
 
-                                return profiles["profiles"]["default"]
+                    return profiles["profiles"]["default"]
                         
     def get_all_offlines() -> List[flet.dropdown.Option]:
 
@@ -651,7 +666,23 @@ class AccountManager:
                                                 json.dump(profiles, f, indent= 4)
 
                                             return profile
-                    
+
+
+    def default_offline(profiles: Dict[str, Any]) -> Dict[str, Any]:
+
+        profiles["profiles"].update({
+            "default": {
+                "name": "Default",
+                "type": "offline",
+                "selected": True,
+                "skin": "assets/steve.png"
+            }
+        })
+        with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "w") as f:
+            json.dump(profiles, f, indent= 4)
+
+        return profiles["profiles"]["default"]          
+
     def get_skin(skin: str, name: str, size: int = 20, width: int = 50, height: int = 50) -> flet.Image:
 
         skin: Skin = Skin.from_image(Image.open(skin).convert("RGBA"))

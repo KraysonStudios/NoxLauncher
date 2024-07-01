@@ -21,11 +21,11 @@ if __name__ == "__main__":
 
         page.title = "Nox Launcher"
 
-        page.window_max_height = constants.MAX_HEIGHT.value
-        page.window_max_width = constants.MAX_WIDTH.value
+        page.window.max_height = constants.MAX_HEIGHT.value
+        page.window.max_width = constants.MAX_WIDTH.value
 
-        page.window_min_height = constants.MIN_HEIGHT.value
-        page.window_min_width = constants.MIN_WIDTH.value
+        page.window.min_height = constants.MIN_HEIGHT.value
+        page.window.min_width = constants.MIN_WIDTH.value
 
         page.fonts = {"Minecraft": "fonts/Minecraft.ttf"}
 
