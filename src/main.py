@@ -3,7 +3,7 @@ import platform
 
 from gui import NoxLauncher
 from constants import constants
-from linux.fs import Linux
+from fs import Config
 from tkinter.messagebox import showerror
 
 if __name__ == "__main__":
@@ -12,12 +12,9 @@ if __name__ == "__main__":
         showerror(title= "Nox Launcher", message= "Unsupported platform.", type= "ok")
         exit(1)
 
-    match platform.system():
-
-        case "Windows": ...
-        case "Linux": Linux.config()
-
     def main(page: flet.Page) -> None:
+
+        Config.config()
 
         page.title = "Nox Launcher"
 

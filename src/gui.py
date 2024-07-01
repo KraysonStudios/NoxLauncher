@@ -3,9 +3,8 @@ import platform
 import os
 import json
 import time
-import minecraft_launcher_lib as mc
 
-from linux.fs import Linux
+from fs import Config
 from skinlib.skin import Skin, Perspective
 from constants import constants
 from typing import Any, Dict, List
@@ -27,7 +26,7 @@ class NoxLauncher:
                 case "/settings": page.views.append(NoxLauncher.settings(page))
                 case "/accounts": page.views.append(NoxLauncher.accounts(page))
                 case "/offline": page.views.append(NoxLauncher.offline(page))
-                case "/news": page.views.append(flet.View(padding= 0))
+                case "/news": page.views.append(NoxLauncher.news(page))
                 case "/info": page.views.append(NoxLauncher.info(page))
                 case "/install": page.views.append(NoxLauncher.install(page))
 
@@ -37,6 +36,31 @@ class NoxLauncher:
         page.on_route_change = routing
 
         page.go("/play")
+
+    def news(page: flet.Page) -> flet.View:
+
+        return flet.View(
+            controls= [
+                flet.Container(
+                    height= 80,
+                    expand_loose= True,
+                    content= flet.Row(
+                        controls= [
+                            flet.Icon(name= flet.icons.ARROW_BACK, color= "#717171", size= 40),
+                            flet.TextButton(content= flet.Text("Back to play", size= 20, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 190, height= 45, on_click= lambda _: page.go("/play")),
+                        ],
+                        alignment= flet.MainAxisAlignment.START,
+                        vertical_alignment= flet.CrossAxisAlignment.CENTER,
+                        expand= True,
+                        expand_loose= True,
+                        spacing= 10
+                    ),
+                    alignment= flet.alignment.center_left,
+                    padding= flet.padding.all(20)
+                )
+            ],
+            padding= 0,
+        )
 
     def install(page: flet.Page) -> flet.View:
 
@@ -138,17 +162,17 @@ class NoxLauncher:
 
     def settings(page: flet.Page) -> flet.View:
 
-        JAVA_INFO: List[str] | bool = Linux.get_java_info()
+        JAVA_INFO: List[str] | bool = Config.get_java_info()
 
         def update_java_settings(_: flet.ControlEvent) -> None:
 
             if java_path.value != "System": 
-                Linux.update_java_path(java_path.value)
+                Config.update_java_path(java_path.value)
             
             location.value = java_path.value
             location.update()
 
-            java_args.value = " ".join(Linux.update_java_memory_dedicated([arg for arg in java_args.value.split(" ") if isinstance(arg, str) and arg != ""], str(round(java_alloc_memory.value))))
+            java_args.value = " ".join(Config.update_java_memory_dedicated([arg for arg in java_args.value.split(" ") if isinstance(arg, str) and arg != ""], str(round(java_alloc_memory.value))))
             java_args.update()
 
             def ok(_: flet.ControlEvent) -> None:
@@ -193,8 +217,8 @@ class NoxLauncher:
             return flet.View()
 
         java_args: flet.TextField = flet.TextField(value= " ".join(JAVA_INFO[1]), multiline= False, expand_loose= True, height= 70, border_radius= 10, border_color= "#717171")
-        java_path: flet.Dropdown = flet.Dropdown(label= "Java source", hint_text= "Select the Java source!", options= Linux.get_java_list(), border_color= "#717171", border_radius= 10, label_style= flet.TextStyle(color= "#ffffff"), value= Linux.determinate_java_path(JAVA_INFO[0]))
-        java_alloc_memory: flet.Slider = flet.Slider(value= Linux.parse_memory(JAVA_INFO[1]), min= 1000, max= Linux.get_memory_ram(), label= "{value}MB", expand_loose= True, height= 40, divisions= 500, active_color= "#148b47", thumb_color= "#ffffff")
+        java_path: flet.Dropdown = flet.Dropdown(label= "Java source", hint_text= "Select the Java source!", options= Config.get_java_list(), border_color= "#717171", border_radius= 10, label_style= flet.TextStyle(color= "#ffffff"), value= Config.determinate_java_path(JAVA_INFO[0]))
+        java_alloc_memory: flet.Slider = flet.Slider(value= Config.parse_memory(JAVA_INFO[1]), min= 1000, max= Config.get_memory_ram(), label= "{value}MB", expand_loose= True, height= 40, divisions= 500, active_color= "#148b47", thumb_color= "#ffffff")
         location: flet.Text = flet.Text(f"Location: {JAVA_INFO[0][:14] + "..."}", size= 20, color= "#ffffff", font_family= "Minecraft")
 
         return flet.View(
@@ -574,7 +598,7 @@ class AccountManager:
             case "Windows":
                 ...
             case "Linux":
-                if not os.path.exists(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json"): Linux.config()
+                if not os.path.exists(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json"): Config.check()
 
                 with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "r") as f:
                     profiles = json.load(f)
@@ -607,7 +631,7 @@ class AccountManager:
             case "Windows":
                 ...
             case "Linux":
-                if not os.path.exists(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json"): Linux.config()
+                if not os.path.exists(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json"): Config.check()
 
                 with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "r") as f:
                     profiles = json.load(f)
@@ -657,7 +681,7 @@ class AccountManager:
             case "Windows":
                 ...
             case "Linux":
-                if not os.path.exists(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json"): Linux.config()
+                if not os.path.exists(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json"): Config.check()
 
                 with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "r") as f:
                     profiles = json.load(f)
@@ -693,7 +717,7 @@ class AccountManager:
             case "Windows":
                 ...
             case "Linux":
-                if not os.path.exists(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json"): Linux.config()
+                if not os.path.exists(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json"): Config.check()
 
                 with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "r") as f:
                     profiles = json.load(f)
