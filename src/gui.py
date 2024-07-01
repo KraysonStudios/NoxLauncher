@@ -2,6 +2,7 @@ import flet
 import platform
 import os
 import json
+import time
 import minecraft_launcher_lib as mc
 
 from linux.fs import Linux
@@ -119,7 +120,7 @@ class NoxLauncher:
                 modal= True,
                 icon= flet.Icon(name= flet.icons.ERROR_ROUNDED, color= flet.colors.RED_ACCENT, size= 40),
                 title= flet.Container(
-                    content= flet.Text("Corrupted Java settings", size= 25, font_family= "Minecraft"),
+                    content= flet.Text("Corrupted java settings", size= 25, font_family= "Minecraft"),
                     alignment= flet.alignment.center,
                     expand_loose= True
                 ),
@@ -270,7 +271,13 @@ class NoxLauncher:
 
                     control.update()
 
-        def change_name(event: flet.ControlEvent) -> None:            
+        def change_name(event: flet.ControlEvent) -> None:     
+
+            def fix_up_account(_: flet.ControlEvent) -> None:
+
+                page.go("/play")
+                time.sleep(1)
+                page.go("/settings")       
 
             account_rename.disabled = True
             account_rename.update()
@@ -280,7 +287,28 @@ class NoxLauncher:
 
             if account_rename is not None:
 
-                AccountManager.rename(account_rename.value.replace(" ", "_"))
+                rename: bool = AccountManager.rename(account_rename.value.replace(" ", "_"))
+
+                if not rename:
+
+                    page.open(flet.AlertDialog(
+                        modal= True,
+                        icon= flet.Icon(name= flet.icons.ERROR_ROUNDED, color= flet.colors.RED_ACCENT, size= 40),
+                        title= flet.Container(
+                            content= flet.Text("Corrupted account settings", size= 25, font_family= "Minecraft"),
+                            alignment= flet.alignment.center,
+                            expand_loose= True
+                        ),
+                        bgcolor= "#272727",
+                        content= flet.Text("Corrupted account settings, press ok to fix up!", size= 20, font_family= "Minecraft"),
+                        actions= [
+                            flet.TextButton(content= flet.Text("Ok", size= 20, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 120, height= 45, on_click= fix_up_account),
+                        ],
+                        on_dismiss= fix_up_account
+                    ))
+
+                    return
+
                 update_account_info(AccountManager.select(account_rename.value.replace(" ", "_")))
 
                 def ok(_: flet.ControlEvent) -> None:
@@ -533,15 +561,15 @@ class AccountManager:
 
                     if len(profiles["profiles"]) > 0 and "default" in profiles["profiles"]:
 
-                        if not isinstance(profiles["profiles"]["default"], dict): return AccountManager.default_offline(profiles)
-                        elif "type" not in profiles["profiles"]["default"]: return AccountManager.default_offline(profiles)
-                        elif not isinstance(profiles["profiles"]["default"]["type"], str) or profiles["profiles"]["default"]["type"] != "offline": return AccountManager.default_offline(profiles)
-                        elif "selected" not in profiles["profiles"]["default"]: return AccountManager.default_offline(profiles)
-                        elif not isinstance(profiles["profiles"]["default"]["selected"], bool): return AccountManager.default_offline(profiles)
+                        if not isinstance(profiles["profiles"]["default"], dict): return AccountManager.build_default_offline(profiles)
+                        elif "type" not in profiles["profiles"]["default"]: return AccountManager.build_default_offline(profiles)
+                        elif not isinstance(profiles["profiles"]["default"]["type"], str) or profiles["profiles"]["default"]["type"] != "offline": return AccountManager.build_default_offline(profiles)
+                        elif "selected" not in profiles["profiles"]["default"]: return AccountManager.build_default_offline(profiles)
+                        elif not isinstance(profiles["profiles"]["default"]["selected"], bool): return AccountManager.build_default_offline(profiles)
                         
                         return profiles["profiles"]["default"]
                     
-                    return AccountManager.default_offline(profiles)
+                    return AccountManager.determinate()
 
     def determinate() -> Dict[str, str]:
 
@@ -573,47 +601,27 @@ class AccountManager:
                                 continue
                             elif profile["selected"] == True:
                                 return profile
-                    
-                    profiles["profiles"].update({
-                        "default": {
-                            "name": "Default",
-                            "type": "offline",
-                            "selected": True,
-                            "skin": "assets/steve.png"
-                        },
-                        "premium": {},
-                        "no-premium": {}
-                    })
+                            
+                    else:
 
-                    with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "w") as f:
-                        json.dump(profiles, f, indent= 4)
+                        profiles["profiles"].update({
+                            "default": {
+                                "name": "Default",
+                                "type": "offline",
+                                "selected": True,
+                                "skin": "assets/steve.png"
+                            },
+                            "premium": {},
+                            "no_premium": {}
 
-                    return profiles["profiles"]["default"]
+                        })
+
+                        with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "w") as f:
+                            json.dump(profiles, f, indent= 4)
+                            
+                        return profiles["profiles"]["default"]
                         
-    def get_all_offlines() -> List[flet.dropdown.Option]:
-
-        match platform.system():
-            case "Windows":
-                ...
-            case "Linux":
-                if not os.path.exists(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json"): Linux.config()
-
-                accounts: List[flet.dropdown.Option] = []
-
-                with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "r") as f:
-                    profiles = json.load(f)
-
-                    if "profiles" in profiles.keys():
-                        if type(profiles["profiles"]) is dict:
-                            if len(profiles["profiles"]) > 0:
-                                for profile in profiles["profiles"].values():
-                                    if "type" in profile:
-                                        if profile["type"] == "offline":
-                                            accounts.append(flet.dropdown.Option(profile["name"]))
-
-                return accounts
-    
-    def rename(new: str) -> None:
+    def rename(new: str) -> bool:
 
         match platform.system():
             case "Windows":
@@ -624,18 +632,30 @@ class AccountManager:
                 with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "r") as f:
                     profiles = json.load(f)
 
-                    if "profiles" in profiles.keys():
-                        if type(profiles["profiles"]) is dict:
-                            if len(profiles["profiles"]) > 0:
-                                for profile in profiles["profiles"].values():
-                                    if "selected" in profile:
-                                        if profile["selected"] == True:
-                                            AccountManager.delete_skin_from_cache(profile["name"])
-                                            profile["name"] = new
-                                            break
+                    if not "profiles" in profiles:
+                        profiles["profiles"] = {}
+                        with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "w") as f:
+                            json.dump(profiles, f, indent= 4)
+                    elif not isinstance(profiles["profiles"], dict):
+                        profiles["profiles"] = {}
+                        with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "w") as f:
+                            json.dump(profiles, f, indent= 4)
 
-                                with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "w") as f: 
-                                    json.dump(profiles, f, indent= 4)
+                    if len(profiles["profiles"]) > 0:
+
+                        for profile in profiles["profiles"].values():
+                            if "selected" not in profile: continue
+                            elif profile["selected"] == True:
+                                AccountManager.delete_skin_from_cache(profile["name"])
+                                profile["name"] = new
+                                break
+
+                        with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "w") as f: 
+                            json.dump(profiles, f, indent= 4)
+
+                        return True
+
+                    return False
 
     def select(name: str) -> Dict[str, str]:
 
@@ -668,7 +688,7 @@ class AccountManager:
                                             return profile
 
 
-    def default_offline(profiles: Dict[str, Any]) -> Dict[str, Any]:
+    def build_default_offline(profiles: Dict[str, Any]) -> Dict[str, Any]:
 
         profiles["profiles"].update({
             "default": {
