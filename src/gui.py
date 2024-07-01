@@ -29,6 +29,7 @@ class NoxLauncher:
                 case "/offline": page.views.append(NoxLauncher.offline(page))
                 case "/news": page.views.append(flet.View(padding= 0))
                 case "/info": page.views.append(NoxLauncher.info(page))
+                case "/install": page.views.append(NoxLauncher.install(page))
 
             page.update()
 
@@ -36,6 +37,31 @@ class NoxLauncher:
         page.on_route_change = routing
 
         page.go("/play")
+
+    def install(page: flet.Page) -> flet.View:
+
+        return flet.View(
+            controls= [
+                flet.Container(
+                    height= 80,
+                    expand_loose= True,
+                    content= flet.Row(
+                        controls= [
+                            flet.Icon(name= flet.icons.ARROW_BACK, color= "#717171", size= 40),
+                            flet.TextButton(content= flet.Text("Back to play", size= 20, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 190, height= 45, on_click= lambda _: page.go("/play")),
+                        ],
+                        alignment= flet.MainAxisAlignment.START,
+                        vertical_alignment= flet.CrossAxisAlignment.CENTER,
+                        expand= True,
+                        expand_loose= True,
+                        spacing= 10
+                    ),
+                    alignment= flet.alignment.center_left,
+                    padding= flet.padding.all(20)
+                )
+            ],
+            padding= 0,
+        )
 
     def info(page: flet.Page) -> flet.View:
 
@@ -114,6 +140,38 @@ class NoxLauncher:
 
         JAVA_INFO: List[str] | bool = Linux.get_java_info()
 
+        def update_java_settings(_: flet.ControlEvent) -> None:
+
+            if java_path.value != "System": 
+                Linux.update_java_path(java_path.value)
+            
+            location.value = java_path.value
+            location.update()
+
+            java_args.value = " ".join(Linux.update_java_memory_dedicated([arg for arg in java_args.value.split(" ") if isinstance(arg, str) and arg != ""], str(round(java_alloc_memory.value))))
+            java_args.update()
+
+            def ok(_: flet.ControlEvent) -> None:
+
+                page.close(BANNER)
+                page.update()
+
+            BANNER: flet.Banner = flet.Banner(
+                bgcolor= "#272727",
+                leading= flet.Icon(name= flet.icons.CHECK, color= "#148b47", size= 40),
+                content= flet.Text(
+                    value= "Java settings updated!",
+                    color= "#ffffff",
+                    size= 20,
+                    font_family= "Minecraft"
+                ),
+                actions= [
+                    flet.TextButton(content= flet.Text("Ok", size= 20, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 150, height= 40, on_click= ok)
+                ]
+            )
+
+            page.open(BANNER)
+
         if JAVA_INFO is False:
 
             page.open(flet.AlertDialog(
@@ -134,8 +192,10 @@ class NoxLauncher:
 
             return flet.View()
 
-        if len(JAVA_INFO[0]) >= 20: JAVA_INFO[0] = JAVA_INFO[0][:19] + "..."
-        if len(JAVA_INFO[1]) >= 20: JAVA_INFO[1] = JAVA_INFO[1][:19] + "..."
+        java_args: flet.TextField = flet.TextField(value= " ".join(JAVA_INFO[1]), multiline= False, expand_loose= True, height= 70, border_radius= 10, border_color= "#717171")
+        java_path: flet.Dropdown = flet.Dropdown(label= "Java source", hint_text= "Select the Java source!", options= Linux.get_java_list(), border_color= "#717171", border_radius= 10, label_style= flet.TextStyle(color= "#ffffff"), value= Linux.determinate_java_path(JAVA_INFO[0]))
+        java_alloc_memory: flet.Slider = flet.Slider(value= Linux.parse_memory(JAVA_INFO[1]), min= 1000, max= Linux.get_memory_ram(), label= "{value}MB", expand_loose= True, height= 40, divisions= 500, active_color= "#148b47", thumb_color= "#ffffff")
+        location: flet.Text = flet.Text(f"Location: {JAVA_INFO[0][:14] + "..."}", size= 20, color= "#ffffff", font_family= "Minecraft")
 
         return flet.View(
             controls= [
@@ -162,7 +222,7 @@ class NoxLauncher:
                     alignment= flet.alignment.center,
                     content= flet.Container(
                         width= 500, 
-                        height= 600, 
+                        height= 560, 
                         bgcolor= "#272727", 
                         border_radius= 20, 
                         alignment= flet.alignment.center,
@@ -171,26 +231,21 @@ class NoxLauncher:
                             controls= [
                                 flet.Container(content= flet.Text("Settings", size= 30, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center),
                                 flet.Row(expand_loose= True, height= 100, controls= [
-                                    flet.Image(
+                                    flet.Container(content= flet.Image(
                                         src= "java.png", 
-                                        width= 70, 
-                                        height= 70,
+                                        width= 90, 
+                                        height= 90,
                                         filter_quality= flet.FilterQuality.HIGH
-                                    ),
-                                    flet.Column(
-                                        controls= [
-                                            flet.Text(f"Location: {JAVA_INFO[0]}", size= 20, color= "#ffffff", font_family= "Minecraft"),
-                                            flet.Text(f"Arguments: {JAVA_INFO[1]}", size= 20, color= "#ffffff", font_family= "Minecraft")
-                                        ],
-                                        spacing= 10,
-                                        horizontal_alignment= flet.MainAxisAlignment.CENTER,
-                                        alignment= flet.MainAxisAlignment.CENTER,
-                                        expand= True,
-                                        expand_loose= True,
-                                    ),
-                                ], spacing= 20, vertical_alignment= flet.CrossAxisAlignment.CENTER),
-                                flet.Text("Java source", size= 20, color= "#ffffff", font_family= "Minecraft"),
-                                flet.Dropdown(label= "Java source", hint_text= "Select the Java source!", options= [flet.dropdown.Option("System"), flet.dropdown.Option("Custom")], border_color= "#717171", border_radius= 10, label_style= flet.TextStyle(color= "#ffffff"))
+                                    ), alignment= flet.alignment.center_left, padding= flet.padding.only(bottom= 28)),
+                                    flet.Container(content= location, expand_loose= True, alignment= flet.alignment.center_left, expand= True),
+                                ], vertical_alignment= flet.CrossAxisAlignment.CENTER, alignment= flet.MainAxisAlignment.CENTER),
+                                flet.Text("Java settings", size= 20, color= "#ffffff", font_family= "Minecraft"),
+                                java_path,
+                                flet.Text("JVM arguments", size= 20, color= "#ffffff", font_family= "Minecraft"),
+                                java_args,
+                                flet.Container(content= flet.Text("Memory dedicated", size= 20, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center),
+                                java_alloc_memory,
+                                flet.Container(content= flet.TextButton(content= flet.Text("Save", size= 20, font_family= "Minecraft"), on_click= update_java_settings, style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 190, height= 45), alignment= flet.alignment.center, expand_loose= True, expand= True)
                             ]
                         )
                     )
@@ -200,7 +255,7 @@ class NoxLauncher:
             horizontal_alignment= flet.MainAxisAlignment.CENTER, 
             vertical_alignment= flet.CrossAxisAlignment.CENTER
         )
-
+    
     def accounts(page: flet.Page) -> flet.View:
 
         ACC: Dict[str, str] = AccountManager.determinate()
@@ -383,12 +438,10 @@ class NoxLauncher:
 
         back_to_play_button: flet.Container = flet.Container(expand_loose= True, alignment= flet.alignment.center,
             content= flet.Row(
-
                 controls= [
                     flet.Icon(name= flet.icons.ARROW_BACK, color= "#717171", size= 40),
                     flet.TextButton(content= flet.Text("Back to accounts", size= 20, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 250, height= 45, on_click= lambda _: page.go("/accounts")),
                 ],
-
                 expand_loose= True,
                 expand= True,
                 alignment= flet.MainAxisAlignment.CENTER
@@ -437,11 +490,9 @@ class NoxLauncher:
         ACC: Dict[str, str] = AccountManager.determinate()
         skin: flet.Image = AccountManager.get_skin(ACC["skin"], ACC["name"])
 
-        if len(ACC["name"]) >= 6: ACC["name"] = ACC["name"][:5] + "..."
-
         return flet.View("/play", 
             controls= [
-                flet.Container(content = flet.Row(expand= True, expand_loose= True, controls= NoxLauncher.minecraft_news(), 
+                flet.Container(content = flet.Row(expand= True, expand_loose= True, controls= constants.MINECRAFT_NEWS.value, 
                 alignment= flet.MainAxisAlignment.CENTER, vertical_alignment= flet.CrossAxisAlignment.CENTER, spacing= 10, scroll= flet.ScrollMode.AUTO), expand= True, expand_loose= True, alignment= flet.alignment.center),
             ],
 
@@ -490,7 +541,7 @@ class NoxLauncher:
             bottom_appbar= flet.BottomAppBar(
                 bgcolor= "#272727",
                 content= flet.Row(expand= True, spacing= 10, alignment= flet.MainAxisAlignment.CENTER, controls= [
-                    flet.TextButton(content= flet.Text("Install", size= 25, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 150, height= 45),
+                    flet.TextButton(content= flet.Text("Install", size= 25, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 150, height= 45, on_click= lambda _: page.go("/install")),
                     flet.Container(expand= True),
                     flet.Dropdown(label= "Installed Versions", hint_text= "Minecraft version to play!", options= [flet.dropdown.Option("1.16.5")], border_color= "#717171", border_radius= 10, label_style= flet.TextStyle(color= "#ffffff")),
                     flet.TextButton(content= flet.Text("Play", size= 25, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 150, height= 45),
@@ -500,7 +551,7 @@ class NoxLauncher:
                         content= flet.Row(expand= True, spacing= 0, controls= [
                             skin,
                             flet.TextButton(
-                                content= flet.Text(ACC["name"], 
+                                content= flet.Text(ACC["name"][:5] + "..." if len(ACC["name"]) > 5 else ACC["name"], 
                                 size= 25, font_family= "Minecraft"), 
                                 height= 50, style= flet.ButtonStyle(color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), 
                                 on_click= lambda _: page.go("/accounts"), 
@@ -514,27 +565,6 @@ class NoxLauncher:
             ), 
             
         padding= 0)
-    
-    def minecraft_news() -> List[flet.Container]:
-
-        containers: List[flet.Container] = []
-
-        for articles in mc.utils.get_minecraft_news(10).values():
-            if not isinstance(articles, int):
-                for article in articles:
-                    containers.append(flet.Container(
-                        content= flet.Column(controls= [
-                            flet.Text(article["default_tile"]["title"], size= 15, color= "#ffffff", font_family= "Minecraft"),
-                            flet.FilledButton(text= "Read", icon= flet.icons.OPEN_IN_NEW, icon_color= "#ffffff", url_target= "article", url= "https://minecraft.net" + article["article_url"], style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 120, height= 40),
-                        ], spacing= 8),
-                        height= 180,
-                        width= 180,
-                        border_radius= 20,
-                        bgcolor= "#272727",
-                        padding= flet.padding.all(20)
-                    ))
-
-        return containers
     
 class AccountManager:
 
@@ -668,25 +698,29 @@ class AccountManager:
                 with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "r") as f:
                     profiles = json.load(f)
 
-                    if "profiles" in profiles.keys():
-                        if type(profiles["profiles"]) is dict:
-                            if len(profiles["profiles"]) > 0:
-                                for profile in profiles["profiles"].values():
-                                    if "selected" in profile:
-                                        profile["selected"] = False
+                    if "profiles" not in profiles: 
 
+                        profiles["profiles"] = {}
+                        with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "w") as f:
+                            json.dump(profiles, f, indent= 4)
+
+                    elif not isinstance(profiles["profiles"], dict):
+                        profiles["profiles"] = {}
+                        with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "w") as f:
+                            json.dump(profiles, f, indent= 4)
+
+                    if len(profiles["profiles"]) > 0:
+                        for profile in profiles["profiles"].values():
+                            if "name" not in profile or "selected" not in profile:
+                                continue
+                            elif profile["name"] == name:
+                                profile["selected"] = True
                                 with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "w") as f: 
                                     json.dump(profiles, f, indent= 4)
 
-                                for profile in profiles["profiles"].values():
-                                    if "name" in profile:
-                                        if profile["name"] == name:
-                                            profile["selected"] = True
-                                            with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "w") as f: 
-                                                json.dump(profiles, f, indent= 4)
-
-                                            return profile
-
+                                return profile
+                    
+                    return AccountManager.determinate()
 
     def build_default_offline(profiles: Dict[str, Any]) -> Dict[str, Any]:
 

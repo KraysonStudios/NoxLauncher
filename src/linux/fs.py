@@ -3,6 +3,7 @@ import json
 import jdk
 import itertools
 import psutil
+import flet
 
 from constants import constants
 from tkinter.messagebox import showinfo
@@ -105,7 +106,10 @@ class Linux:
                 settings = json.load(f)
 
                 META: Dict[str, Any] = {
-                    "java": {},
+                    "java": {
+                        "path": jdk.shutil.which("java"),
+                        "args": ["-Xms1G", f"-Xmx{Linux.get_memory_ram()}M"]
+                    },
                     "close_on_play": True
                 }
 
@@ -118,6 +122,15 @@ class Linux:
                 elif not "java" in settings:
                     with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/settings.json", "w") as f:
                         json.dump(META, f, indent= 4)
+                elif not isinstance(settings["java"], dict):
+                    with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/settings.json", "w") as f:
+                        json.dump(META, f, indent= 4)
+                elif not "path" in settings["java"] or not "args" in settings["java"]:
+                    with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/settings.json", "w") as f:
+                        json.dump(META, f, indent= 4)
+                elif not isinstance(settings["java"]["path"], str) or not isinstance(settings["java"]["args"], list):
+                    with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/settings.json", "w") as f:
+                        json.dump(META, f, indent= 4)
                 elif not isinstance(settings["close_on_play"], bool):
                     with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/settings.json", "w") as f:
                         json.dump(META, f, indent= 4)
@@ -126,35 +139,20 @@ class Linux:
 
             settings = json.load(f)
 
-            if "path" not in settings["java"] or "args" not in settings["java"]:
+            if not isinstance(settings["java"]["path"], str):
+                showinfo("Nox Launcher", "Java is not installed. Please be patient while it is being installed. Don`t close app.", type= "ok")
+                jdk.install("21", operating_system= jdk.OperatingSystem.LINUX, arch= jdk.Architecture.X64, path= constants.LINUX_HOME + "/Nox Launcher/java/")
 
-                if jdk.shutil.which("java") is None:
-                    showinfo("Nox Launcher", "Java is not installed. Please be patient while it is being installed. Don`t close app.", type= "ok")
-                    jdk.install("21", operating_system= jdk.OperatingSystem.LINUX, arch= jdk.Architecture.X64, path= constants.LINUX_HOME + "/Nox Launcher/java/")
+                with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/settings.json", "r") as f:
 
-                    with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/settings.json", "r") as f:
+                    settings = json.load(f)
+                    settings["java"].update({
+                        "path": jdk.shutil.which("java"),
+                        "args": ["-Xms1G", f"-Xmx{Linux.get_memory_ram()}M"]
+                    })
 
-                        settings = json.load(f)
-                        settings["java"].update({
-                            "path": jdk.shutil.which("java"),
-                            "args": ["-Xms1G", f"-Xmx{Linux.get_memory_ram()}M"]
-                        })
-
-                        with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/settings.json", "w") as f:
-                            json.dump(settings, f, indent= 4)
-
-                else:
-                    with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/settings.json", "r") as f:
-
-                        settings = json.load(f)
-                        
-                        settings["java"].update({
-                            "path": jdk.shutil.which("java"),
-                            "args": ["-Xms1G", f"-Xmx{Linux.get_memory_ram()}M"]
-                        })
-
-                        with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/settings.json", "w") as f:
-                            json.dump(settings, f, indent= 4)
+                    with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/settings.json", "w") as f:
+                        json.dump(settings, f, indent= 4)
 
     def get_java_info() -> List[str] | bool: 
 
@@ -169,3 +167,69 @@ class Linux:
                 return [settings["java"]["path"], settings["java"]["args"]]
                         
     def get_memory_ram() -> int: return round(0.40 * psutil.virtual_memory().total / (1024 ** 2))
+
+    def get_java_list() -> List[flet.dropdown.Option]:
+
+        if not os.path.exists(constants.LINUX_HOME.value + "/Nox Launcher/java/"): Linux.config()
+
+        options: List[flet.dropdown.Option] = []
+
+        options.append(flet.dropdown.Option("System"))
+
+        if len(os.listdir(constants.LINUX_HOME.value + "/Nox Launcher/java/")) > 0: 
+
+            for java in [java for java in os.listdir(constants.LINUX_HOME.value + "/Nox Launcher/java/") if os.path.isdir(constants.LINUX_HOME.value + "/Nox Launcher/java/" + java)]:
+
+                if os.path.exists(constants.LINUX_HOME.value + "/Nox Launcher/java/" + java + "/bin/java") and os.path.isfile(constants.LINUX_HOME.value + "/Nox Launcher/java/" + java + "/bin/java"):
+                    options.append(flet.dropdown.Option(constants.LINUX_HOME.value + "/Nox Launcher/java/" + java + "/bin/java"))
+
+        for java in [java for java in os.listdir("/usr/lib/jvm/") if os.path.isdir("/usr/lib/jvm/" + java)]:
+
+            if os.path.exists("/usr/lib/jvm/" + java + "/bin/java") and os.path.isfile("/usr/lib/jvm/" + java + "/bin/java"):
+                options.append(flet.dropdown.Option("/usr/lib/jvm/" + java + "/bin/java"))
+
+        return options
+    
+    def parse_memory(args: List[str]) -> int: 
+        for arg in [arg for arg in args if isinstance(arg, str)]:
+            if arg.startswith("-Xmx") and arg.find("M") != -1 and arg.index("M") == len(arg) - 1: return int(arg.replace("-Xmx", "").replace("M", ""))
+        else: return 2048
+
+    def determinate_java_path(path: str) -> str: 
+
+        parsed_path: List[str] = [path for path in path.split("/") if path != ""]   
+
+        if len(parsed_path) <= 4 and parsed_path[1] == "bin": return "System"
+        elif [parsed_path[0], parsed_path[1], parsed_path[2]] == ["usr", "lib", "jvm"]: return path
+
+    def update_java_memory_dedicated(args: List[str], alloc: int) -> List[str]:
+
+        for arg in [arg for arg in args if isinstance(arg, str)]:
+            if arg.startswith("-Xmx") and arg.find("M") != -1 and arg.index("M") == len(arg) - 1:
+                new_arg = "-Xmx" + str(alloc) + "M"
+                args.insert(args.index(arg), new_arg)
+                args.remove(arg)
+        
+        if not os.path.exists(constants.LINUX_HOME.value + "/Nox Launcher/settings/settings.json"): Linux.config()
+
+        with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/settings.json", "r") as f:
+
+            settings = json.load(f)
+            settings["java"]["args"] = args
+
+            with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/settings.json", "w") as f:
+                json.dump(settings, f, indent= 4)
+
+        return args
+    
+    def update_java_path(path: str) -> None:
+        
+        if not os.path.exists(constants.LINUX_HOME.value + "/Nox Launcher/settings/settings.json"): Linux.config()
+
+        with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/settings.json", "r") as f:
+
+            settings = json.load(f)
+            settings["java"]["path"] = path
+
+            with open(constants.LINUX_HOME.value + "/Nox Launcher/settings/settings.json", "w") as f:
+                json.dump(settings, f, indent= 4)
