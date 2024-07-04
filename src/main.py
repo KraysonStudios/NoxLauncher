@@ -14,7 +14,7 @@ if __name__ == "__main__":
 
     def main(page: flet.Page) -> None:
 
-        Config.config()
+        Config.check()
 
         page.title = "Nox Launcher"
 
