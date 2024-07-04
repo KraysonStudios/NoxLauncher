@@ -596,7 +596,30 @@ class AccountManager:
 
         match platform.system():
             case "Windows":
-                ...
+                if not os.path.exists(constants.WINDOWS_HOME.value + "/Nox Launcher/settings/profiles/profiles.json"): Config.check()
+
+                with open(constants.WINDOWS_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "r") as f:
+                    profiles = json.load(f)
+
+                    if not "profiles" in profiles:
+                        profiles["profiles"] = {}
+                        with open(constants.WINDOWS_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "w") as f:
+                            json.dump(profiles, f, indent= 4)
+
+                    elif not isinstance(profiles["profiles"], dict):
+                        profiles["profiles"] = {}
+                        with open(constants.WINDOWS_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "w") as f:
+                            json.dump(profiles, f, indent= 4)
+
+                    if len(profiles["profiles"]) > 0 and "default" in profiles["profiles"]:
+
+                        if not isinstance(profiles["profiles"]["default"], dict): return AccountManager.build_default_offline(profiles)
+                        elif "type" not in profiles["profiles"]["default"]: return AccountManager.build_default_offline(profiles)
+                        elif not isinstance(profiles["profiles"]["default"]["type"], str) or profiles["profiles"]["default"]["type"] != "offline": return AccountManager.build_default_offline(profiles)
+                        elif "selected" not in profiles["profiles"]["default"]: return AccountManager.build_default_offline(profiles)
+                        elif not isinstance(profiles["profiles"]["default"]["selected"], bool): return AccountManager.build_default_offline(profiles)
+                        
+                    return profiles["profiles"]["default"]
             case "Linux":
                 if not os.path.exists(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json"): Config.check()
 
@@ -629,7 +652,50 @@ class AccountManager:
 
         match platform.system():
             case "Windows":
-                ...
+                if not os.path.exists(constants.WINDOWS_HOME.value + "/Nox Launcher/settings/profiles/profiles.json"): Config.check()
+
+                with open(constants.WINDOWS_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "r") as f:
+                    profiles = json.load(f)
+
+                    if not "profiles" in profiles:
+                        profiles["profiles"] = {}
+                        with open(constants.WINDOWS_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "w") as f:
+                            json.dump(profiles, f, indent= 4)
+
+                    elif not isinstance(profiles["profiles"], dict):
+                        profiles["profiles"] = {}
+                        with open(constants.WINDOWS_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "w") as f:
+                            json.dump(profiles, f, indent= 4)
+
+                    if len(profiles["profiles"]) > 0:
+                        for profile in profiles["profiles"].values():
+                            if not isinstance(profile, dict):
+                                continue
+                            elif not "selected" in profile:
+                                profile["selected"] = False
+                                continue
+                            elif profile["selected"] == True:
+                                return profile
+                            
+                    else:
+                        
+                        profiles["profiles"].update({
+                            "default": {
+                                "name": "Default",
+                                "type": "offline",
+                                "selected": True,
+                                "skin": "assets/steve.png"
+                            },
+                            "premium": {},
+                            "no_premium": {}
+
+                        })
+
+                        with open(constants.WINDOWS_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "w") as f:
+                            json.dump(profiles, f, indent= 4)
+                            
+                        return profiles["profiles"]["default"]
+                    
             case "Linux":
                 if not os.path.exists(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json"): Config.check()
 
@@ -715,7 +781,35 @@ class AccountManager:
 
         match platform.system():
             case "Windows":
-                ...
+                if not os.path.exists(constants.WINDOWS_HOME.value + "/Nox Launcher/settings/profiles/profiles.json"): Config.check()
+
+                with open(constants.WINDOWS_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "r") as f:
+                    profiles = json.load(f)
+
+                    if "profiles" not in profiles: 
+
+                        profiles["profiles"] = {}
+                        with open(constants.WINDOWS_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "w") as f:
+                            json.dump(profiles, f, indent= 4)
+
+                    elif not isinstance(profiles["profiles"], dict):
+                        profiles["profiles"] = {}
+                        with open(constants.WINDOWS_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "w") as f:
+                            json.dump(profiles, f, indent= 4)
+
+                    if len(profiles["profiles"]) > 0:
+                        for profile in profiles["profiles"].values():
+                            if "name" not in profile or "selected" not in profile:
+                                continue
+                            elif profile["name"] == name:
+                                profile["selected"] = True
+                                with open(constants.WINDOWS_HOME.value + "/Nox Launcher/settings/profiles/profiles.json", "w") as f: 
+                                    json.dump(profiles, f, indent= 4)
+
+                                return profile
+                    
+                    return AccountManager.determinate()
+
             case "Linux":
                 if not os.path.exists(constants.LINUX_HOME.value + "/Nox Launcher/settings/profiles/profiles.json"): Config.check()
 
@@ -772,19 +866,23 @@ class AccountManager:
             scaling_factor= size
         )
 
-        skin.to_isometric_image(perspective).save(f"{constants.LINUX_HOME.value}/Nox Launcher/cache/{name}.png")
+        image_path = f"{constants.LINUX_HOME.value}/Nox Launcher/cache/{name}.png" if platform.system() == "Linux" else f"{constants.WINDOWS_HOME.value}/Nox Launcher/cache/{name}.png"
+
+        skin.to_isometric_image(perspective).save(image_path)
 
         if os.path.exists(os.path.dirname(__file__) + "/test.png") or os.path.exists(os.path.dirname(os.path.dirname(__file__)) + "/test.png"):
             os.remove(os.path.dirname(__file__) + "/test.png")
             os.remove(os.path.dirname(os.path.dirname(__file__)) + "/test.png")
 
-        return flet.Image(src= f"{constants.LINUX_HOME.value}/Nox Launcher/cache/{name}.png", width= width, height= height)
+        return flet.Image(src= image_path, width= width, height= height)
     
     def delete_skin_from_cache(name: str) -> None:
 
         match platform.system():
             case "Windows":
-                ...
+                if os.path.exists(f"{constants.WINDOWS_HOME.value}/Nox Launcher/cache/{name}.png"):
+                    os.remove(f"{constants.WINDOWS_HOME.value}/Nox Launcher/cache/{name}.png")
+
             case "Linux":
                 if os.path.exists(f"{constants.LINUX_HOME.value}/Nox Launcher/cache/{name}.png"):
                     os.remove(f"{constants.LINUX_HOME.value}/Nox Launcher/cache/{name}.png")
