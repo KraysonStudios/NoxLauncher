@@ -1,5 +1,4 @@
 import flet
-import platform
 import os
 import json
 import time
