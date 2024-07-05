@@ -2,7 +2,6 @@ import os
 import json
 import jdk
 import itertools
-import jdk.enums
 import psutil
 import flet
 import platform
