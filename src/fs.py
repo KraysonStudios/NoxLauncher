@@ -6,7 +6,6 @@ import psutil
 import flet
 import platform
 
-from constants import constants
 from tkinter.messagebox import showinfo
 from typing import Any, Dict, List
 
@@ -142,7 +141,7 @@ class Config:
 
             if not isinstance(settings["java"]["path"], str):
                 showinfo("Nox Launcher", "Java is not installed. Please be patient while it is being installed. Don`t close app.", type= "ok")
-                jdk.install("21", operating_system= jdk.OperatingSystem.LINUX, arch= jdk.Architecture.X64, path= constants.LINUX_HOME + "/Nox Launcher/java/")
+                jdk.install("21", operating_system= jdk.OperatingSystem.LINUX, arch= jdk.Architecture.X64, path= Config.get_path() + "/Nox Launcher/java/")
 
                 with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "r") as f:
 
