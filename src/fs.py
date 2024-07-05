@@ -2,6 +2,7 @@ import os
 import json
 import jdk
 import itertools
+import jdk.enums
 import psutil
 import flet
 import platform
@@ -141,7 +142,7 @@ class Config:
 
             if not isinstance(settings["java"]["path"], str):
                 showinfo("Nox Launcher", "Java is not installed. Please be patient while it is being installed. Don`t close app.", type= "ok")
-                jdk.install("21", operating_system= jdk.OperatingSystem.LINUX, arch= jdk.Architecture.X64, path= Config.get_path() + "/Nox Launcher/java/")
+                jdk.install("21", operating_system= jdk.OperatingSystem.LINUX if platform.system() == "Linux" else jdk.OperatingSystem.WINDOWS, arch= jdk.Architecture.X64, path= Config.get_path() + "/Nox Launcher/java/")
 
                 with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "r") as f:
 
