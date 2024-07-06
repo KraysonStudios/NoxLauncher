@@ -1,5 +1,6 @@
 import os
 import json
+from sys import path
 import jdk
 import itertools
 import psutil
@@ -184,13 +185,19 @@ class Config:
                         if os.path.exists(Config.get_path() + "/Nox Launcher/java/" + java + "/bin/java") and os.path.isfile(Config.get_path() + "/Nox Launcher/java/" + java + "/bin/java"):
                             options.append(flet.dropdown.Option(Config.get_path() + "/Nox Launcher/java/" + java + "/bin/java"))
                         
-                for java_one, java_two in itertools.zip_longest(
-                    [java for java in os.listdir("C:/Program Files (x86)/") if os.path.exists("C:/Program Files (x86)/" + java + "/bin/java.exe")], 
-                    [java for java in os.listdir("C:/Program Files/") if os.path.exists("C:/Program Files/" + java + "/bin/java.exe")], 
+                for path_one, path_two in itertools.zip_longest(
+                    [path for path in os.listdir('C:/Program Files/') if os.path.isdir('C:/Program Files/' + path)], 
+                    [path for path in os.listdir('C:/Program Files (x86)/') if os.path.isdir('C:/Program Files (x86)/' + path)], 
                     fillvalue= None
-                ): 
-                    if java_one is not None: options.append(flet.dropdown.Option("C:/Program Files (x86)/" + java_one + "/bin/java.exe"))
-                    if java_two is not None: options.append(flet.dropdown.Option("C:/Program Files/" + java_two + "/bin/java.exe"))
+                ):
+                    for java_one, java_two in itertools.zip_longest(
+                        [java for java in os.listdir('C:/Program Files/' + path_one) if os.path.isdir(f'C:/Program Files/{path_one}/{java}/') and java.find('jdk') != -1 and os.path.exists(f'C:/Program Files/{path_one}/{java}/bin/java.exe') and os.path.isfile(f'C:/Program Files/{path_one}/{java}/bin/java.exe')], 
+                        [java for java in os.listdir('C:/Program Files (x86)/' + path_two) if os.path.isdir(f'C:/Program Files (x86)/{path_two}/{java}/') and java.find('jdk') != -1 and os.path.exists(f'C:/Program Files (x86)/{path_two}/{java}/bin/java.exe') and os.path.isfile(f'C:/Program Files (x86)/{path_two}/{java}/bin/java.exe')], 
+                        fillvalue= None
+                    ):
+                        
+                        if java_one is not None: options.append(flet.dropdown.Option(f'C:/Program Files/{path_one}/{java_one}/bin/java.exe'))
+                        if java_two is not None: options.append(flet.dropdown.Option(f'C:/Program Files (x86)/{path_two}/{java_two}/bin/java.exe'))
 
                 return options
             
