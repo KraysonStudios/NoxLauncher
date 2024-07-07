@@ -102,12 +102,6 @@ class NoxLauncher:
                     title.value = "Install Vanilla"
                     title.update()
 
-                    main_row.controls.append(
-
-                        flet.Dropdown(label= "Java source", hint_text= "Select the Java source!", options= Config.get_java_list(), border_color= "#717171", border_radius= 10, label_style= flet.TextStyle(color= "#ffffff"), value= Config.determinate_java_path(JAVA_INFO[0]))
-
-                    )
-
                 case "forge":
 
                     main_row.controls.clear()
