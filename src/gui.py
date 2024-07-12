@@ -64,30 +64,174 @@ class NoxLauncher:
 
     def install(page: flet.Page) -> flet.View:
 
-        fabric_releases: flet.Dropdown = flet.Dropdown(label= "Fabric Releases", hint_text= "Select a release and install it!", options= constants.FABRIC_RELEASES.value, border_color= "#717171", border_radius= 10, label_style= flet.TextStyle(color= "#ffffff"))
-        fabric_snapshots: flet.Dropdown = flet.Dropdown(label= "Fabric Snapshots", hint_text= "Select a snapshot and install it!", options= constants.FABRIC_SNAPSHOTS.value, border_color= "#717171", border_radius= 10, label_style= flet.TextStyle(color= "#ffffff"))
+        global fabric
 
-        vanilla_releases: flet.Dropdown = flet.Dropdown(label= "Vanilla Releases", hint_text= "Select a release and install it!", options= constants.VANILLA_RELEASES.value, border_color= "#717171", border_radius= 10, label_style= flet.TextStyle(color= "#ffffff"))
-        vanilla_snapshots: flet.Dropdown = flet.Dropdown(label= "Vanilla Snapshots", hint_text= "Select a snapshot and install it!", options= constants.VANILLA_SNAPSHOTS.value, border_color= "#717171", border_radius= 10, label_style= flet.TextStyle(color= "#ffffff"))
+        forge, fabric, vanilla = False, False, False
 
-        forge_versions: flet.Dropdown = flet.Dropdown(label= "Forge versions", hint_text= "Select a version and install it!", options= constants.FORGE.value, border_color= "#717171", border_radius= 10, label_style= flet.TextStyle(color= "#ffffff"))
+        FABRIC_RELEASES: flet.Dropdown = flet.Dropdown(label= "Fabric Releases", hint_text= "Select a release and install it!", options= constants.FABRIC_RELEASES.value, border_color= "#717171", border_radius= 10, label_style= flet.TextStyle(color= "#ffffff"))
+        FABRIC_SNAPHOTS: flet.Dropdown = flet.Dropdown(label= "Fabric Snapshots", hint_text= "Select a snapshot and install it!", options= constants.FABRIC_SNAPSHOTS.value, border_color= "#717171", border_radius= 10, label_style= flet.TextStyle(color= "#ffffff"))
 
-        def install_minecraft(event: flet.ControlEvent) -> None:
+        VANILLA_RELEASES: flet.Dropdown = flet.Dropdown(label= "Vanilla Releases", hint_text= "Select a release and install it!", options= constants.VANILLA_RELEASES.value, border_color= "#717171", border_radius= 10, label_style= flet.TextStyle(color= "#ffffff"))
+        VANILLA_SNAPHOTS: flet.Dropdown = flet.Dropdown(label= "Vanilla Snapshots", hint_text= "Select a snapshot and install it!", options= constants.VANILLA_SNAPSHOTS.value, border_color= "#717171", border_radius= 10, label_style= flet.TextStyle(color= "#ffffff"))
+
+        FORGE_VERSIONS: flet.Dropdown = flet.Dropdown(label= "Forge versions", hint_text= "Select a version and install it!", options= constants.FORGE.value, border_color= "#717171", border_radius= 10, label_style= flet.TextStyle(color= "#ffffff"))
+
+        def install_versions(event: flet.ControlEvent) -> None:
+            
+                match (forge, fabric, vanilla):
+
+                    case (True, False, False):
+                        pass
+                    case (False, True, False):
+
+                        if FABRIC_RELEASES.value is None and FABRIC_SNAPHOTS.value is None: 
+                            
+                            BANNER: flet.Banner = flet.Banner(
+                                bgcolor= "#272727",
+                                leading= flet.Icon(name= flet.icons.WARNING_AMBER_ROUNDED, color= flet.colors.YELLOW_400, size= 40),
+                                content= flet.Text(
+                                    value= "Please select a release or snapshot or otherwise leave!",
+                                    color= "#ffffff",
+                                    size= 20,
+                                    font_family= "Minecraft"
+                                ),
+                                actions= [
+                                    flet.TextButton(content= flet.Text("Ok", size= 20, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 150, height= 40, on_click= lambda _: page.close(BANNER))
+                                ]
+                            )
+
+                            page.open(BANNER)
+                            return
+
+                        event.control.disabled = True
+                        event.control.update()
+                        
+                        FABRIC_RELEASES.disabled = True
+                        FABRIC_SNAPHOTS.disabled = True
+
+                        FABRIC_RELEASES.update()
+                        FABRIC_SNAPHOTS.update()
+
+                        back_to_play.disabled = True
+                        back_to_play.update() 
+
+                        BANNER: flet.Banner = flet.Banner(
+                            bgcolor= "#272727",
+                            leading= flet.Icon(name= flet.icons.DOWNLOADING, color= "#148b47", size= 40),
+                            content= flet.Text(
+                                value= f"Fabric versions to install:  {FABRIC_RELEASES.value if FABRIC_RELEASES.value is not None else ''} {'and ' + FABRIC_SNAPHOTS.value if FABRIC_SNAPHOTS.value is not None else ''}",
+                                color= "#ffffff",
+                                size= 20,
+                                font_family= "Minecraft"
+                            ),
+                            actions= [
+                                flet.TextButton(content= flet.Text("Ok", size= 20, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 150, height= 40, on_click= lambda _: page.close(BANNER))
+                            ]
+                        )
+
+                        page.open(BANNER)
+
+                        INSTALLING_INFO: flet.AlertDialog = flet.AlertDialog(
+                            modal= True,
+                            icon= flet.Image(src= "fabric.png", width= 50, height= 50, filter_quality= flet.FilterQuality.HIGH),
+                            title= flet.Container(
+                                content= flet.Text("Installing...", size= 25, font_family= "Minecraft"),
+                                alignment= flet.alignment.center,
+                                expand_loose= True
+                            ),
+                            bgcolor= "#272727",
+                            content= flet.Text("Progress:", size= 20, font_family= "Minecraft"),
+                            on_dismiss= lambda _: None
+                        )
+
+                        page.open(INSTALLING_INFO)
+
+                        match (FABRIC_RELEASES.value, FABRIC_SNAPHOTS.value):
+
+                            case (None, None):
+                                pass
+                            case (None, _):
+                                pass
+                            case (_, None):
+                                pass
+                            case (_, _):
+                                pass
+
+                    case (False, False, True):
+                        pass
+
+        INSTALL_BUTTON: flet.TextButton = flet.TextButton(content= flet.Text("Install", size= 20, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 190, height= 45, on_click= install_versions)
+        
+        def select_versions(event: flet.ControlEvent) -> None:
 
             match event.control.key:
 
                 case "fabric":
 
+                    global fabric
+                    fabric = True
+
                     main_row.controls.clear()
                     main_row.update()
 
                     main_container.width = 500
-                    main_container.height = 500
+                    main_container.height = 460
                     
                     main_container.update()
 
-                    title.value = "Install Fabric"
+                    title.value = "Fabric"
                     title.update()
+
+                    title_row.controls.remove(title_icon)
+                    title_row.controls.insert(0, flet.Image(src= "fabric.png", width= 50, height= 50, filter_quality= flet.FilterQuality.HIGH))   
+
+                    title_row.update()
+
+                    main_column.controls.remove(main_row)
+
+                    main_column.controls.append(
+                        flet.Row(
+                            controls= [
+                                flet.Container(content= 
+                                    flet.Text("Fabric Releases", size= 25, font_family= "Minecraft"), 
+                                    expand_loose= True,
+                                    alignment= flet.alignment.center, 
+                                    padding= flet.padding.all(20)
+                                )
+
+                            ],
+                            expand_loose= True,
+                            alignment= flet.MainAxisAlignment.CENTER
+                        )
+                    )
+                    main_column.controls.append(FABRIC_RELEASES)
+
+                    main_column.controls.append(
+                        flet.Row(
+                            controls= [
+                                flet.Container(content= 
+                                    flet.Text("Fabric Snapshots", size= 25, font_family= "Minecraft"), 
+                                    expand_loose= True,
+                                    alignment= flet.alignment.center, 
+                                    padding= flet.padding.all(20)
+                                )
+
+                            ],
+                            expand_loose= True,
+                            alignment= flet.MainAxisAlignment.CENTER
+                        )
+                    )
+                    main_column.controls.append(FABRIC_SNAPHOTS)
+
+                    main_column.controls.append(
+                        flet.Container(
+                            content= INSTALL_BUTTON,
+                            alignment= flet.alignment.center,
+                            padding= flet.padding.all(30)
+                        )
+                    )
+
+                    main_column.update()
 
                 case "vanilla":
 
@@ -115,7 +259,19 @@ class NoxLauncher:
                     title.value = "Install Forge"
                     title.update()
 
+        title_icon: flet.Icon = flet.Icon(name= flet.icons.DOWNLOAD, color= "#717171", size= 30)
         title: flet.Text = flet.Text("Install versions", size= 30, color= "#ffffff", font_family= "Minecraft")
+
+        title_row: flet.Row = flet.Row(
+            controls= [
+                title_icon,
+                flet.Container(content= title, expand_loose= True, alignment= flet.alignment.center)
+            ],
+            spacing= 15,
+            expand_loose= True,
+            alignment= flet.MainAxisAlignment.CENTER,
+            vertical_alignment= flet.CrossAxisAlignment.CENTER
+        )
 
         main_row: flet.Row = flet.Row(
             controls= [
@@ -124,7 +280,7 @@ class NoxLauncher:
                     expand= True,
                     content= flet.ElevatedButton(
                         content= flet.Image(src= "fabric.png", width= 90, height= 90, filter_quality= flet.FilterQuality.HIGH), 
-                        width= 120, height= 120, bgcolor= '#272727', key= "fabric", on_click= install_minecraft,
+                        width= 120, height= 120, bgcolor= '#272727', key= "fabric", on_click= select_versions,
                         style= flet.ButtonStyle(side= flet.BorderSide(width= 2, color= "#148b47"))
                     ),
                     alignment= flet.alignment.center
@@ -134,7 +290,7 @@ class NoxLauncher:
                     expand= True,
                     content= flet.ElevatedButton(
                         content= flet.Image(src= "vanilla.png", width= 90, height= 90, filter_quality= flet.FilterQuality.HIGH), 
-                        width= 120, height= 120, bgcolor= '#272727', key= "vanilla", on_click= install_minecraft,
+                        width= 120, height= 120, bgcolor= '#272727', key= "vanilla", on_click= select_versions,
                         style= flet.ButtonStyle(side= flet.BorderSide(width= 2, color= "#148b47"))
                     ),
                     alignment= flet.alignment.center
@@ -144,7 +300,7 @@ class NoxLauncher:
                     expand= True,
                     content= flet.ElevatedButton(
                         content= flet.Image(src= "forge.png", width= 90, height= 90, filter_quality= flet.FilterQuality.HIGH), 
-                        width= 120, height= 120, bgcolor= '#272727', key= "forge", on_click= install_minecraft,
+                        width= 120, height= 120, bgcolor= '#272727', key= "forge", on_click= select_versions,
                         style= flet.ButtonStyle(side= flet.BorderSide(width= 2, color= "#148b47"))
                     ),
                     alignment= flet.alignment.center
@@ -156,6 +312,13 @@ class NoxLauncher:
             expand_loose= True
         )
 
+        main_column: flet.Column = flet.Column(expand= True, expand_loose= True, spacing= 5,
+            controls= [
+                title_row,
+                main_row
+            ]
+        )
+
         main_container: flet.Container = flet.Container(
             width= 500,
             height= 250,
@@ -163,22 +326,10 @@ class NoxLauncher:
             padding= flet.padding.all(20),
             bgcolor= "#272727",
             border_radius= 20,
-            content= flet.Column(expand= True, expand_loose= True, spacing= 5,
-                controls= [
-                    flet.Row(
-                        controls= [
-                            flet.Icon(name= flet.icons.DOWNLOAD, color= "#717171", size= 30),
-                            flet.Container(content= title, expand_loose= True, alignment= flet.alignment.center)
-                        ],
-                        spacing= 15,
-                        expand_loose= True,
-                        alignment= flet.MainAxisAlignment.CENTER,
-                        vertical_alignment= flet.CrossAxisAlignment.CENTER
-                    ),
-                    main_row
-                ]
-            )
+            content= main_column
         )
+
+        back_to_play: flet.TextButton = flet.TextButton(content= flet.Text("Back to play", size= 20, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 190, height= 45, on_click= lambda _: page.go("/play"))
 
         return flet.View(
             controls= [
@@ -188,7 +339,7 @@ class NoxLauncher:
                     content= flet.Row(
                         controls= [
                             flet.Icon(name= flet.icons.ARROW_BACK, color= "#717171", size= 40),
-                            flet.TextButton(content= flet.Text("Back to play", size= 20, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 190, height= 45, on_click= lambda _: page.go("/play")),
+                            back_to_play
                         ],
                         alignment= flet.MainAxisAlignment.START,
                         vertical_alignment= flet.CrossAxisAlignment.CENTER,

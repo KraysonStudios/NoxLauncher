@@ -1,6 +1,5 @@
 import os
 import json
-from sys import path
 import jdk
 import itertools
 import psutil
@@ -230,8 +229,6 @@ class Config:
 
         match platform.system():
             case "Windows": 
-                
-                # HAY QUE ARREGLAR ESTO EN WINDOWS.
                 
                 parsed_path: List[str] = [path for path in path.split("\\") if path != ""]
 
