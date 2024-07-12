@@ -7,7 +7,7 @@ import minecraft_launcher_lib
 from fs import Config
 from skinlib.skin import Skin, Perspective
 from constants import constants
-from typing import Any, Dict, List
+from typing import Any, Callable, Dict, List
 from PIL import Image
 
 class NoxLauncher: 
@@ -64,7 +64,10 @@ class NoxLauncher:
 
     def install(page: flet.Page) -> flet.View:
 
+
         global fabric
+        global vanilla
+        global forge
 
         forge, fabric, vanilla = False, False, False
 
@@ -77,88 +80,156 @@ class NoxLauncher:
         FORGE_VERSIONS: flet.Dropdown = flet.Dropdown(label= "Forge versions", hint_text= "Select a version and install it!", options= constants.FORGE.value, border_color= "#717171", border_radius= 10, label_style= flet.TextStyle(color= "#ffffff"))
 
         def install_versions(event: flet.ControlEvent) -> None:
-            
-                match (forge, fabric, vanilla):
 
-                    case (True, False, False):
-                        pass
-                    case (False, True, False):
+            def ok_install(_: flet.ControlEvent) -> None:
 
-                        if FABRIC_RELEASES.value is None and FABRIC_SNAPHOTS.value is None: 
-                            
-                            BANNER: flet.Banner = flet.Banner(
-                                bgcolor= "#272727",
-                                leading= flet.Icon(name= flet.icons.WARNING_AMBER_ROUNDED, color= flet.colors.YELLOW_400, size= 40),
-                                content= flet.Text(
-                                    value= "Please select a release or snapshot or otherwise leave!",
-                                    color= "#ffffff",
-                                    size= 20,
-                                    font_family= "Minecraft"
-                                ),
-                                actions= [
-                                    flet.TextButton(content= flet.Text("Ok", size= 20, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 150, height= 40, on_click= lambda _: page.close(BANNER))
-                                ]
-                            )
+                def close() -> None:
 
-                            page.open(BANNER)
-                            return
+                    page.close(INSTALLING_INFO)
+                    page.go("/play")
 
-                        event.control.disabled = True
-                        event.control.update()
-                        
-                        FABRIC_RELEASES.disabled = True
-                        FABRIC_SNAPHOTS.disabled = True
+                    BANNER: flet.Banner = flet.Banner(
+                        bgcolor= "#272727",
+                        leading= flet.Icon(name= flet.icons.CHECK, color= '#148b47', size= 40),
+                        content= flet.Text(
+                            value= "New minecraft version's has been installed!",
+                            color= "#ffffff",
+                            size= 20,
+                            font_family= "Minecraft"
+                        ),
+                        actions= [
+                            flet.TextButton(content= flet.Text("Ok", size= 20, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 150, height= 40, on_click= lambda _: page.close(BANNER))
+                        ]
+                    )
 
-                        FABRIC_RELEASES.update()
-                        FABRIC_SNAPHOTS.update()
+                    page.open(BANNER)
 
-                        back_to_play.disabled = True
-                        back_to_play.update() 
+                page.close(BANNER_INFO)
+                page.update()
 
-                        BANNER: flet.Banner = flet.Banner(
-                            bgcolor= "#272727",
-                            leading= flet.Icon(name= flet.icons.DOWNLOADING, color= "#148b47", size= 40),
-                            content= flet.Text(
-                                value= f"Fabric versions to install:  {FABRIC_RELEASES.value if FABRIC_RELEASES.value is not None else ''} {'and ' + FABRIC_SNAPHOTS.value if FABRIC_SNAPHOTS.value is not None else ''}",
-                                color= "#ffffff",
-                                size= 20,
-                                font_family= "Minecraft"
-                            ),
-                            actions= [
-                                flet.TextButton(content= flet.Text("Ok", size= 20, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 150, height= 40, on_click= lambda _: page.close(BANNER))
-                            ]
-                        )
+                event.control.disabled = True
+                event.control.update()
 
-                        page.open(BANNER)
+                if fabric:
+                    FABRIC_RELEASES.disabled = True
+                    FABRIC_SNAPHOTS.disabled = True
 
-                        INSTALLING_INFO: flet.AlertDialog = flet.AlertDialog(
-                            modal= True,
-                            icon= flet.Image(src= "fabric.png", width= 50, height= 50, filter_quality= flet.FilterQuality.HIGH),
-                            title= flet.Container(
-                                content= flet.Text("Installing...", size= 25, font_family= "Minecraft"),
-                                alignment= flet.alignment.center,
-                                expand_loose= True
-                            ),
-                            bgcolor= "#272727",
-                            content= flet.Text("Progress:", size= 20, font_family= "Minecraft"),
-                            on_dismiss= lambda _: None
-                        )
+                    FABRIC_RELEASES.update()
+                    FABRIC_SNAPHOTS.update()
+                elif vanilla:
+                    VANILLA_RELEASES.disabled = True
+                    VANILLA_SNAPHOTS.disabled = True
 
-                        page.open(INSTALLING_INFO)
+                    VANILLA_RELEASES.update()
+                    VANILLA_SNAPHOTS.update()
+                elif forge:
+                    FORGE_VERSIONS.disabled = True
+                    FORGE_VERSIONS.update()
 
-                        match (FABRIC_RELEASES.value, FABRIC_SNAPHOTS.value):
+                back_to_play.disabled = True
+                back_to_play.update() 
 
-                            case (None, None):
-                                pass
-                            case (None, _):
-                                pass
-                            case (_, None):
-                                pass
-                            case (_, _):
-                                pass
+                VERSIONS: flet.Text | flet.Container = flet.Text("Waiting for user...", size= 20, font_family= "Minecraft", color= "#ffffff") if (fabric and FABRIC_RELEASES.value is not None) or (vanilla and VANILLA_RELEASES.value is not None) or (forge and FORGE_VERSIONS.value is not None) else flet.Container()
+                SNAPSHOTS: flet.Text | flet.Container = flet.Text("Waiting for user...", size= 20, font_family= "Minecraft", color= "#ffffff") if (fabric and FABRIC_SNAPHOTS.value is not None) or (vanilla and VANILLA_SNAPHOTS.value is not None) else flet.Container()
 
-                    case (False, False, True):
-                        pass
+                VERSION_DATA: Dict[str, str] | None = {
+                    "type": "fabric release" if (FABRIC_RELEASES.value is not None) else "vanilla release" if (VANILLA_RELEASES.value is not None) else "forge version" if (FORGE_VERSIONS.value is not None) else None,
+                    "version": FABRIC_RELEASES.value if (FABRIC_RELEASES.value is not None) else VANILLA_RELEASES.value if (VANILLA_RELEASES.value is not None) else FORGE_VERSIONS.value if (FORGE_VERSIONS.value is not None) else None
+                } if (FABRIC_RELEASES.value is not None) or (VANILLA_RELEASES.value is not None) or (FORGE_VERSIONS.value is not None) else None
+
+                SNAPSHOT_DATA: Dict[str, str] | None = {
+                    "type": "fabric snapshot" if (FABRIC_SNAPHOTS.value is not None) else "vanilla snapshot" if (VANILLA_SNAPHOTS.value is not None) else None,
+                    "version": FABRIC_SNAPHOTS.value if (FABRIC_SNAPHOTS.value is not None) else VANILLA_SNAPHOTS.value if (VANILLA_SNAPHOTS.value is not None) else None
+                } if (FABRIC_SNAPHOTS.value is not None) or (VANILLA_SNAPHOTS.value is not None) else None
+
+                INSTALLING_INFO: flet.AlertDialog = flet.AlertDialog(
+                    modal= True,
+                    icon= flet.Icon(name= flet.icons.DOWNLOADING_ROUNDED, color= '#148b47', size= 40),
+                    title= flet.Container(
+                        content= flet.Text("Installing resources..", size= 25, font_family= "Minecraft"),
+                        alignment= flet.alignment.center,
+                        expand_loose= True
+                    ),
+                    bgcolor= "#272727",
+                    content= flet.Column(
+                        controls= [
+                            flet.Column(
+                                controls= [
+                                    VERSIONS,
+                                    flet.ProgressBar(expand_loose= True, color= "#148b47")
+                                ],
+                                expand_loose= True,
+                                alignment= flet.MainAxisAlignment.CENTER,
+                                horizontal_alignment= flet.CrossAxisAlignment.CENTER,
+                                spacing= 10
+                            ) if (FABRIC_RELEASES.value is not None) or (VANILLA_RELEASES.value is not None) or (FORGE_VERSIONS.value is not None) else flet.Container(),
+                            flet.Column(
+                                controls= [
+                                    SNAPSHOTS,
+                                    flet.ProgressBar(expand_loose= True, color= "#148b47")
+                                ],
+                                expand_loose= True,
+                                alignment= flet.MainAxisAlignment.CENTER,
+                                horizontal_alignment= flet.CrossAxisAlignment.CENTER,
+                                spacing= 10
+                            ) if (FABRIC_SNAPHOTS.value is not None) or (VANILLA_SNAPHOTS.value is not None) else flet.Container()
+                        ],
+                        spacing= 20,
+                        height= 160,
+                        width= 600,
+                        alignment= flet.MainAxisAlignment.CENTER,
+                        horizontal_alignment= flet.CrossAxisAlignment.CENTER
+                    ),
+                    on_dismiss= lambda _: None
+                )
+
+                page.open(INSTALLING_INFO)
+
+                MinecraftDownloader([VERSION_DATA, SNAPSHOT_DATA], [VERSIONS, SNAPSHOTS], close)
+
+            if (fabric and FABRIC_RELEASES.value is None and FABRIC_SNAPHOTS.value is None) or (vanilla and VANILLA_RELEASES.value is None and VANILLA_SNAPHOTS.value is None) or (forge and FORGE_VERSIONS.value is None): 
+    
+                BANNER: flet.Banner = flet.Banner(
+                    bgcolor= "#272727",
+                    leading= flet.Icon(name= flet.icons.WARNING_AMBER_ROUNDED, color= flet.colors.YELLOW_400, size= 40),
+                    content= flet.Text(
+                        value= "Please select a release or snapshot or otherwise leave!",
+                        color= "#ffffff",
+                        size= 20,
+                        font_family= "Minecraft"
+                    ),
+                    actions= [
+                        flet.TextButton(content= flet.Text("Ok", size= 20, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 150, height= 40, on_click= lambda _: page.close(BANNER))
+                    ]
+                )
+
+                page.open(BANNER)
+                return
+
+            banner_info_text: str = ''
+
+            if fabric:
+                banner_info_text = f"The Next versions of Fabric to install:  {FABRIC_RELEASES.value if FABRIC_RELEASES.value is not None else ''}{f' and {FABRIC_SNAPHOTS.value}' if FABRIC_SNAPHOTS.value is not None else ''}" 
+            elif vanilla:
+                banner_info_text = f"The Next versions of Vanilla to install:  {VANILLA_RELEASES.value if VANILLA_RELEASES.value is not None else ''}{f' and {VANILLA_SNAPHOTS.value}' if VANILLA_SNAPHOTS.value is not None else ''}" 
+            elif forge:
+                banner_info_text = f"The next version of Forge to install: {FORGE_VERSIONS.value}"
+
+            BANNER_INFO: flet.Banner = flet.Banner(
+                bgcolor= "#272727",
+                leading= flet.Icon(name= flet.icons.DOWNLOADING, color= "#148b47", size= 40),
+                content= flet.Text(
+                    value= banner_info_text,
+                    color= "#ffffff",
+                    size= 20,
+                    font_family= "Minecraft"
+                ),
+                actions= [
+                    flet.TextButton(content= flet.Text("Ok", size= 20, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 150, height= 40, on_click= ok_install)
+                ]
+            )
+
+            page.open(BANNER_INFO)                
 
         INSTALL_BUTTON: flet.TextButton = flet.TextButton(content= flet.Text("Install", size= 20, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 190, height= 45, on_click= install_versions)
         
@@ -235,16 +306,70 @@ class NoxLauncher:
 
                 case "vanilla":
 
+                    global vanilla
+                    vanilla = True
+
                     main_row.controls.clear()
                     main_row.update()
 
                     main_container.width = 500
-                    main_container.height = 500
+                    main_container.height = 460
                     
                     main_container.update()
 
-                    title.value = "Install Vanilla"
+                    title.value = "Vanilla"
                     title.update()
+
+                    title_row.controls.remove(title_icon)
+                    title_row.controls.insert(0, flet.Image(src= "vanilla.png", width= 50, height= 50, filter_quality= flet.FilterQuality.HIGH))   
+
+                    title_row.update()
+
+                    main_column.controls.remove(main_row)
+
+                    main_column.controls.append(
+                        flet.Row(
+                            controls= [
+                                flet.Container(content= 
+                                    flet.Text("Vanilla Releases", size= 25, font_family= "Minecraft"), 
+                                    expand_loose= True,
+                                    alignment= flet.alignment.center, 
+                                    padding= flet.padding.all(20)
+                                )
+
+                            ],
+                            expand_loose= True,
+                            alignment= flet.MainAxisAlignment.CENTER
+                        )
+                    )
+                    main_column.controls.append(VANILLA_RELEASES)
+
+                    main_column.controls.append(
+                        flet.Row(
+                            controls= [
+                                flet.Container(content= 
+                                    flet.Text("Vanilla Snapshots", size= 25, font_family= "Minecraft"), 
+                                    expand_loose= True,
+                                    alignment= flet.alignment.center, 
+                                    padding= flet.padding.all(20)
+                                )
+
+                            ],
+                            expand_loose= True,
+                            alignment= flet.MainAxisAlignment.CENTER
+                        )
+                    )
+                    main_column.controls.append(VANILLA_SNAPHOTS)
+
+                    main_column.controls.append(
+                        flet.Container(
+                            content= INSTALL_BUTTON,
+                            alignment= flet.alignment.center,
+                            padding= flet.padding.all(30)
+                        )
+                    )
+
+                    main_column.update()
 
                 case "forge":
 
@@ -862,6 +987,63 @@ class NoxLauncher:
             ), 
             
         padding= 0)
+        
+class MinecraftDownloader:
+
+    def __init__(self, versions: List[Dict[str, Any]], controls: List[flet.Text], close: Callable) -> None:
+
+        self.versions: List[Dict[str, Any]] = versions
+        self.controls: List[flet.Text] = controls
+        self.close: Callable = close
+
+        self.downloader(self.versions, self.controls)
+
+    def downloader(self, versions: List[Dict[str, Any]], controls: List[flet.Text]) -> None: 
+
+        def setStatus(status: str) -> None:
+
+            controls[n].value = status
+            controls[n].size = 15
+            controls[n].update()
+
+        n: int = 0
+        
+        for version in versions:
+
+            if version is None or controls[n] is None: 
+                n += 1
+                continue
+
+            match version["type"]:
+                case "fabric release" | "fabric snapshot":
+                    controls[n].value = f"Downloading Fabric {version['version']}..."
+                    controls[n].update()
+
+                    time.sleep(3)
+
+                    minecraft_launcher_lib.fabric.install_fabric(
+                        version["version"], 
+                        f"{Config.get_path()}/Nox Launcher/",
+                        callback= {"setStatus": setStatus}
+                    )
+
+
+                case "vanilla release" | "vanilla snapshot":
+                    controls[n].value = f"Downloading Vanilla {version['version']}..."
+                    controls[n].update()
+
+                    time.sleep(3)
+
+                    minecraft_launcher_lib.install.install_minecraft_version(
+                        version["version"], 
+                        f"{Config.get_path()}/Nox Launcher/",
+                        {"setStatus": setStatus}
+                    )
+                case "forge version": ...
+
+            n += 1
+
+        self.close()
         
 class AccountManager:
 

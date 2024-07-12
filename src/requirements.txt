@@ -1,4 +1,4 @@
-flet==0.23.2
+flet
 minecraft-launcher-lib
 install-jdk
 wget
