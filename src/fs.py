@@ -6,12 +6,13 @@ import psutil
 import flet
 import platform
 
+from functools import cache
 from tkinter.messagebox import showinfo
 from typing import Any, Dict, List
 
 class Config:
 
-    def check() -> None:
+    def repair() -> None:
 
         if not os.path.exists(Config.get_path() + "/Nox Launcher"):
             os.mkdir(Config.get_path() + "/Nox Launcher/")
@@ -140,7 +141,7 @@ class Config:
             settings = json.load(f)
 
             if not isinstance(settings["java"]["path"], str):
-                showinfo("Nox Launcher", "Java is not installed. Please be patient while it is being installed. Don`t close app.", type= "ok")
+                showinfo("Nox Launcher", "Java is not installed. Please be patient while it is being installed. Don`t close app internally.", type= "ok")
                 jdk.install("21", operating_system= jdk.OperatingSystem.LINUX if platform.system() == "Linux" else jdk.OperatingSystem.WINDOWS, arch= jdk.Architecture.X64, path= Config.get_path() + "/Nox Launcher/java/")
 
                 with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "r") as f:
@@ -148,7 +149,7 @@ class Config:
                     settings = json.load(f)
                     settings["java"].update({
                         "path": jdk.shutil.which("java"),
-                        "args": ["-Xms1G", f"-Xmx{Config.get_memory_ram()}M"]
+                        "args": ["-Xms1G", f"-Xmx{Config.get_idiomatic_alloc_ram()}M"]
                     })
 
                     with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "w") as f:
@@ -168,12 +169,18 @@ class Config:
                         
     def get_memory_ram() -> int: return round(0.40 * psutil.virtual_memory().total / (1024 ** 2))
 
+    def get_idiomatic_alloc_ram() -> int:
+        memory_available: int = Config.get_memory_ram()
+
+        if memory_available <= 2048: return memory_available
+        else: return round(memory_available / 2) if not round(memory_available / 2) <= 2048 else memory_available
+
     def get_java_list() -> List[flet.dropdown.Option]:
 
         match platform.system():
             case "Windows": 
 
-                if not os.path.exists(Config.get_path() + "/Nox Launcher/java/"): Config.check()
+                if not os.path.exists(Config.get_path() + "/Nox Launcher/java/"): Config.repair()
 
                 options: List[flet.dropdown.Option] = [flet.dropdown.Option("System")]
 
@@ -202,7 +209,7 @@ class Config:
             
             case "Linux":
 
-                if not os.path.exists(Config.get_path() + "/Nox Launcher/java/"): Config.check()
+                if not os.path.exists(Config.get_path() + "/Nox Launcher/java/"): Config.repair()
 
                 options: List[flet.dropdown.Option] = [flet.dropdown.Option("System")]
 
@@ -219,6 +226,45 @@ class Config:
                         options.append(flet.dropdown.Option("/usr/lib/jvm/" + java + "/bin/java"))
 
                 return options
+            
+    def get_versions_available() -> List[flet.dropdown.Option]:
+
+        if not os.path.exists(Config.get_path() + "/Nox Launcher/"): Config.repair()
+        elif not os.path.exists(Config.get_path() + "/Nox Launcher/versions/"): return [flet.dropdown.Option("Install an minecraft version!")]
+
+        versions: List[flet.dropdown.Option] = []
+
+        for version in [version for version in os.listdir(Config.get_path() + "/Nox Launcher/versions/") if os.path.isdir(Config.get_path() + "/Nox Launcher/versions/" + version)]:
+
+            if os.path.exists(Config.get_path() + "/Nox Launcher/versions/" + f"{version}/{version}.jar") and os.path.isfile(Config.get_path() + "/Nox Launcher/versions/" + f"{version}/{version}.jar"):
+                versions.append(flet.dropdown.Option(version))
+
+        if len(versions) == 0: return [flet.dropdown.Option("Install an minecraft version!")]
+        else: return versions
+            
+    def get_close_on_play() -> bool: 
+
+        if not os.path.exists(Config.get_path() + "/Nox Launcher/settings/settings.json"): Config.repair()
+
+        with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "r") as f:
+
+            settings = json.load(f)
+
+            if "close_on_play" not in settings: return False
+            elif not isinstance(settings["close_on_play"], bool): return False
+            else: return settings["close_on_play"]
+
+    def update_close_on_play(value: bool) -> None:
+
+        if not os.path.exists(Config.get_path() + "/Nox Launcher/settings/settings.json"): Config.repair()
+
+        with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "r") as f:
+
+            settings = json.load(f)
+            settings["close_on_play"] = value
+
+            with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "w") as f:
+                json.dump(settings, f, indent= 4)
     
     def parse_memory(args: List[str]) -> int: 
         for arg in [arg for arg in args if isinstance(arg, str)]:
@@ -241,7 +287,7 @@ class Config:
                 if len(parsed_path) <= 4 and parsed_path[1] == "bin": return "System"
                 elif [parsed_path[0], parsed_path[1], parsed_path[2]] == ["usr", "lib", "jvm"]: return path
 
-    def update_java_memory_dedicated(args: List[str], alloc: int) -> List[str]:
+    def update_java_memory_allocated(args: List[str], alloc: int) -> List[str]:
 
         for arg in [arg for arg in args if isinstance(arg, str)]:
             if arg.startswith("-Xmx") and arg.find("M") != -1 and arg.index("M") == len(arg) - 1:
@@ -249,7 +295,7 @@ class Config:
                 args.insert(args.index(arg), new_arg)
                 args.remove(arg)
 
-        if not os.path.exists(Config.get_path() + "/Nox Launcher/settings/settings.json"): Config.check()
+        if not os.path.exists(Config.get_path() + "/Nox Launcher/settings/settings.json"): Config.repair()
 
         with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "r") as f:
 
@@ -263,7 +309,7 @@ class Config:
     
     def update_java_path(path: str) -> None:
     
-        if not os.path.exists(Config.get_path() + "/Nox Launcher/settings/settings.json"): Config.check()
+        if not os.path.exists(Config.get_path() + "/Nox Launcher/settings/settings.json"): Config.repair()
 
         with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "r") as f:
 
@@ -273,6 +319,7 @@ class Config:
             with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "w") as f:
                 json.dump(settings, f, indent= 4)
 
+    @cache
     def get_path() -> str:
         match platform.system():
             case "Windows": return os.environ.get("APPDATA")

@@ -1,4 +1,3 @@
-import os
 import flet
 import minecraft_launcher_lib
 
