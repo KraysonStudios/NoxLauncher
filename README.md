@@ -2,7 +2,7 @@
    <img alt= "Logo" src= "https://github.com/KraysonStudios/NoxLauncher-Dev/blob/master/src/assets/icon.png" style= "width: 700px; height: 400px;">
 </p>
 
-# NoxLauncher-Dev
+# NoxLauncher
 
 The official repository of development for main application of **Nox Launcher**.
 
