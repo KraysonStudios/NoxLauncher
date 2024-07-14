@@ -72,13 +72,13 @@ class NoxLauncher:
 
         forge, fabric, vanilla = False, False, False
 
-        FABRIC_RELEASES: flet.Dropdown = flet.Dropdown(label= "Fabric Releases", hint_text= "Select a release and install it!", options= constants.FABRIC_RELEASES.value, border_color= "#717171", border_radius= 10, label_style= flet.TextStyle(color= "#ffffff"))
-        FABRIC_SNAPHOTS: flet.Dropdown = flet.Dropdown(label= "Fabric Snapshots", hint_text= "Select a snapshot and install it!", options= constants.FABRIC_SNAPSHOTS.value, border_color= "#717171", border_radius= 10, label_style= flet.TextStyle(color= "#ffffff"))
+        FABRIC_RELEASES: flet.Dropdown = flet.Dropdown(label= "Fabric Releases", hint_text= "Select a release and install it!", options= constants.FABRIC_RELEASES.value, border_color= "#717171", border_radius= 10, border_width= 2, label_style= flet.TextStyle(color= "#ffffff"))
+        FABRIC_SNAPHOTS: flet.Dropdown = flet.Dropdown(label= "Fabric Snapshots", hint_text= "Select a snapshot and install it!", options= constants.FABRIC_SNAPSHOTS.value, border_color= "#717171", border_radius= 10, border_width= 2, label_style= flet.TextStyle(color= "#ffffff"))
 
-        VANILLA_RELEASES: flet.Dropdown = flet.Dropdown(label= "Vanilla Releases", hint_text= "Select a release and install it!", options= constants.VANILLA_RELEASES.value, border_color= "#717171", border_radius= 10, label_style= flet.TextStyle(color= "#ffffff"))
-        VANILLA_SNAPHOTS: flet.Dropdown = flet.Dropdown(label= "Vanilla Snapshots", hint_text= "Select a snapshot and install it!", options= constants.VANILLA_SNAPSHOTS.value, border_color= "#717171", border_radius= 10, label_style= flet.TextStyle(color= "#ffffff"))
+        VANILLA_RELEASES: flet.Dropdown = flet.Dropdown(label= "Vanilla Releases", hint_text= "Select a release and install it!", options= constants.VANILLA_RELEASES.value, border_color= "#717171", border_radius= 10, border_width= 2, label_style= flet.TextStyle(color= "#ffffff"))
+        VANILLA_SNAPHOTS: flet.Dropdown = flet.Dropdown(label= "Vanilla Snapshots", hint_text= "Select a snapshot and install it!", options= constants.VANILLA_SNAPSHOTS.value, border_color= "#717171", border_radius= 10, border_width= 2, label_style= flet.TextStyle(color= "#ffffff"))
 
-        FORGE_VERSIONS: flet.Dropdown = flet.Dropdown(label= "Forge versions", hint_text= "Select a version and install it!", options= constants.FORGE.value, border_color= "#717171", border_radius= 10, label_style= flet.TextStyle(color= "#ffffff"))
+        FORGE_VERSIONS: flet.Dropdown = flet.Dropdown(label= "Forge versions", hint_text= "Select a version and install it!", options= constants.FORGE.value, border_color= "#717171", border_radius= 10, border_width= 2, label_style= flet.TextStyle(color= "#ffffff"))
 
         def install_versions(event: flet.ControlEvent) -> None:
 
@@ -444,7 +444,7 @@ class NoxLauncher:
                     content= flet.ElevatedButton(
                         content= flet.Image(src= "fabric.png", width= 90, height= 90, filter_quality= flet.FilterQuality.HIGH), 
                         width= 120, height= 120, bgcolor= '#272727', key= "fabric", on_click= select_versions,
-                        style= flet.ButtonStyle(side= flet.BorderSide(width= 2, color= "#148b47"))
+                        style= flet.ButtonStyle(side= flet.BorderSide(width= 2, color= "#717171"))
                     ),
                     alignment= flet.alignment.center
                 ),
@@ -454,7 +454,7 @@ class NoxLauncher:
                     content= flet.ElevatedButton(
                         content= flet.Image(src= "vanilla.png", width= 90, height= 90, filter_quality= flet.FilterQuality.HIGH), 
                         width= 120, height= 120, bgcolor= '#272727', key= "vanilla", on_click= select_versions,
-                        style= flet.ButtonStyle(side= flet.BorderSide(width= 2, color= "#148b47"))
+                        style= flet.ButtonStyle(side= flet.BorderSide(width= 2, color= "#717171"))
                     ),
                     alignment= flet.alignment.center
                 ),
@@ -464,7 +464,7 @@ class NoxLauncher:
                     content= flet.ElevatedButton(
                         content= flet.Image(src= "forge.png", width= 90, height= 90, filter_quality= flet.FilterQuality.HIGH), 
                         width= 120, height= 120, bgcolor= '#272727', key= "forge", on_click= select_versions,
-                        style= flet.ButtonStyle(side= flet.BorderSide(width= 2, color= "#148b47"))
+                        style= flet.ButtonStyle(side= flet.BorderSide(width= 2, color= "#717171"))
                     ),
                     alignment= flet.alignment.center
                 )      
@@ -550,15 +550,14 @@ class NoxLauncher:
                     alignment= flet.alignment.center,
                     content= flet.Container(
                         width= 500, 
-                        height= 500, 
+                        height= 510, 
                         bgcolor= "#272727", 
                         border_radius= 20, 
                         alignment= flet.alignment.center,
                         padding= flet.padding.all(20), 
-                        content= flet.Column(expand= True, expand_loose= True, spacing= 5,
+                        content= flet.Column(expand= True, expand_loose= True,
                             controls= [
-                                flet.Container(content= flet.Image(src= "krayson_studio.png", width= 140, height= 140, filter_quality= flet.FilterQuality.HIGH), expand_loose= True, alignment= flet.alignment.center),
-                                flet.Container(content= flet.Text("Nox Launcher", size= 30, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center),
+                                flet.Container(image_src= "icon.png", expand_loose= True, height= 180),
                                 flet.Container(content= flet.Text("Nox Launcher is a powerful and easy-to-use launcher for Minecraft develop by Krayson Studio.", size= 15, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center),
                                 flet.Column(controls= [
                                     flet.Text("Developed by: ", color= "#ffffff", size= 15, font_family= "Minecraft"),
@@ -601,16 +600,21 @@ class NoxLauncher:
             Config.update_java_memory_allocated(JAVA_INFO[1], Config.get_memory_ram())
             page.go("/play")
 
-        def update_java_settings(_: flet.ControlEvent) -> None:
+        def update_settings(_: flet.ControlEvent) -> None:
 
             if java_path.value != "System": 
                 Config.update_java_path(java_path.value)
+
+            version.value = f"Version: {Config.get_java_version(java_path.value)}"
+            version.update()
             
-            location.value = java_path.value
+            location.value = f"Location: {java_path.value if len(java_path.value) <= 15 else f'{java_path.value[:15]}...'}" 
             location.update()
 
             java_args.value = " ".join(Config.update_java_memory_allocated([arg for arg in java_args.value.split(" ") if isinstance(arg, str) and arg != ""], str(round(java_allocated_memory.value))))
             java_args.update()
+
+            Config.update_close_when_playing(close_when_playing.value)
 
             def ok(_: flet.ControlEvent) -> None:
 
@@ -674,9 +678,11 @@ class NoxLauncher:
             return flet.View()
 
         java_args: flet.TextField = flet.TextField(value= " ".join(JAVA_INFO[1]), multiline= False, expand_loose= True, height= 70, border_radius= 10, border_color= "#717171")
-        java_path: flet.Dropdown = flet.Dropdown(label= "Java source", hint_text= "Select the Java source!", options= Config.get_java_list(), border_color= "#717171", border_radius= 10, label_style= flet.TextStyle(color= "#ffffff"), value= Config.determinate_java_path(JAVA_INFO[0]))
+        java_path: flet.Dropdown = flet.Dropdown(label= "Java source", hint_text= "Select the Java source!", options= Config.get_java_list(), border_color= "#717171", border_radius= 10, border_width= 2,  label_style= flet.TextStyle(color= "#ffffff"), value= Config.determinate_java_path(JAVA_INFO[0]))
         java_allocated_memory: flet.Slider = flet.Slider(value= Config.parse_memory(JAVA_INFO[1]), min= 1000, max= Config.get_memory_ram(), label= "{value}MB", expand_loose= True, height= 40, active_color= "#148b47", thumb_color= "#ffffff")
+        version: flet.Text = flet.Text(f"Version: {Config.get_java_version(JAVA_INFO[0])}", size= 20, color= "#ffffff", font_family= "Minecraft")
         location: flet.Text = flet.Text(f"Location: {JAVA_INFO[0][:14] + "..."}", size= 20, color= "#ffffff", font_family= "Minecraft")
+        close_when_playing: flet.Switch = flet.Switch(value= Config.get_close_when_playing(), active_color= "#148b47")
 
         return flet.View(
             controls= [
@@ -703,7 +709,7 @@ class NoxLauncher:
                     alignment= flet.alignment.center,
                     content= flet.Container(
                         width= 500, 
-                        height= 560, 
+                        height= 590, 
                         bgcolor= "#272727", 
                         border_radius= 20, 
                         alignment= flet.alignment.center,
@@ -718,15 +724,31 @@ class NoxLauncher:
                                         height= 90,
                                         filter_quality= flet.FilterQuality.HIGH
                                     ), alignment= flet.alignment.center_left, padding= flet.padding.only(bottom= 28)),
-                                    flet.Container(content= location, expand_loose= True, alignment= flet.alignment.center_left, expand= True),
-                                ], vertical_alignment= flet.CrossAxisAlignment.CENTER, alignment= flet.MainAxisAlignment.CENTER),
+                                    flet.Column(
+                                        controls = [
+                                            flet.Container(content= location, expand_loose= True, alignment= flet.alignment.center_left),
+                                            flet.Container(content= version, expand_loose= True, alignment= flet.alignment.center_left)
+                                        ],
+                                        spacing= 15,
+                                        expand_loose= True
+                                    )
+                                ], vertical_alignment= flet.CrossAxisAlignment.CENTER, alignment= flet.MainAxisAlignment.CENTER, spacing= 0),
                                 flet.Text("Java settings", size= 20, color= "#ffffff", font_family= "Minecraft"),
                                 java_path,
                                 flet.Text("JVM arguments", size= 20, color= "#ffffff", font_family= "Minecraft"),
                                 java_args,
                                 flet.Container(content= flet.Text("Memory dedicated", size= 20, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center),
                                 java_allocated_memory,
-                                flet.Container(content= flet.TextButton(content= flet.Text("Save", size= 20, font_family= "Minecraft"), on_click= update_java_settings, style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 190, height= 45), alignment= flet.alignment.center, expand_loose= True, expand= True)
+                                flet.Row(
+                                    controls = [
+                                        flet.Container(content= flet.Text("close the launcher when playing", size= 20, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center),
+                                        close_when_playing
+                                    ],
+                                    expand_loose= True,
+                                    alignment= flet.MainAxisAlignment.CENTER,
+                                    vertical_alignment= flet.CrossAxisAlignment.CENTER
+                                ),
+                                flet.Container(content= flet.TextButton(content= flet.Text("Save", size= 20, font_family= "Minecraft"), on_click= update_settings, style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 190, height= 45), alignment= flet.alignment.center, expand_loose= True, expand= True)
                             ]
                         )
                     )
@@ -975,27 +997,22 @@ class NoxLauncher:
             if VERSIONS.value is not None and VERSIONS.value != "Install an minecraft version!": 
                 Launcher(VERSIONS.value, page)
 
-        VERSIONS: flet.Dropdown = flet.Dropdown(label= "Installed Versions", hint_text= "Minecraft version to play!", options= Config.get_versions_available(), border_color= "#717171", border_radius= 10, label_style= flet.TextStyle(color= "#ffffff"))
+        VERSIONS: flet.Dropdown = flet.Dropdown(label= "Installed Versions", hint_text= "Minecraft version to play!", options= Config.get_versions_available(), border_color= "#717171", border_radius= 10, label_style= flet.TextStyle(color= "#ffffff"), border_width= 2)
 
         return flet.View("/play", 
             controls= [
                 flet.Container(content = flet.Row(expand= True, expand_loose= True, controls= constants.MINECRAFT_NEWS.value, 
-                alignment= flet.MainAxisAlignment.CENTER, vertical_alignment= flet.CrossAxisAlignment.CENTER, spacing= 10, scroll= flet.ScrollMode.AUTO), expand= True, expand_loose= True, alignment= flet.alignment.center),
+                alignment= flet.MainAxisAlignment.CENTER, vertical_alignment= flet.CrossAxisAlignment.CENTER, spacing= 30, scroll= flet.ScrollMode.AUTO), expand= True, expand_loose= True, alignment= flet.alignment.center),
             ],
 
             appbar= flet.AppBar(
-                title= flet.Text("Nox Launcher", 
-                    size= 25, 
-                    font_family= "Minecraft"
-                ), 
+                leading= flet.Image(src= "icon.png", width= 150, height= 100, filter_quality= flet.FilterQuality.HIGH),
+                leading_width= 170,
                 bgcolor= "#272727", 
-                center_title= False,
                 actions= [
                     flet.Container(
                         width= 120,
-                        height= 40, 
-                        border_radius= 20, 
-                        border= flet.border.all(1, "#717171"), 
+                        height= 44, 
                         alignment= flet.alignment.center,
                         content= flet.Row(
                             expand= True,
@@ -1004,18 +1021,18 @@ class NoxLauncher:
                             controls= [
                                 flet.IconButton(
                                     icon= flet.icons.INFO,
-                                    icon_size= 25,
+                                    icon_size= 26,
                                     icon_color= "#717171",
-                                    height= 40,
-                                    width= 40,
+                                    height= 42,
+                                    width= 42,
                                     on_click= lambda _: page.go("/info")
                                 ),
                                 flet.IconButton(
                                     icon= flet.icons.NEWSPAPER_ROUNDED,
-                                    icon_size= 25,
+                                    icon_size= 26,
                                     icon_color= "#717171",
-                                    height= 40,
-                                    width= 40,
+                                    height= 42,
+                                    width= 42,
                                 ),
                             ],
                             alignment= flet.MainAxisAlignment.CENTER,
@@ -1034,7 +1051,7 @@ class NoxLauncher:
                     flet.TextButton(content= flet.Text("Play", size= 25, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 150, height= 45, on_click= start_launcher),
                     flet.Container(expand= True),
                     flet.Container(expand= True, border_radius= 20, 
-                        border= flet.border.all(1, "#717171"), 
+                        border= flet.border.all(2, "#717171"), 
                         content= flet.Row(expand= True, spacing= 0, controls= [
                             skin,
                             flet.TextButton(
@@ -1155,7 +1172,7 @@ class Launcher:
         
     def launch(self) -> None:
 
-        CLOSE_ON_PLAY: bool = Config.get_close_on_play()
+        CLOSE_WHEN_PLAYING: bool = Config.get_close_when_playing()
         ACCOUNT: Dict[str, str] = AccountManager.determinate()
 
         match ACCOUNT["type"]:
@@ -1170,7 +1187,7 @@ class Launcher:
 
                 minecraft_args: List[str] = minecraft_launcher_lib.command.get_minecraft_command(self.version, f"{Config.get_path()}/Nox Launcher/", OPTIONS)
 
-                match CLOSE_ON_PLAY:
+                match CLOSE_WHEN_PLAYING:
 
                     case True:
                         match platform.system():

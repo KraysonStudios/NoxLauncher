@@ -1,5 +1,6 @@
 import os
 import json
+import re
 import jdk
 import itertools
 import psutil
@@ -44,7 +45,7 @@ class Config:
             with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "w") as f:
                 json.dump({
                     "java": {},
-                    "close-on-play": True
+                    "close-when-playing": True
                 }, f, indent= 4)
 
         if not os.path.exists(Config.get_path() + "/Nox Launcher/settings/profiles"):
@@ -60,7 +61,7 @@ class Config:
             with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "w") as f:
                 json.dump({
                     "java": {},
-                    "close-on-play": True
+                    "close-when-playing": True
                 }, f, indent= 4)
 
         if os.path.exists(Config.get_path() + "/Nox Launcher/launcher_profiles.json"):
@@ -109,7 +110,7 @@ class Config:
                 META: Dict[str, Any] = {
                     "java": {
                         "path": jdk.shutil.which("java"),
-                        "args": ["-Xms1G", f"-Xmx{Config.get_memory_ram()}M"]
+                        "args": ["-Xms1G", f"-Xmx{Config.get_idiomatic_alloc_ram()}M"]
                     },
                     "close_on_play": True
                 }
@@ -117,7 +118,7 @@ class Config:
                 if len(settings.keys()) != len(META.keys()):
                     with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "w") as f:
                         json.dump(META, f, indent= 4)
-                elif not "close_on_play" in settings:
+                elif not "close-when-playing" in settings:
                     with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "w") as f:
                         json.dump(META, f, indent= 4)
                 elif not "java" in settings:
@@ -132,7 +133,7 @@ class Config:
                 elif not isinstance(settings["java"]["path"], str) or not isinstance(settings["java"]["args"], list):
                     with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "w") as f:
                         json.dump(META, f, indent= 4)
-                elif not isinstance(settings["close_on_play"], bool):
+                elif not isinstance(settings["close-when-playing"], bool):
                     with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "w") as f:
                         json.dump(META, f, indent= 4)
 
@@ -242,7 +243,7 @@ class Config:
         if len(versions) == 0: return [flet.dropdown.Option("Install an minecraft version!")]
         else: return versions
             
-    def get_close_on_play() -> bool: 
+    def get_close_when_playing() -> bool: 
 
         if not os.path.exists(Config.get_path() + "/Nox Launcher/settings/settings.json"): Config.repair()
 
@@ -250,18 +251,18 @@ class Config:
 
             settings = json.load(f)
 
-            if "close_on_play" not in settings: return False
-            elif not isinstance(settings["close_on_play"], bool): return False
-            else: return settings["close_on_play"]
+            if "close-when-playing" not in settings: return False
+            elif not isinstance(settings["close-when-playing"], bool): return False
+            else: return settings["close-when-playing"]
 
-    def update_close_on_play(value: bool) -> None:
+    def update_close_when_playing(value: bool) -> None:
 
         if not os.path.exists(Config.get_path() + "/Nox Launcher/settings/settings.json"): Config.repair()
 
         with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "r") as f:
 
             settings = json.load(f)
-            settings["close_on_play"] = value
+            settings["close-when-playing"] = value
 
             with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "w") as f:
                 json.dump(settings, f, indent= 4)
@@ -270,6 +271,12 @@ class Config:
         for arg in [arg for arg in args if isinstance(arg, str)]:
             if arg.startswith("-Xmx") and arg.find("M") != -1 and arg.index("M") == len(arg) - 1: return int(arg.replace("-Xmx", "").replace("M", ""))
         else: return 2048
+
+    def get_java_version(path: str) -> str:
+        
+        for direct in [path for path in path.split("/") if path != ""]: 
+            if direct.find(".") != -1 or direct.find("-") != -1: return direct if len(direct) <= 20 else direct[:19] + "..."
+        else: return "Undetermined"
 
     def determinate_java_path(path: str) -> str: 
 
