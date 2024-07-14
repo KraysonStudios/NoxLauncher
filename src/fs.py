@@ -15,20 +15,20 @@ class Config:
 
     def repair() -> None:
 
-        if not os.path.exists(Config.get_path() + "/Nox Launcher"):
-            os.mkdir(Config.get_path() + "/Nox Launcher/")
+        if not os.path.exists(Config.get_path() + "/NoxLauncher"):
+            os.mkdir(Config.get_path() + "/NoxLauncher/")
             
-        if not os.path.exists(Config.get_path() + "/Nox Launcher/java"):
-            os.mkdir(Config.get_path() + "/Nox Launcher/java/")
+        if not os.path.exists(Config.get_path() + "/NoxLauncher/java"):
+            os.mkdir(Config.get_path() + "/NoxLauncher/java/")
 
-        if not os.path.exists(Config.get_path() + "/Nox Launcher/cache"):
-            os.mkdir(Config.get_path() + "/Nox Launcher/cache/")
+        if not os.path.exists(Config.get_path() + "/NoxLauncher/cache"):
+            os.mkdir(Config.get_path() + "/NoxLauncher/cache/")
 
-        if not os.path.exists(Config.get_path() + "/Nox Launcher/skins"):
-            os.mkdir(Config.get_path() + "/Nox Launcher/skins/")
+        if not os.path.exists(Config.get_path() + "/NoxLauncher/skins"):
+            os.mkdir(Config.get_path() + "/NoxLauncher/skins/")
 
-        if not os.path.exists(Config.get_path() + "/Nox Launcher/launcher_profiles.json"):
-            with open(Config.get_path() + "/Nox Launcher/launcher_profiles.json", "w") as f:
+        if not os.path.exists(Config.get_path() + "/NoxLauncher/launcher_profiles.json"):
+            with open(Config.get_path() + "/NoxLauncher/launcher_profiles.json", "w") as f:
                 json.dump({
                     "profiles" : {},                  
                     "settings": {
@@ -38,34 +38,34 @@ class Config:
                     "version": 3
                 }, f, indent= 4)
 
-        if not os.path.exists(Config.get_path() + "/Nox Launcher/settings"):
-            os.mkdir(Config.get_path() + "/Nox Launcher/settings/")
-            os.mkdir(Config.get_path() + "/Nox Launcher/settings/profiles/")
+        if not os.path.exists(Config.get_path() + "/NoxLauncher/settings"):
+            os.mkdir(Config.get_path() + "/NoxLauncher/settings/")
+            os.mkdir(Config.get_path() + "/NoxLauncher/settings/profiles/")
 
-            with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "w") as f:
+            with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w") as f:
                 json.dump({
                     "java": {},
                     "close-when-playing": True
                 }, f, indent= 4)
 
-        if not os.path.exists(Config.get_path() + "/Nox Launcher/settings/profiles"):
-            os.mkdir(Config.get_path() + "/Nox Launcher/settings/profiles/")
+        if not os.path.exists(Config.get_path() + "/NoxLauncher/settings/profiles"):
+            os.mkdir(Config.get_path() + "/NoxLauncher/settings/profiles/")
 
-        if not os.path.exists(Config.get_path() + "/Nox Launcher/settings/profiles/profiles.json"):
-            with open(Config.get_path() + "/Nox Launcher/settings/profiles/profiles.json", "w") as f:
+        if not os.path.exists(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json"):
+            with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w") as f:
                 json.dump({
                     "profiles": {}
                 }, f, indent= 4)
 
-        if not os.path.exists(Config.get_path() + "/Nox Launcher/settings/settings.json"):
-            with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "w") as f:
+        if not os.path.exists(Config.get_path() + "/NoxLauncher/settings/settings.json"):
+            with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w") as f:
                 json.dump({
                     "java": {},
                     "close-when-playing": True
                 }, f, indent= 4)
 
-        if os.path.exists(Config.get_path() + "/Nox Launcher/launcher_profiles.json"):
-            with open(Config.get_path() + "/Nox Launcher/launcher_profiles.json", "r") as f:
+        if os.path.exists(Config.get_path() + "/NoxLauncher/launcher_profiles.json"):
+            with open(Config.get_path() + "/NoxLauncher/launcher_profiles.json", "r") as f:
 
                 META: Dict[str, Any] = {
                     "profiles" : {},                  
@@ -79,31 +79,31 @@ class Config:
                 profiles = json.load(f)
 
                 if len(profiles.keys()) + len(profiles.values()) != len(META.keys()) + len(META.values()):
-                    with open(Config.get_path() + "/Nox Launcher/launcher_profiles.json", "w") as f:
+                    with open(Config.get_path() + "/NoxLauncher/launcher_profiles.json", "w") as f:
                         json.dump(META, f, indent= 4)
 
                 for kp, km in itertools.zip_longest(profiles.keys(), META.keys(), fillvalue= None):
 
                     if kp != km:
-                        with open(Config.get_path() + "/Nox Launcher/launcher_profiles.json", "w") as f:
+                        with open(Config.get_path() + "/NoxLauncher/launcher_profiles.json", "w") as f:
                             json.dump(META, f, indent= 4)
                         break
                     elif "settings" in profiles.keys():
 
                         for k in profiles["settings"].keys():
                             if k not in META["settings"].keys():
-                                with open(Config.get_path() + "/Nox Launcher/launcher_profiles.json", "w") as f:
+                                with open(Config.get_path() + "/NoxLauncher/launcher_profiles.json", "w") as f:
                                     json.dump(META, f, indent= 4)
                                 break
                             
                             for vp, vm in itertools.zip_longest(profiles["settings"].values(), META["settings"].values(), fillvalue= None):
                                 if vp != vm:
-                                    with open(Config.get_path() + "/Nox Launcher/launcher_profiles.json", "w") as f:
+                                    with open(Config.get_path() + "/NoxLauncher/launcher_profiles.json", "w") as f:
                                         json.dump(META, f, indent= 4)
                                     break
 
-        if os.path.exists(Config.get_path() + "/Nox Launcher/settings/settings.json"):
-            with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "r") as f:
+        if os.path.exists(Config.get_path() + "/NoxLauncher/settings/settings.json"):
+            with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r") as f:
 
                 settings = json.load(f)
 
@@ -112,40 +112,47 @@ class Config:
                         "path": jdk.shutil.which("java"),
                         "args": ["-Xms1G", f"-Xmx{Config.get_idiomatic_alloc_ram()}M"]
                     },
-                    "close_on_play": True
+                    "close-when-playing": True,
+                    "debug": True
                 }
 
                 if len(settings.keys()) != len(META.keys()):
-                    with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "w") as f:
+                    with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w") as f:
                         json.dump(META, f, indent= 4)
                 elif not "close-when-playing" in settings:
-                    with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "w") as f:
+                    with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w") as f:
+                        json.dump(META, f, indent= 4)
+                elif not "debug" in settings:
+                    with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w") as f:
                         json.dump(META, f, indent= 4)
                 elif not "java" in settings:
-                    with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "w") as f:
+                    with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w") as f:
                         json.dump(META, f, indent= 4)
                 elif not isinstance(settings["java"], dict):
-                    with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "w") as f:
+                    with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w") as f:
                         json.dump(META, f, indent= 4)
                 elif not "path" in settings["java"] or not "args" in settings["java"]:
-                    with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "w") as f:
+                    with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w") as f:
                         json.dump(META, f, indent= 4)
                 elif not isinstance(settings["java"]["path"], str) or not isinstance(settings["java"]["args"], list):
-                    with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "w") as f:
+                    with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w") as f:
                         json.dump(META, f, indent= 4)
                 elif not isinstance(settings["close-when-playing"], bool):
-                    with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "w") as f:
+                    with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w") as f:
+                        json.dump(META, f, indent= 4)
+                elif not isinstance(settings["debug"], bool):
+                    with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w") as f:
                         json.dump(META, f, indent= 4)
 
-        with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "r") as f:
+        with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r") as f:
 
             settings = json.load(f)
 
             if not isinstance(settings["java"]["path"], str):
-                showinfo("Nox Launcher", "Java is not installed. Please be patient while it is being installed. Don`t close app internally.", type= "ok")
-                jdk.install("21", operating_system= jdk.OperatingSystem.LINUX if platform.system() == "Linux" else jdk.OperatingSystem.WINDOWS, arch= jdk.Architecture.X64, path= Config.get_path() + "/Nox Launcher/java/")
+                showinfo("NoxLauncher", "Java is not installed. Please be patient while it is being installed. Don`t close app internally.", type= "ok")
+                jdk.install("21", operating_system= jdk.OperatingSystem.LINUX if platform.system() == "Linux" else jdk.OperatingSystem.WINDOWS, arch= jdk.Architecture.X64, path= Config.get_path() + "/NoxLauncher/java/")
 
-                with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "r") as f:
+                with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r") as f:
 
                     settings = json.load(f)
                     settings["java"].update({
@@ -153,13 +160,13 @@ class Config:
                         "args": ["-Xms1G", f"-Xmx{Config.get_idiomatic_alloc_ram()}M"]
                     })
 
-                    with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "w") as f:
+                    with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w") as f:
                         json.dump(settings, f, indent= 4)
 
     def get_java_info() -> List[str] | bool: 
 
-        if os.path.exists(Config.get_path() + "/Nox Launcher/settings/settings.json"):
-            with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "r") as f:
+        if os.path.exists(Config.get_path() + "/NoxLauncher/settings/settings.json"):
+            with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r") as f:
 
                 settings = json.load(f)
 
@@ -181,16 +188,16 @@ class Config:
         match platform.system():
             case "Windows": 
 
-                if not os.path.exists(Config.get_path() + "/Nox Launcher/java/"): Config.repair()
+                if not os.path.exists(Config.get_path() + "/NoxLauncher/java/"): Config.repair()
 
                 options: List[flet.dropdown.Option] = [flet.dropdown.Option("System")]
 
-                if len(os.listdir(Config.get_path() + "/Nox Launcher/java/")) > 0:
+                if len(os.listdir(Config.get_path() + "/NoxLauncher/java/")) > 0:
 
-                    for java in [java for java in os.listdir(Config.get_path() + "/Nox Launcher/java/") if os.path.isdir(Config.get_path() + "/Nox Launcher/java/" + java)]:
+                    for java in [java for java in os.listdir(Config.get_path() + "/NoxLauncher/java/") if os.path.isdir(Config.get_path() + "/NoxLauncher/java/" + java)]:
                         
-                        if os.path.exists(Config.get_path() + "/Nox Launcher/java/" + java + "/bin/java") and os.path.isfile(Config.get_path() + "/Nox Launcher/java/" + java + "/bin/java"):
-                            options.append(flet.dropdown.Option(Config.get_path() + "/Nox Launcher/java/" + java + "/bin/java"))
+                        if os.path.exists(Config.get_path() + "/NoxLauncher/java/" + java + "/bin/java") and os.path.isfile(Config.get_path() + "/NoxLauncher/java/" + java + "/bin/java"):
+                            options.append(flet.dropdown.Option(Config.get_path() + "/NoxLauncher/java/" + java + "/bin/java"))
                         
                 for path_one, path_two in itertools.zip_longest(
                     [path for path in os.listdir('C:/Program Files/') if os.path.isdir('C:/Program Files/' + path)], 
@@ -210,16 +217,16 @@ class Config:
             
             case "Linux":
 
-                if not os.path.exists(Config.get_path() + "/Nox Launcher/java/"): Config.repair()
+                if not os.path.exists(Config.get_path() + "/NoxLauncher/java/"): Config.repair()
 
                 options: List[flet.dropdown.Option] = [flet.dropdown.Option("System")]
 
-                if len(os.listdir(Config.get_path() + "/Nox Launcher/java/")) > 0: 
+                if len(os.listdir(Config.get_path() + "/NoxLauncher/java/")) > 0: 
 
-                    for java in [java for java in os.listdir(Config.get_path() + "/Nox Launcher/java/") if os.path.isdir(Config.get_path() + "/Nox Launcher/java/" + java)]:
+                    for java in [java for java in os.listdir(Config.get_path() + "/NoxLauncher/java/") if os.path.isdir(Config.get_path() + "/NoxLauncher/java/" + java)]:
 
-                        if os.path.exists(Config.get_path() + "/Nox Launcher/java/" + java + "/bin/java") and os.path.isfile(Config.get_path() + "/Nox Launcher/java/" + java + "/bin/java"):
-                            options.append(flet.dropdown.Option(Config.get_path() + "/Nox Launcher/java/" + java + "/bin/java"))
+                        if os.path.exists(Config.get_path() + "/NoxLauncher/java/" + java + "/bin/java") and os.path.isfile(Config.get_path() + "/NoxLauncher/java/" + java + "/bin/java"):
+                            options.append(flet.dropdown.Option(Config.get_path() + "/NoxLauncher/java/" + java + "/bin/java"))
 
                 for java in [java for java in os.listdir("/usr/lib/jvm/") if os.path.isdir("/usr/lib/jvm/" + java)]:
 
@@ -230,14 +237,14 @@ class Config:
             
     def get_versions_available() -> List[flet.dropdown.Option]:
 
-        if not os.path.exists(Config.get_path() + "/Nox Launcher/"): Config.repair()
-        elif not os.path.exists(Config.get_path() + "/Nox Launcher/versions/"): return [flet.dropdown.Option("Install an minecraft version!")]
+        if not os.path.exists(Config.get_path() + "/NoxLauncher/"): Config.repair()
+        elif not os.path.exists(Config.get_path() + "/NoxLauncher/versions/"): return [flet.dropdown.Option("Install an minecraft version!")]
 
         versions: List[flet.dropdown.Option] = []
 
-        for version in [version for version in os.listdir(Config.get_path() + "/Nox Launcher/versions/") if os.path.isdir(Config.get_path() + "/Nox Launcher/versions/" + version)]:
+        for version in [version for version in os.listdir(Config.get_path() + "/NoxLauncher/versions/") if os.path.isdir(Config.get_path() + "/NoxLauncher/versions/" + version)]:
 
-            if os.path.exists(Config.get_path() + "/Nox Launcher/versions/" + f"{version}/{version}.jar") and os.path.isfile(Config.get_path() + "/Nox Launcher/versions/" + f"{version}/{version}.jar"):
+            if os.path.exists(Config.get_path() + "/NoxLauncher/versions/" + f"{version}/{version}.jar") and os.path.isfile(Config.get_path() + "/NoxLauncher/versions/" + f"{version}/{version}.jar"):
                 versions.append(flet.dropdown.Option(version))
 
         if len(versions) == 0: return [flet.dropdown.Option("Install an minecraft version!")]
@@ -245,9 +252,9 @@ class Config:
             
     def get_close_when_playing() -> bool: 
 
-        if not os.path.exists(Config.get_path() + "/Nox Launcher/settings/settings.json"): Config.repair()
+        if not os.path.exists(Config.get_path() + "/NoxLauncher/settings/settings.json"): Config.repair()
 
-        with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "r") as f:
+        with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r") as f:
 
             settings = json.load(f)
 
@@ -257,14 +264,38 @@ class Config:
 
     def update_close_when_playing(value: bool) -> None:
 
-        if not os.path.exists(Config.get_path() + "/Nox Launcher/settings/settings.json"): Config.repair()
+        if not os.path.exists(Config.get_path() + "/NoxLauncher/settings/settings.json"): Config.repair()
 
-        with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "r") as f:
+        with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r") as f:
 
             settings = json.load(f)
             settings["close-when-playing"] = value
 
-            with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "w") as f:
+            with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w") as f:
+                json.dump(settings, f, indent= 4)
+
+    def get_debug_mode() -> bool: 
+
+        if not os.path.exists(Config.get_path() + "/NoxLauncher/settings/settings.json"): Config.repair()
+
+        with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r") as f:
+
+            settings = json.load(f)
+
+            if "debug" not in settings: return False
+            elif not isinstance(settings["debug"], bool): return False
+            else: return settings["debug"]
+
+    def update_debug_mode(value: bool) -> None:
+
+        if not os.path.exists(Config.get_path() + "/NoxLauncher/settings/settings.json"): Config.repair()
+
+        with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r") as f:
+
+            settings = json.load(f)
+            settings["debug"] = value
+
+            with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w") as f:
                 json.dump(settings, f, indent= 4)
     
     def parse_memory(args: List[str]) -> int: 
@@ -302,28 +333,28 @@ class Config:
                 args.insert(args.index(arg), new_arg)
                 args.remove(arg)
 
-        if not os.path.exists(Config.get_path() + "/Nox Launcher/settings/settings.json"): Config.repair()
+        if not os.path.exists(Config.get_path() + "/NoxLauncher/settings/settings.json"): Config.repair()
 
-        with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "r") as f:
+        with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r") as f:
 
             settings = json.load(f)
             settings["java"]["args"] = args
 
-            with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "w") as f:
+            with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w") as f:
                 json.dump(settings, f, indent= 4)
 
         return args
     
     def update_java_path(path: str) -> None:
     
-        if not os.path.exists(Config.get_path() + "/Nox Launcher/settings/settings.json"): Config.repair()
+        if not os.path.exists(Config.get_path() + "/NoxLauncher/settings/settings.json"): Config.repair()
 
-        with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "r") as f:
+        with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r") as f:
 
             settings = json.load(f)
             settings["java"]["path"] = path
 
-            with open(Config.get_path() + "/Nox Launcher/settings/settings.json", "w") as f:
+            with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w") as f:
                 json.dump(settings, f, indent= 4)
 
     @cache

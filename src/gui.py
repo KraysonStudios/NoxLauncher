@@ -4,6 +4,7 @@ import os
 import json
 import time
 import uuid
+import subprocess
 import minecraft_launcher_lib
 
 from fs import Config
@@ -59,6 +60,14 @@ class NoxLauncher:
                     ),
                     alignment= flet.alignment.center_left,
                     padding= flet.padding.all(20)
+                ),
+                flet.Column(
+                    expand= True, 
+                    expand_loose= True,
+                    alignment= flet.MainAxisAlignment.CENTER,
+                    horizontal_alignment= flet.CrossAxisAlignment.CENTER,
+                    scroll= flet.ScrollMode.AUTO,
+                    controls= []
                 )
             ],
             padding= 0,
@@ -558,7 +567,7 @@ class NoxLauncher:
                         content= flet.Column(expand= True, expand_loose= True,
                             controls= [
                                 flet.Container(image_src= "icon.png", expand_loose= True, height= 180),
-                                flet.Container(content= flet.Text("Nox Launcher is a powerful and easy-to-use launcher for Minecraft develop by Krayson Studio.", size= 15, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center),
+                                flet.Container(content= flet.Text("NoxLauncher is a powerful and easy-to-use launcher for Minecraft develop by Krayson Studio.", size= 15, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center),
                                 flet.Column(controls= [
                                     flet.Text("Developed by: ", color= "#ffffff", size= 15, font_family= "Minecraft"),
                                     flet.Row(controls= [
@@ -615,6 +624,7 @@ class NoxLauncher:
             java_args.update()
 
             Config.update_close_when_playing(close_when_playing.value)
+            Config.update_debug_mode(debug_mode.value)
 
             def ok(_: flet.ControlEvent) -> None:
 
@@ -683,6 +693,7 @@ class NoxLauncher:
         version: flet.Text = flet.Text(f"Version: {Config.get_java_version(JAVA_INFO[0])}", size= 20, color= "#ffffff", font_family= "Minecraft")
         location: flet.Text = flet.Text(f"Location: {JAVA_INFO[0][:14] + "..."}", size= 20, color= "#ffffff", font_family= "Minecraft")
         close_when_playing: flet.Switch = flet.Switch(value= Config.get_close_when_playing(), active_color= "#148b47")
+        debug_mode: flet.Switch = flet.Switch(value= Config.get_debug_mode(), active_color= "#148b47")
 
         return flet.View(
             controls= [
@@ -709,7 +720,7 @@ class NoxLauncher:
                     alignment= flet.alignment.center,
                     content= flet.Container(
                         width= 500, 
-                        height= 590, 
+                        height= 610, 
                         bgcolor= "#272727", 
                         border_radius= 20, 
                         alignment= flet.alignment.center,
@@ -743,6 +754,15 @@ class NoxLauncher:
                                     controls = [
                                         flet.Container(content= flet.Text("close the launcher when playing", size= 20, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center),
                                         close_when_playing
+                                    ],
+                                    expand_loose= True,
+                                    alignment= flet.MainAxisAlignment.CENTER,
+                                    vertical_alignment= flet.CrossAxisAlignment.CENTER
+                                ),
+                                flet.Row(
+                                    controls = [
+                                        flet.Container(content= flet.Text("Debug mode", size= 20, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center),
+                                        debug_mode
                                     ],
                                     expand_loose= True,
                                     alignment= flet.MainAxisAlignment.CENTER,
@@ -1105,7 +1125,7 @@ class MinecraftDownloader:
 
                     minecraft_launcher_lib.fabric.install_fabric(
                         version["version"], 
-                        f"{Config.get_path()}/Nox Launcher/",
+                        f"{Config.get_path()}/NoxLauncher/",
                         callback= {"setStatus": setStatus}
                     )
 
@@ -1117,7 +1137,7 @@ class MinecraftDownloader:
 
                     minecraft_launcher_lib.install.install_minecraft_version(
                         version["version"], 
-                        f"{Config.get_path()}/Nox Launcher/",
+                        f"{Config.get_path()}/NoxLauncher/",
                         {"setStatus": setStatus}
                     )
 
@@ -1129,7 +1149,7 @@ class MinecraftDownloader:
 
                     minecraft_launcher_lib.forge.install_forge_version(
                         version["version"], 
-                        f"{Config.get_path()}/Nox Launcher/",
+                        f"{Config.get_path()}/NoxLauncher/",
                         {"setStatus": setStatus}
                     )
 
@@ -1141,9 +1161,10 @@ class Launcher:
 
     def __init__(self,  version: str, page: flet.Page) -> None:
 
-        self.java_args: List[str] | bool = Config.get_java_info()[0]
-        self.java_path: str | bool = Config.get_java_info()[1]
+        self.java_args: List[str] | bool = Config.get_java_info()[1]
+        self.java_path: str | bool = Config.get_java_info()[0]
         self.version: str = version
+        self.page: flet.Page = page
 
         def close_alert(control: flet.ControlEvent) -> None:
             page.close(control.control)
@@ -1172,6 +1193,7 @@ class Launcher:
         
     def launch(self) -> None:
 
+        DEBUG_MODE: bool = Config.get_debug_mode()
         CLOSE_WHEN_PLAYING: bool = Config.get_close_when_playing()
         ACCOUNT: Dict[str, str] = AccountManager.determinate()
 
@@ -1182,42 +1204,65 @@ class Launcher:
                 OPTIONS: Dict[str, Any] = {
                     "username": ACCOUNT["name"],
                     "uuid": uuid.uuid4().hex,
-                    "token": ""
+                    "token": "",
+                    'jvmArguments': self.java_args,
+                    'executablePath': self.java_path
                 }
 
-                minecraft_args: List[str] = minecraft_launcher_lib.command.get_minecraft_command(self.version, f"{Config.get_path()}/Nox Launcher/", OPTIONS)
+                minecraft_args: str = " ".join(minecraft_launcher_lib.command.get_minecraft_command(self.version, f"{Config.get_path()}/NoxLauncher/", OPTIONS))
 
                 match CLOSE_WHEN_PLAYING:
 
                     case True:
                         match platform.system():
-                            case "Windows": ...
-                            case "Linux": ...
+                            case "Windows": 
+                                match DEBUG_MODE:
+                                    case True:
+                                        self.page.window.destroy()
+                                        subprocess.call(f'start /i cmd /k {minecraft_args}', shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True)
+                                    case False:
+                                        self.page.window.destroy()
+                                        subprocess.call(f'start /b cmd /k {minecraft_args}', shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True)
+                            case "Linux": 
+                                match DEBUG_MODE:
+                                    case True: 
+                                        self.page.window.destroy()
+                                        subprocess.call(f'nohup alacritty -e {minecraft_args}', shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True)
+                                    case False:
+                                        self.page.window.destroy()
+                                        subprocess.call(f'nohup {minecraft_args}', shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True)
 
                     case False: 
-
                         match platform.system():
-                            case "Windows": ...
-                            case "Linux": ...
+                            case "Windows":
+                                match DEBUG_MODE:
+                                    case True: subprocess.call(f'start /i cmd /k {minecraft_args}', shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True)
+                                    case False: subprocess.call(f'start /b cmd /k {minecraft_args}', shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True)
+                            case "Linux": 
+                                match DEBUG_MODE:
+                                    case True: 
+                                        # HAY QUE DETERMINAR LA TERMINAL O USAR UNO UNIVERSAL, en mi caso es alacritty.
+                                        subprocess.call(f'nohup alacritty -e {minecraft_args}', shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True)
+                                    case False: subprocess.call(f'nohup {minecraft_args}', shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True)
             case _: ...
         
 class AccountManager:
 
     def offline() -> Dict[str, str]:
 
-        if not os.path.exists(Config.get_path() + "/Nox Launcher/settings/profiles/profiles.json"): Config.repair()
+        if not os.path.exists(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json"): Config.repair()
 
-        with open(Config.get_path() + "/Nox Launcher/settings/profiles/profiles.json", "r") as f:
+        with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "r") as f:
             profiles = json.load(f)
 
             if not "profiles" in profiles:
                 profiles["profiles"] = {}
-                with open(Config.get_path() + "/Nox Launcher/settings/profiles/profiles.json", "w") as f:
+                with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w") as f:
                     json.dump(profiles, f, indent= 4)
 
             elif not isinstance(profiles["profiles"], dict):
                 profiles["profiles"] = {}
-                with open(Config.get_path() + "/Nox Launcher/settings/profiles/profiles.json", "w") as f:
+                with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w") as f:
                     json.dump(profiles, f, indent= 4)
 
             if len(profiles["profiles"]) > 0 and "default" in profiles["profiles"]:
@@ -1234,19 +1279,19 @@ class AccountManager:
 
     def determinate() -> Dict[str, str]:
 
-        if not os.path.exists(Config.get_path() + "/Nox Launcher/settings/profiles/profiles.json"): Config.repair()
+        if not os.path.exists(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json"): Config.repair()
 
-        with open(Config.get_path() + "/Nox Launcher/settings/profiles/profiles.json", "r") as f:
+        with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "r") as f:
             profiles = json.load(f)
 
             if not "profiles" in profiles:
                 profiles["profiles"] = {}
-                with open(Config.get_path() + "/Nox Launcher/settings/profiles/profiles.json", "w") as f:
+                with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w") as f:
                     json.dump(profiles, f, indent= 4)
 
             elif not isinstance(profiles["profiles"], dict):
                 profiles["profiles"] = {}
-                with open(Config.get_path() + "/Nox Launcher/settings/profiles/profiles.json", "w") as f:
+                with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w") as f:
                     json.dump(profiles, f, indent= 4)
 
             if len(profiles["profiles"]) > 0:
@@ -1266,32 +1311,32 @@ class AccountManager:
                         "name": "Default",
                         "type": "offline",
                         "selected": True,
-                        "skin": "assets/steve.png"
+                        "skin": f"{Config.get_path()}/skins/steve.png"
                     },
                     "premium": {},
                     "no_premium": {}
 
                 })
 
-                with open(Config.get_path() + "/Nox Launcher/settings/profiles/profiles.json", "w") as f:
+                with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w") as f:
                     json.dump(profiles, f, indent= 4)
                     
                 return profiles["profiles"]["default"]
                         
     def rename(new: str) -> bool:
 
-        if not os.path.exists(Config.get_path() + "/Nox Launcher/settings/profiles/profiles.json"): Config.repair()
+        if not os.path.exists(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json"): Config.repair()
 
-        with open(Config.get_path() + "/Nox Launcher/settings/profiles/profiles.json", "r") as f:
+        with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "r") as f:
             profiles = json.load(f)
 
             if not "profiles" in profiles:
                 profiles["profiles"] = {}
-                with open(Config.get_path() + "/Nox Launcher/settings/profiles/profiles.json", "w") as f:
+                with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w") as f:
                     json.dump(profiles, f, indent= 4)
             elif not isinstance(profiles["profiles"], dict):
                 profiles["profiles"] = {}
-                with open(Config.get_path() + "/Nox Launcher/settings/profiles/profiles.json", "w") as f:
+                with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w") as f:
                     json.dump(profiles, f, indent= 4)
 
             if len(profiles["profiles"]) > 0:
@@ -1303,7 +1348,7 @@ class AccountManager:
                         profile["name"] = new
                         break
 
-                with open(Config.get_path() + "/Nox Launcher/settings/profiles/profiles.json", "w") as f: 
+                with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w") as f: 
                     json.dump(profiles, f, indent= 4)
 
                 return True
@@ -1312,20 +1357,20 @@ class AccountManager:
 
     def select(name: str) -> Dict[str, str]:
 
-        if not os.path.exists(Config.get_path() + "/Nox Launcher/settings/profiles/profiles.json"): Config.repair()
+        if not os.path.exists(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json"): Config.repair()
 
-        with open(Config.get_path() + "/Nox Launcher/settings/profiles/profiles.json", "r") as f:
+        with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "r") as f:
             profiles = json.load(f)
 
             if "profiles" not in profiles: 
 
                 profiles["profiles"] = {}
-                with open(Config.get_path() + "/Nox Launcher/settings/profiles/profiles.json", "w") as f:
+                with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w") as f:
                     json.dump(profiles, f, indent= 4)
 
             elif not isinstance(profiles["profiles"], dict):
                 profiles["profiles"] = {}
-                with open(Config.get_path() + "/Nox Launcher/settings/profiles/profiles.json", "w") as f:
+                with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w") as f:
                     json.dump(profiles, f, indent= 4)
 
             if len(profiles["profiles"]) > 0:
@@ -1334,7 +1379,7 @@ class AccountManager:
                         continue
                     elif profile["name"] == name:
                         profile["selected"] = True
-                        with open(Config.get_path() + "/Nox Launcher/settings/profiles/profiles.json", "w") as f: 
+                        with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w") as f: 
                             json.dump(profiles, f, indent= 4)
 
                         return profile
@@ -1352,7 +1397,7 @@ class AccountManager:
             }
         })
 
-        with open(Config.get_path() + "/Nox Launcher/settings/profiles/profiles.json", "w") as f:
+        with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w") as f:
             json.dump(profiles, f, indent= 4)
 
         return profiles["profiles"]["default"]          
@@ -1368,15 +1413,15 @@ class AccountManager:
             scaling_factor= size
         )
 
-        skin.to_isometric_image(perspective).save(f"{Config.get_path()}/Nox Launcher/cache/{name}.png")
+        skin.to_isometric_image(perspective).save(f"{Config.get_path()}/NoxLauncher/cache/{name}.png")
 
         if os.path.exists(os.path.dirname(__file__) + "/test.png") or os.path.exists(os.path.dirname(os.path.dirname(__file__)) + "/test.png"):
             os.remove(os.path.dirname(__file__) + "/test.png")
             os.remove(os.path.dirname(os.path.dirname(__file__)) + "/test.png")
 
-        return flet.Image(src= f"{Config.get_path()}/Nox Launcher/cache/{name}.png", width= width, height= height)
+        return flet.Image(src= f"{Config.get_path()}/NoxLauncher/cache/{name}.png", width= width, height= height)
     
     def delete_skin_from_cache(name: str) -> None:
 
-        if os.path.exists(f"{Config.get_path()}/Nox Launcher/cache/{name}.png"):
-            os.remove(f"{Config.get_path()}/Nox Launcher/cache/{name}.png")
+        if os.path.exists(f"{Config.get_path()}/NoxLauncher/cache/{name}.png"):
+            os.remove(f"{Config.get_path()}/NoxLauncher/cache/{name}.png")
