@@ -15,6 +15,8 @@ https://github.com/gitlimes/discord-md-badge?
 -->
 [![](https://dcbadge.limes.pink/api/server/https://discord.com/invite/DWfuQRsxwb)](https://discord.com/invite/DWfuQRsxwb)
 
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 ## Features 🎉
 
 ### Support the almost popular modloaders 🔥
@@ -38,3 +40,5 @@ https://github.com/gitlimes/discord-md-badge?
 
 - **Windows**
 - **Linux**
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------
