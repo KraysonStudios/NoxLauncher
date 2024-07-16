@@ -22,11 +22,11 @@ https://github.com/gitlimes/discord-md-badge?
 - **[Fabric](https://fabricmc.net/)**
 - **[Forge](https://files.minecraftforge.net/net/minecraftforge/forge/)**
 
-### It easy-to-use 👑.
+### It easy-to-use 👑
 
 - Is **extremely configurable** to launch minecraft.
 
-### It solid as an rock 🪨.
+### It solid as an rock 🪨
 
 - The **official** releases are completely stable and almost **problem-free**.
 
