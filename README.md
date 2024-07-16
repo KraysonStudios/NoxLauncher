@@ -3,4 +3,10 @@
 </p>
 
 # NoxLauncher
-NoxLauncher is a powerful and easy-to-use launcher for Minecraft develop by Krayson Studio.
+
+> [!NOTE]  
+> **This repo is official and notthing else. Pls contribute in this only repo.**
+
+### NoxLauncher is a powerful and easy-to-use launcher for Minecraft develop by Krayson Studio 🪐.
+
+
