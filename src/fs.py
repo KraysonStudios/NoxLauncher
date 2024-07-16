@@ -3,9 +3,7 @@ import json
 import jdk
 import itertools
 import psutil
-import zipfile
 import flet
-import wget
 import platform
 
 from functools import cache

@@ -1,7 +1,6 @@
 flet
 minecraft-launcher-lib
 install-jdk
-wget
 numpy
 attrs
 pillow

@@ -568,7 +568,7 @@ class NoxLauncher:
                         content= flet.Column(expand= True, expand_loose= True,
                             controls= [
                                 flet.Container(image_src= "icon.png", expand_loose= True, height= 180),
-                                flet.Container(content= flet.Text("NoxLauncher is a powerful and easy-to-use launcher for Minecraft develop by Krayson Studio.", size= 15, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center),
+                                flet.Container(content= flet.Text("NoxLauncher is a powerful and easy-to-use Minecraft launcher develop by Krayson Studio.", size= 15, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center),
                                 flet.Column(controls= [
                                     flet.Text("Developed by: ", color= "#ffffff", size= 15, font_family= "Minecraft"),
                                     flet.Row(controls= [
@@ -692,7 +692,7 @@ class NoxLauncher:
         java_path: flet.Dropdown = flet.Dropdown(label= "Java source", hint_text= "Select the Java source!", options= Config.get_java_list(), border_color= "#717171", border_radius= 10, border_width= 2,  label_style= flet.TextStyle(color= "#ffffff"), value= Config.determinate_java_path(JAVA_INFO[0]))
         java_allocated_memory: flet.Slider = flet.Slider(value= Config.parse_memory(JAVA_INFO[1]), min= 1000, max= Config.get_memory_ram(), label= "{value}MB", expand_loose= True, height= 40, active_color= "#148b47", thumb_color= "#ffffff")
         version: flet.Text = flet.Text(f"Version: {Config.get_java_version(JAVA_INFO[0])}", size= 20, color= "#ffffff", font_family= "Minecraft")
-        location: flet.Text = flet.Text(f"Location: {JAVA_INFO[0][:14] + "..."}", size= 20, color= "#ffffff", font_family= "Minecraft")
+        location: flet.Text = flet.Text(f"Location: {JAVA_INFO[0][:14]}...", size= 20, color= "#ffffff", font_family= "Minecraft")
         close_when_playing: flet.Switch = flet.Switch(value= Config.get_close_when_playing(), active_color= "#148b47")
         debug_mode: flet.Switch = flet.Switch(value= Config.get_debug_mode(), active_color= "#148b47")
 
