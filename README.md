@@ -24,7 +24,7 @@ Support the **almost** popular **modloaders**.
 
 It fast ⚡.
 
-- On comparasion with others minecraft launchers and mostly with official minecraft launcher; Nox Launcher is blazingly fast on startup. 
+- On comparasion with others minecraft launchers and mostly with official Minecraft Launcher; **Nox Launcher** is blazingly fast on startup. 
 
 It multiplatform ✨.
 
