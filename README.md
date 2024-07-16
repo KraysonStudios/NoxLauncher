@@ -13,10 +13,7 @@
 Discord Markdown Badge API
 https://github.com/gitlimes/discord-md-badge?
 -->
-
-<p align="center">
-   [![](https://dcbadge.limes.pink/api/server/https://discord.com/invite/DWfuQRsxwb)](https://discord.com/invite/DWfuQRsxwb)
-</p>
+[![](https://dcbadge.limes.pink/api/server/https://discord.com/invite/DWfuQRsxwb)](https://discord.com/invite/DWfuQRsxwb)
 
 ## Features 🎉
 
