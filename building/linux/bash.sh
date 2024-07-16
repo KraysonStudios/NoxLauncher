@@ -10,3 +10,16 @@ pyinstaller \
     --strip \
     --nowindowed \
     --onefile
+
+mkdir linux
+
+cd linux/
+
+zip NoxLauncher ../assets 
+zip NoxLauncher -j ../dist/NoxLauncher
+
+cd ..
+
+zip linux/NoxLauncher -j ../LICENSE
+
+echo "Building complete!"
