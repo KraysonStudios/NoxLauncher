@@ -26,7 +26,7 @@ https://github.com/gitlimes/discord-md-badge?
 
 - Is **extremely configurable** to launch minecraft.
 
-### It solid as rock 🪨.
+### It solid as an rock 🪨.
 
 - The **official** releases are completely stable and almost **problem-free**.
 
