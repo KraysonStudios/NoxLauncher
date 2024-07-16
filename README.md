@@ -28,7 +28,7 @@ https://github.com/gitlimes/discord-md-badge?
 
 ### It secure 🔐
 
-- All **sensitive data** is stored **encrypted** on your computer. Nothing is send to **Krayson Studios** 🪐 and his APIS.
+- All **sensitive data** is stored **encrypted** on your computer. Nothing is send to **Krayson Studios** 🪐 and his **APIS**.
 
 ### It solid as an rock 🪨
 
