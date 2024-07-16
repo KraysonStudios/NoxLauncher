@@ -7,7 +7,6 @@ import uuid
 import subprocess
 import minecraft_launcher_lib
 
-
 from fs import Config
 from skinlib.skin import Skin, Perspective
 from constants import constants
