@@ -21,3 +21,8 @@ Support the **almost** popular **modloaders**.
 
 - **[Fabric](https://fabricmc.net/)**
 - **[Forge](https://files.minecraftforge.net/net/minecraftforge/forge/)**
+
+It multiplatform.
+
+- **Windows**
+- **Linux**
