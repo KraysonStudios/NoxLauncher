@@ -26,6 +26,10 @@ https://github.com/gitlimes/discord-md-badge?
 
 - Is **extremely configurable** to launch minecraft.
 
+### It secure 🔐
+
+- All **sensitive data** is stored **encrypted** on your computer. Nothing is send to **Krayson Studios** 🪐 and his APIS.
+
 ### It solid as an rock 🪨
 
 - The **official** releases are completely stable and almost **problem-free**.
