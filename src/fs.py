@@ -25,7 +25,8 @@ class Config:
         if not os.path.exists(Config.get_path() + "/NoxLauncher/cache/minecraft_news.json"):
             with open(Config.get_path() + "/NoxLauncher/cache/minecraft_news.json", "w", encoding= "utf-8") as f:
                 json.dump({
-                    "news": []
+                    "news": [],
+                    "requested": ""
                 }, f, indent= 4)
 
         if not os.path.exists(Config.get_path() + "/NoxLauncher/launcher_profiles.json"):
