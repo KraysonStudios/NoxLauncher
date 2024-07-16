@@ -1,12 +1,15 @@
-import flet
-import os
-import json
-import datetime
-import minecraft_launcher_lib
+try:
+    import flet
+    import os
+    import json
+    import datetime
+    import minecraft_launcher_lib
 
-from fs import Config
-from typing import List
-from enum import Enum
+    from fs import Config
+    from typing import List
+    from enum import Enum
+
+except Exception as e: raise Exception(f"Report this error to the developers: \n{e.args[0]}\n")
 
 def minecraft_news() -> List[flet.Container]:
 

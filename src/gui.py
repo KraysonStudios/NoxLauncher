@@ -1,18 +1,22 @@
-import platform
-import flet
-import os
-import json
-import time
-import uuid
-import subprocess
-import minecraft_launcher_lib
+try:
 
-from fs import Config
-from skinlib.skin import Skin, Perspective
-from constants import constants
-from tkinter.messagebox import showerror
-from typing import Any, Callable, Dict, List
-from PIL import Image
+    import platform
+    import flet
+    import os
+    import json
+    import time
+    import uuid
+    import subprocess
+    import minecraft_launcher_lib
+
+    from fs import Config
+    from skinlib.skin import Skin, Perspective
+    from constants import constants
+    from tkinter.messagebox import showerror
+    from typing import Any, Callable, Dict, List
+    from PIL import Image
+
+except Exception as e: raise Exception(f"Report this error to the developers: \n{e.args[0]}\n")
 
 class NoxLauncher: 
 
@@ -783,6 +787,12 @@ class NoxLauncher:
     def accounts(page: flet.Page) -> flet.View:
 
         ACC: Dict[str, str] = AccountManager.determinate()
+
+        if not os.path.exists(ACC["skin"]):
+            showerror(title= "Nox Launcher", message= "Skin not found. Please fix this editing profiles.json and try again.", type= "ok")
+            page.window.destroy()
+            return flet.View()
+
         skin: flet.Image = AccountManager.get_skin(ACC["skin"], ACC["name"], size= 50, width= 120, height= 120)
 
         return flet.View("/accounts",  
@@ -817,6 +827,12 @@ class NoxLauncher:
     def offline(page: flet.Page) -> flet.View:
 
         ACC: Dict[str, str] = AccountManager.offline()
+
+        if not os.path.exists(ACC["skin"]):
+            showerror(title= "Nox Launcher", message= "Skin not found. Please fix this editing profiles.json and try again.", type= "ok")
+            page.window.destroy()
+            return flet.View()
+
         skin: flet.Image = AccountManager.get_skin(ACC["skin"], ACC["name"], size= 50, width= 120, height= 120)
 
         def update_account_info(account: Dict[str, str]) -> None:
@@ -1012,6 +1028,12 @@ class NoxLauncher:
     def play(page: flet.Page) -> flet.View:
 
         ACC: Dict[str, str] = AccountManager.determinate()
+
+        if not os.path.exists(ACC["skin"]):
+            showerror(title= "Nox Launcher", message= "Skin not found. Please fix this editing profiles.json and try again.", type= "ok")
+            page.window.destroy()
+            return flet.View()
+
         skin: flet.Image = AccountManager.get_skin(ACC["skin"], ACC["name"])
 
         def start_launcher(_: flet.ControlEvent) -> None: 
@@ -1311,7 +1333,7 @@ class AccountManager:
                         "name": "Default",
                         "type": "offline",
                         "selected": True,
-                        "skin": "src/assets/steve.png" if os.path.dirname(__file__) == "src" else "steve.png"
+                        "skin": "extensions/assets/steve.png"
                     },
                     "premium": {},
                     "no_premium": {}
@@ -1403,10 +1425,6 @@ class AccountManager:
         return profiles["profiles"]["default"]          
 
     def get_skin(skin: str, name: str, size: int = 20, width: int = 50, height: int = 50) -> flet.Image:
-
-        if not os.path.exists(skin):
-            showerror(title= "Nox Launcher", message= "Skin not found. Please fix this editing profiles.json and try again.", type= "ok")
-            return
 
         skin: Skin = Skin.from_image(Image.open(skin).convert("RGBA"))
 

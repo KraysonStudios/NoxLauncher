@@ -5,3 +5,4 @@ numpy
 attrs
 pillow
 psutil
+pyinstaller

@@ -1,14 +1,18 @@
-import os
-import json
-import jdk
-import itertools
-import psutil
-import flet
-import platform
+try:
 
-from functools import cache
-from tkinter.messagebox import showinfo
-from typing import Any, Dict, List
+    import os
+    import json
+    import jdk
+    import itertools
+    import psutil
+    import flet
+    import platform
+
+    from functools import cache
+    from tkinter.messagebox import showinfo
+    from typing import Any, Dict, List
+
+except Exception as e: raise Exception(f"Report this error to the developers: \n{e.args[0]}\n")
 
 class Config:
 
