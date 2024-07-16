@@ -1312,7 +1312,7 @@ class AccountManager:
                         "name": "Default",
                         "type": "offline",
                         "selected": True,
-                        "skin": "src/assets/steve.png" if os.path.dirname(__file__) == "src" else "assets/steve.png"
+                        "skin": "src/assets/steve.png" if os.path.dirname(__file__) == "src" else "steve.png"
                     },
                     "premium": {},
                     "no_premium": {}
