@@ -22,6 +22,14 @@ https://github.com/gitlimes/discord-md-badge?
 - **[Fabric](https://fabricmc.net/)**
 - **[Forge](https://files.minecraftforge.net/net/minecraftforge/forge/)**
 
+### It easy-to-use 👑.
+
+- Is **extremely configurable** to launch minecraft.
+
+### It solid as rock 🪨.
+
+- The **official** releases are completely stable and almost **problem-free**.
+
 ### It fast ⚡
 
 - On comparasion with others minecraft launchers and mostly with official Minecraft Launcher; **Nox Launcher** is blazingly fast on startup. 
