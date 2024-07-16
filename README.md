@@ -7,7 +7,7 @@
 > [!NOTE]  
 > This repo is __**official**__ and nothing else. Pls contribute in this only repo.
 
-**NoxLauncher** is a *powerful* and __**easy-to-use**__ launcher for Minecraft develop by **Krayson Studio** 🪐.
+**NoxLauncher** is a *powerful* and *easy-to-use* Minecraft Launcher develop by **Krayson Studio** 🪐.
 
 <!---
 Discord Markdown Badge API
