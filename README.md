@@ -17,7 +17,7 @@ https://github.com/gitlimes/discord-md-badge?
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-## Features 🎉
+### Features 🎉
 
 ### Support the almost popular modloaders 🔥
 
