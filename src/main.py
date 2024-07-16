@@ -2,7 +2,6 @@ try:
 
     import flet
     import platform
-    import os
 
     from gui import NoxLauncher
     from constants import constants
@@ -16,7 +15,7 @@ if __name__ == "__main__":
     if not platform.system() in ["Linux", "Windows"]:
         showerror(title= "Nox Launcher", message= "Unsupported platform.", type= "ok")
         exit(1)
-        
+
     def main(page: flet.Page) -> None:
 
         Config.repair()
