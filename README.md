@@ -5,8 +5,8 @@
 # NoxLauncher
 
 > [!NOTE]  
-> **This repo is official and notthing else. Pls contribute in this only repo.**
+> This repo is __**official**__ and notthing else. Pls contribute in this only repo.
 
-### NoxLauncher is a powerful and easy-to-use launcher for Minecraft develop by Krayson Studio 🪐.
+**NoxLauncher is a powerful and easy-to-use launcher for Minecraft develop by Krayson Studio 🪐.**
 
 
