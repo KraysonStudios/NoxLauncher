@@ -22,7 +22,11 @@ Support the **almost** popular **modloaders**.
 - **[Fabric](https://fabricmc.net/)**
 - **[Forge](https://files.minecraftforge.net/net/minecraftforge/forge/)**
 
-It multiplatform.
+It fast ⚡.
+
+- On comparasion with others minecraft launchers and mostly with official minecraft launcher; Nox Launcher is blazingly fast on startup. 
+
+It multiplatform ✨.
 
 - **Windows**
 - **Linux**
