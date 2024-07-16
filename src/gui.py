@@ -7,9 +7,11 @@ import uuid
 import subprocess
 import minecraft_launcher_lib
 
+
 from fs import Config
 from skinlib.skin import Skin, Perspective
 from constants import constants
+from tkinter.messagebox import showerror
 from typing import Any, Callable, Dict, List
 from PIL import Image
 
@@ -1250,19 +1252,19 @@ class AccountManager:
 
     def offline() -> Dict[str, str]:
 
-        if not os.path.exists(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json"): Config.repair()
+        if not os.path.exists(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", encoding= "utf-8"): Config.repair()
 
-        with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "r") as f:
+        with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "r", encoding= "utf-8") as f:
             profiles = json.load(f)
 
             if not "profiles" in profiles:
                 profiles["profiles"] = {}
-                with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w") as f:
+                with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w", encoding= "utf-8") as f:
                     json.dump(profiles, f, indent= 4)
 
             elif not isinstance(profiles["profiles"], dict):
                 profiles["profiles"] = {}
-                with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w") as f:
+                with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w", encoding= "utf-8") as f:
                     json.dump(profiles, f, indent= 4)
 
             if len(profiles["profiles"]) > 0 and "default" in profiles["profiles"]:
@@ -1281,17 +1283,17 @@ class AccountManager:
 
         if not os.path.exists(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json"): Config.repair()
 
-        with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "r") as f:
+        with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "r", encoding= "utf-8") as f:
             profiles = json.load(f)
 
             if not "profiles" in profiles:
                 profiles["profiles"] = {}
-                with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w") as f:
+                with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w", encoding= "utf-8") as f:
                     json.dump(profiles, f, indent= 4)
 
             elif not isinstance(profiles["profiles"], dict):
                 profiles["profiles"] = {}
-                with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w") as f:
+                with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w", encoding= "utf-8") as f:
                     json.dump(profiles, f, indent= 4)
 
             if len(profiles["profiles"]) > 0:
@@ -1303,7 +1305,6 @@ class AccountManager:
                         continue
                     elif profile["selected"] == True:
                         return profile
-                    
             else:
 
                 profiles["profiles"].update({
@@ -1311,14 +1312,14 @@ class AccountManager:
                         "name": "Default",
                         "type": "offline",
                         "selected": True,
-                        "skin": f"{Config.get_path()}/skins/steve.png"
+                        "skin": "src/assets/steve.png" if os.path.dirname(__file__) == "src" else "assets/steve.png"
                     },
                     "premium": {},
                     "no_premium": {}
 
                 })
 
-                with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w") as f:
+                with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w", encoding= "utf-8") as f:
                     json.dump(profiles, f, indent= 4)
                     
                 return profiles["profiles"]["default"]
@@ -1327,16 +1328,16 @@ class AccountManager:
 
         if not os.path.exists(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json"): Config.repair()
 
-        with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "r") as f:
+        with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "r", encoding= "utf-8") as f:
             profiles = json.load(f)
 
             if not "profiles" in profiles:
                 profiles["profiles"] = {}
-                with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w") as f:
+                with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w", encoding= "utf-8") as f:
                     json.dump(profiles, f, indent= 4)
             elif not isinstance(profiles["profiles"], dict):
                 profiles["profiles"] = {}
-                with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w") as f:
+                with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w", encoding= "utf-8") as f:
                     json.dump(profiles, f, indent= 4)
 
             if len(profiles["profiles"]) > 0:
@@ -1348,7 +1349,7 @@ class AccountManager:
                         profile["name"] = new
                         break
 
-                with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w") as f: 
+                with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w", encoding= "utf-8") as f: 
                     json.dump(profiles, f, indent= 4)
 
                 return True
@@ -1359,18 +1360,18 @@ class AccountManager:
 
         if not os.path.exists(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json"): Config.repair()
 
-        with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "r") as f:
+        with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "r", encoding= "utf-8") as f:
             profiles = json.load(f)
 
             if "profiles" not in profiles: 
 
                 profiles["profiles"] = {}
-                with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w") as f:
+                with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w", encoding= "utf-8") as f:
                     json.dump(profiles, f, indent= 4)
 
             elif not isinstance(profiles["profiles"], dict):
                 profiles["profiles"] = {}
-                with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w") as f:
+                with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w", encoding= "utf-8") as f:
                     json.dump(profiles, f, indent= 4)
 
             if len(profiles["profiles"]) > 0:
@@ -1379,7 +1380,7 @@ class AccountManager:
                         continue
                     elif profile["name"] == name:
                         profile["selected"] = True
-                        with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w") as f: 
+                        with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w", encoding= "utf-8") as f: 
                             json.dump(profiles, f, indent= 4)
 
                         return profile
@@ -1397,12 +1398,16 @@ class AccountManager:
             }
         })
 
-        with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w") as f:
+        with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w", encoding= "utf-8") as f:
             json.dump(profiles, f, indent= 4)
 
         return profiles["profiles"]["default"]          
 
     def get_skin(skin: str, name: str, size: int = 20, width: int = 50, height: int = 50) -> flet.Image:
+
+        if not os.path.exists(skin):
+            showerror(title= "Nox Launcher", message= "Skin not found. Please fix this editing profiles.json and try again.", type= "ok")
+            return
 
         skin: Skin = Skin.from_image(Image.open(skin).convert("RGBA"))
 

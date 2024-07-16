@@ -1,10 +1,11 @@
 import os
 import json
-import re
 import jdk
 import itertools
 import psutil
+import zipfile
 import flet
+import wget
 import platform
 
 from functools import cache
@@ -15,20 +16,18 @@ class Config:
 
     def repair() -> None:
 
-        if not os.path.exists(Config.get_path() + "/NoxLauncher"):
-            os.mkdir(Config.get_path() + "/NoxLauncher/")
-            
-        if not os.path.exists(Config.get_path() + "/NoxLauncher/java"):
-            os.mkdir(Config.get_path() + "/NoxLauncher/java/")
+        if not os.path.exists(Config.get_path() + "/NoxLauncher"): os.mkdir(Config.get_path() + "/NoxLauncher/")
+        if not os.path.exists(Config.get_path() + "/NoxLauncher/java"): os.mkdir(Config.get_path() + "/NoxLauncher/java/")
+        if not os.path.exists(Config.get_path() + "/NoxLauncher/cache"): os.mkdir(Config.get_path() + "/NoxLauncher/cache/")
 
-        if not os.path.exists(Config.get_path() + "/NoxLauncher/cache"):
-            os.mkdir(Config.get_path() + "/NoxLauncher/cache/")
-
-        if not os.path.exists(Config.get_path() + "/NoxLauncher/skins"):
-            os.mkdir(Config.get_path() + "/NoxLauncher/skins/")
+        if not os.path.exists(Config.get_path() + "/NoxLauncher/cache/minecraft_news.json"):
+            with open(Config.get_path() + "/NoxLauncher/cache/minecraft_news.json", "w", encoding= "utf-8") as f:
+                json.dump({
+                    "news": []
+                }, f, indent= 4)
 
         if not os.path.exists(Config.get_path() + "/NoxLauncher/launcher_profiles.json"):
-            with open(Config.get_path() + "/NoxLauncher/launcher_profiles.json", "w") as f:
+            with open(Config.get_path() + "/NoxLauncher/launcher_profiles.json", "w", encoding= "utf-8") as f:
                 json.dump({
                     "profiles" : {},                  
                     "settings": {
@@ -42,7 +41,7 @@ class Config:
             os.mkdir(Config.get_path() + "/NoxLauncher/settings/")
             os.mkdir(Config.get_path() + "/NoxLauncher/settings/profiles/")
 
-            with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w") as f:
+            with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w", encoding= "utf-8") as f:
                 json.dump({
                     "java": {},
                     "close-when-playing": True
@@ -52,20 +51,20 @@ class Config:
             os.mkdir(Config.get_path() + "/NoxLauncher/settings/profiles/")
 
         if not os.path.exists(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json"):
-            with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w") as f:
+            with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "w", encoding= "utf-8") as f:
                 json.dump({
                     "profiles": {}
                 }, f, indent= 4)
 
         if not os.path.exists(Config.get_path() + "/NoxLauncher/settings/settings.json"):
-            with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w") as f:
+            with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w", encoding= "utf-8") as f:
                 json.dump({
                     "java": {},
                     "close-when-playing": True
                 }, f, indent= 4)
 
         if os.path.exists(Config.get_path() + "/NoxLauncher/launcher_profiles.json"):
-            with open(Config.get_path() + "/NoxLauncher/launcher_profiles.json", "r") as f:
+            with open(Config.get_path() + "/NoxLauncher/launcher_profiles.json", "r", encoding= "utf-8") as f:
 
                 META: Dict[str, Any] = {
                     "profiles" : {},                  
@@ -103,7 +102,7 @@ class Config:
                                     break
 
         if os.path.exists(Config.get_path() + "/NoxLauncher/settings/settings.json"):
-            with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r") as f:
+            with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r", encoding= "utf-8") as f:
 
                 settings = json.load(f)
 
@@ -117,31 +116,31 @@ class Config:
                 }
 
                 if len(settings.keys()) != len(META.keys()):
-                    with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w") as f:
+                    with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w", encoding= "utf-8") as f:
                         json.dump(META, f, indent= 4)
                 elif not "close-when-playing" in settings:
-                    with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w") as f:
+                    with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w", encoding= "utf-8") as f:
                         json.dump(META, f, indent= 4)
                 elif not "debug" in settings:
-                    with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w") as f:
+                    with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w", encoding= "utf-8") as f:
                         json.dump(META, f, indent= 4)
                 elif not "java" in settings:
-                    with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w") as f:
+                    with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w", encoding= "utf-8") as f:
                         json.dump(META, f, indent= 4)
                 elif not isinstance(settings["java"], dict):
-                    with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w") as f:
+                    with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w", encoding= "utf-8") as f:
                         json.dump(META, f, indent= 4)
                 elif not "path" in settings["java"] or not "args" in settings["java"]:
-                    with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w") as f:
+                    with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w", encoding= "utf-8") as f:
                         json.dump(META, f, indent= 4)
                 elif not isinstance(settings["java"]["path"], str) or not isinstance(settings["java"]["args"], list):
-                    with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w") as f:
+                    with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w", encoding= "utf-8") as f:
                         json.dump(META, f, indent= 4)
                 elif not isinstance(settings["close-when-playing"], bool):
-                    with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w") as f:
+                    with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w", encoding= "utf-8") as f:
                         json.dump(META, f, indent= 4)
                 elif not isinstance(settings["debug"], bool):
-                    with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w") as f:
+                    with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w", encoding= "utf-8") as f:
                         json.dump(META, f, indent= 4)
 
         with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r") as f:
@@ -152,7 +151,7 @@ class Config:
                 showinfo("NoxLauncher", "Java is not installed. Please be patient while it is being installed. Don`t close app internally.", type= "ok")
                 jdk.install("21", operating_system= jdk.OperatingSystem.LINUX if platform.system() == "Linux" else jdk.OperatingSystem.WINDOWS, arch= jdk.Architecture.X64, path= Config.get_path() + "/NoxLauncher/java/")
 
-                with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r") as f:
+                with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r", encoding= "utf-8") as f:
 
                     settings = json.load(f)
                     settings["java"].update({
@@ -160,13 +159,13 @@ class Config:
                         "args": ["-Xms1G", f"-Xmx{Config.get_idiomatic_alloc_ram()}M"]
                     })
 
-                    with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w") as f:
+                    with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w", encoding= "utf-8") as f:
                         json.dump(settings, f, indent= 4)
 
     def get_java_info() -> List[str] | bool: 
 
         if os.path.exists(Config.get_path() + "/NoxLauncher/settings/settings.json"):
-            with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r") as f:
+            with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r", encoding= "utf-8") as f:
 
                 settings = json.load(f)
 
@@ -254,7 +253,7 @@ class Config:
 
         if not os.path.exists(Config.get_path() + "/NoxLauncher/settings/settings.json"): Config.repair()
 
-        with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r") as f:
+        with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r", encoding= "utf-8") as f:
 
             settings = json.load(f)
 
@@ -266,7 +265,7 @@ class Config:
 
         if not os.path.exists(Config.get_path() + "/NoxLauncher/settings/settings.json"): Config.repair()
 
-        with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r") as f:
+        with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r", encoding= "utf-8") as f:
 
             settings = json.load(f)
             settings["close-when-playing"] = value
@@ -278,7 +277,7 @@ class Config:
 
         if not os.path.exists(Config.get_path() + "/NoxLauncher/settings/settings.json"): Config.repair()
 
-        with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r") as f:
+        with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r", encoding= "utf-8") as f:
 
             settings = json.load(f)
 
@@ -290,12 +289,12 @@ class Config:
 
         if not os.path.exists(Config.get_path() + "/NoxLauncher/settings/settings.json"): Config.repair()
 
-        with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r") as f:
+        with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r", encoding= "utf-8") as f:
 
             settings = json.load(f)
             settings["debug"] = value
 
-            with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w") as f:
+            with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w", encoding= "utf-8") as f:
                 json.dump(settings, f, indent= 4)
     
     def parse_memory(args: List[str]) -> int: 
@@ -335,12 +334,12 @@ class Config:
 
         if not os.path.exists(Config.get_path() + "/NoxLauncher/settings/settings.json"): Config.repair()
 
-        with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r") as f:
+        with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r", encoding= "utf-8") as f:
 
             settings = json.load(f)
             settings["java"]["args"] = args
 
-            with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w") as f:
+            with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w", encoding= "utf-8") as f:
                 json.dump(settings, f, indent= 4)
 
         return args
@@ -349,12 +348,12 @@ class Config:
     
         if not os.path.exists(Config.get_path() + "/NoxLauncher/settings/settings.json"): Config.repair()
 
-        with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r") as f:
+        with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r", encoding= "utf-8") as f:
 
             settings = json.load(f)
             settings["java"]["path"] = path
 
-            with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w") as f:
+            with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w", encoding= "utf-8") as f:
                 json.dump(settings, f, indent= 4)
 
     @cache
