@@ -8,12 +8,15 @@ try:
     from fs import Config
     from tkinter.messagebox import showerror
 
-except Exception as e: raise Exception(f"Report this error to the developers: \n{e.args[0]}\n")
+except Exception as e:
+
+    print(f"Report this error to the developers: \n{e.args[0]}\n")
+    exit(1)
 
 if __name__ == "__main__":
 
     if not platform.system() in ["Linux", "Windows"]:
-        showerror(title= "Nox Launcher", message= "Unsupported platform.", type= "ok")
+        showerror(title= "Nox Launcher", message= "Unsupported Operating System.", type= "ok")
         exit(1)
 
     def main(page: flet.Page) -> None:

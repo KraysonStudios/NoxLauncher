@@ -12,7 +12,9 @@ try:
     from tkinter.messagebox import showinfo
     from typing import Any, Dict, List
 
-except Exception as e: raise Exception(f"Report this error to the developers: \n{e.args[0]}\n")
+except Exception as e: 
+    print(f"Report this error to the developers: \n{e.args[0]}\n")
+    exit(1)
 
 class Config:
 

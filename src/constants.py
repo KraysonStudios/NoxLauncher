@@ -5,11 +5,15 @@ try:
     import datetime
     import minecraft_launcher_lib
 
+    from abs import NoxLauncherDropdown
     from fs import Config
     from typing import List
     from enum import Enum
 
-except Exception as e: raise Exception(f"Report this error to the developers: \n{e.args[0]}\n")
+except Exception as e: 
+    
+    print(f"Report this error to the developers: \n{e.args[0]}\n")
+    exit(1)
 
 def minecraft_news() -> List[flet.Container]:
 
@@ -91,8 +95,8 @@ class constants(Enum):
     MIN_WIDTH = 900
     MIN_HEIGHT = 700
     MINECRAFT_NEWS = minecraft_news()
-    VANILLA_SNAPSHOTS = [flet.dropdown.Option(version["id"]) for version in minecraft_launcher_lib.utils.get_version_list() if version["type"] == "snapshot"]
-    VANILLA_RELEASES = [flet.dropdown.Option(version["id"]) for version in minecraft_launcher_lib.utils.get_version_list() if version["type"] == "release"]
-    FABRIC_SNAPSHOTS = [flet.dropdown.Option(version["version"]) for version in minecraft_launcher_lib.fabric.get_all_minecraft_versions() if version["stable"] == False]
-    FABRIC_RELEASES = [flet.dropdown.Option(version["version"]) for version in minecraft_launcher_lib.fabric.get_all_minecraft_versions() if version["stable"]]
-    FORGE = [flet.dropdown.Option(version) for version in minecraft_launcher_lib.forge.list_forge_versions()]
+    VANILLA_SNAPSHOTS = NoxLauncherDropdown(label= "Vanilla Snapshots", hint_text= "Select a snapshot and install it!", options= [flet.dropdown.Option(version["id"]) for version in minecraft_launcher_lib.utils.get_version_list() if version["type"] == "snapshot"], border_color= "#717171", border_radius= 10, border_width= 2, label_style= flet.TextStyle(color= "#ffffff"))
+    VANILLA_RELEASES = NoxLauncherDropdown(label= "Vanilla Releases", hint_text= "Select a release and install it!", options= [flet.dropdown.Option(version["id"]) for version in minecraft_launcher_lib.utils.get_version_list() if version["type"] == "release"], border_color= "#717171", border_radius= 10, border_width= 2, label_style= flet.TextStyle(color= "#ffffff"))
+    FABRIC_SNAPSHOTS = NoxLauncherDropdown(label= "Fabric Snapshots", hint_text= "Select a snapshot and install it!", options= [flet.dropdown.Option(version["version"]) for version in minecraft_launcher_lib.fabric.get_all_minecraft_versions() if version["stable"] == False], border_color= "#717171", border_radius= 10, border_width= 2, label_style= flet.TextStyle(color= "#ffffff"))
+    FABRIC_RELEASES = NoxLauncherDropdown(label= "Fabric Releases", hint_text= "Select a release and install it!", options= [flet.dropdown.Option(version["version"]) for version in minecraft_launcher_lib.fabric.get_all_minecraft_versions() if version["stable"]], border_color= "#717171", border_radius= 10, border_width= 2, label_style= flet.TextStyle(color= "#ffffff"))
+    FORGE = NoxLauncherDropdown(label= "Forge versions", hint_text= "Select a version and install it!", options= [flet.dropdown.Option(version) for version in minecraft_launcher_lib.forge.list_forge_versions()], border_color= "#717171", border_radius= 10, border_width= 2, label_style= flet.TextStyle(color= "#ffffff"))
