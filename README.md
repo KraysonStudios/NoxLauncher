@@ -1,5 +1,5 @@
 <p align="center">
-   <img alt= "icon" src= "https://github.com/KraysonStudios/NoxLauncher/blob/master/assets/icon.png" style= "width: 80%; height: 50%;">
+   <img alt= "icon" src= "https://github.com/KraysonStudios/NoxLauncher/blob/master/assets/icon.png" style= "width: 75%; height: 45%;">
 </p>
 
 # NoxLauncher
