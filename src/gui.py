@@ -1160,6 +1160,13 @@ class MinecraftDownloader:
                         {"setStatus": setStatus}
                     )
 
+                    if version["type"] == "vanilla release":
+                        Config.add_profile_version(
+                            version["version"],
+                            f"{Config.get_path()}/NoxLauncher/versions/{version['version']}/{version['version']}.jar",
+                            ""                            
+                        )
+
                 case "forge version": 
                     controls[n].value = f"Downloading Forge {version['version']}..."
                     controls[n].update()

@@ -4,9 +4,11 @@ try:
     import json
     import jdk
     import itertools
+    import shutil
     import psutil
     import flet
     import platform
+    import uuid
 
     from functools import cache
     from tkinter.messagebox import showinfo
@@ -41,6 +43,8 @@ class Config:
                     },
                     "version": 3
                 }, f, indent= 4)
+
+        Config.check_profiles_status()
 
         if not os.path.exists(Config.get_path() + "/NoxLauncher/settings"):
             os.mkdir(Config.get_path() + "/NoxLauncher/settings/")
@@ -360,6 +364,194 @@ class Config:
 
             with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w", encoding= "utf-8") as f:
                 json.dump(settings, f, indent= 4)
+
+    def add_profile_version(name: str, path: str, icon: str) -> None:
+
+        if not os.path.exists(f"{Config.get_path()}/NoxLauncher/launcher_profiles.json"): Config.repair()
+
+        with open(f"{Config.get_path()}/NoxLauncher/launcher_profiles.json", "r", encoding= "utf-8") as f:    
+
+            profiles = json.load(f)
+
+            if not "profiles" in profiles: Config.repair()
+            elif not isinstance(profiles["profiles"], dict): Config.repair()
+
+            profiles["profiles"].update({
+
+                f"{uuid.uuid4().hex}": {
+                    "name": name,
+                    "type": "custom",
+                    "path": path,
+                    "icon": icon,
+                    "resolution": {
+                        "width": 854,
+                        "height": 480,
+                        "fullscreen": False
+                    },
+                }
+
+            })
+        
+        with open(f"{Config.get_path()}/NoxLauncher/launcher_profiles.json", "w", encoding= "utf-8") as f:
+            json.dump(profiles, f, indent= 4)
+
+    def edit_profile_version(name: str, edit: Dict[str, Any]) -> None:
+
+        if not os.path.exists(f"{Config.get_path()}/NoxLauncher/launcher_profiles.json"): Config.check_profiles_status()
+
+        with open(f"{Config.get_path()}/NoxLauncher/launcher_profiles.json", "r", encoding= "utf-8") as f:    
+
+            profiles = json.load(f)
+
+            if not "profiles" in profiles: Config.check_profiles_status()
+            elif not isinstance(profiles["profiles"], dict): Config.check_profiles_status()
+
+            for profile in profiles["profiles"].values():
+
+                if not isinstance(profile, dict): 
+                    Config.check_profiles_status()
+                    continue
+
+                if not "name" in profile.keys(): continue
+                elif not isinstance(profile["name"], str): continue
+
+                if profile["name"].lower() == name.lower():
+                    profile.update(edit)
+                    break   
+
+        with open(f"{Config.get_path()}/NoxLauncher/launcher_profiles.json", "w", encoding= "utf-8") as f:
+            json.dump(profiles, f, indent= 4)
+
+    def remove_profile_version(name: str) -> None:
+
+        if not os.path.exists(f"{Config.get_path()}/NoxLauncher/launcher_profiles.json"): Config.repair()
+
+        with open(f"{Config.get_path()}/NoxLauncher/launcher_profiles.json", "r", encoding= "utf-8") as f:    
+
+            profiles = json.load(f)
+
+            if not "profiles" in profiles: Config.check_profiles_status()
+            elif not isinstance(profiles["profiles"], dict): Config.check_profiles_status()
+
+            for profile in profiles["profiles"].values():
+
+                if not isinstance(profile, dict): 
+                    Config.check_profiles_status()
+                    continue
+
+                if not "name" in profile.keys(): continue
+                elif not isinstance(profile["name"], str): continue
+
+                if profile["name"].lower() == name.lower():
+                    profiles["profiles"].pop(profile)
+                    break   
+
+        with open(f"{Config.get_path()}/NoxLauncher/launcher_profiles.json", "w", encoding= "utf-8") as f:
+            json.dump(profiles, f, indent= 4)
+
+    def check_profiles_status() -> None:
+
+        if not os.path.exists(f"{Config.get_path()}/NoxLauncher/launcher_profiles.json"): Config.repair()
+
+        VERSION_PATHS: List[str] = []
+
+        with open(f"{Config.get_path()}/NoxLauncher/launcher_profiles.json", "r", encoding= "utf-8") as f:
+
+            profiles = json.load(f)
+
+            if not "profiles" in profiles: Config.reset_profiles_versions()
+            elif not isinstance(profiles["profiles"], dict): Config.reset_profiles_versions()
+            elif not "version" in profiles.keys(): Config.reset_profiles_versions()
+            elif not isinstance(profiles["version"], int): Config.reset_profiles_versions()
+            elif not "settings" in profiles.keys(): Config.reset_profiles_versions()
+            elif not isinstance(profiles["settings"], dict): Config.reset_profiles_versions()
+            elif not "enableAdvanced" in profiles["settings"].keys(): Config.reset_profiles_versions()
+            elif not isinstance(profiles["settings"]["enableAdvanced"], bool): Config.reset_profiles_versions()
+            elif not "profileSorting" in profiles["settings"].keys(): Config.reset_profiles_versions()
+            elif not isinstance(profiles["settings"]["profileSorting"], str): Config.reset_profiles_versions()
+
+            for profile in profiles["profiles"].values():
+
+                if not isinstance(profile, dict):
+                    Config.reset_profiles_versions()
+                    break 
+                   
+                if not "name" in profile.keys(): 
+                    Config.reset_profiles_versions()
+                    break
+                elif not isinstance(profile["name"], str): 
+                    Config.reset_profiles_versions()
+                    break
+                elif not "type" in profile.keys(): 
+                    Config.reset_profiles_versions()
+                    break
+                elif not isinstance(profile["type"], str): 
+                    Config.reset_profiles_versions()
+                    break
+                elif not "path" in profile.keys(): 
+                    Config.reset_profiles_versions()
+                    break
+                elif not isinstance(profile["path"], str): 
+                    Config.reset_profiles_versions()
+                    break
+                elif not "icon" in profile.keys(): 
+                    Config.reset_profiles_versions()
+                    break
+                elif not isinstance(profile["icon"], str): 
+                    Config.reset_profiles_versions()
+                    break
+                elif not "resolution" in profile.keys():
+                    Config.reset_profiles_versions()
+                    break
+                elif not isinstance(profile["resolution"], dict): 
+                    Config.reset_profiles_versions()
+                    break
+                elif not "width" in profile["resolution"].keys(): 
+                    Config.reset_profiles_versions()
+                    break
+                elif not isinstance(profile["resolution"]["width"], int): 
+                    Config.reset_profiles_versions()
+                    break
+                elif not "height" in profile["resolution"].keys(): 
+                    Config.reset_profiles_versions()
+                    break
+                elif not isinstance(profile["resolution"]["height"], int): 
+                    Config.reset_profiles_versions()
+                    break
+                elif not "fullscreen" in profile["resolution"].keys(): 
+                    Config.reset_profiles_versions()
+                    break
+                elif not isinstance(profile["resolution"]["fullscreen"], bool): 
+                    Config.reset_profiles_versions()
+
+                VERSION_PATHS.append({"name": profiles["name"], "path": profile["path"]})
+
+        if not os.path.exists(f"{Config.get_path()}/NoxLauncher/versions"): return
+
+        for origin, target in itertools.zip_longest(
+            [version for version in os.listdir(f"{Config.get_path()}/NoxLauncher/versions") if os.path.isdir(f"{Config.get_path()}/NoxLauncher/versions/{version}")],
+            VERSION_PATHS,
+            fillvalue= None
+        ):
+            
+            if f"{Config.get_path()}/NoxLauncher/versions/{origin}/{origin}.jar" != target["path"]: 
+                shutil.rmtree(f"{Config.get_path()}/NoxLauncher/versions/{origin}", ignore_errors= True)
+                Config.remove_profile_version(target["name"])
+
+    @cache
+    def reset_profiles_versions() -> None:
+
+        if not os.path.exists(f"{Config.get_path()}/NoxLauncher/launcher_profiles.json"): Config.repair()
+
+        with open(f"{Config.get_path()}/NoxLauncher/launcher_profiles.json", "w", encoding= "utf-8") as f:
+            json.dump({
+                "profiles" : {},                  
+                "settings": {
+                    "enableAdvanced": False,
+                    "profileSorting": "byName"
+                },
+                "version": 3
+            }, f, indent= 4)
 
     @cache
     def get_path() -> str:
