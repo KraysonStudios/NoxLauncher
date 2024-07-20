@@ -7,13 +7,25 @@ try:
 
     from abs import NoxLauncherDropdown
     from fs import Config
-    from typing import List
+    from typing import List, Dict, Any
     from enum import Enum
 
 except Exception as e: 
     
-    print(f"Report this error to the developers: \n{e.args[0]}\n")
+    print(f"Report this error to the developers: \n{e.args[0]}")
     exit(1)
+
+def update_minecraft_news(news: Dict[str, Any]) -> None:
+
+    for article in minecraft_launcher_lib.utils.get_minecraft_news(5).values():
+
+        if isinstance(article, list): 
+            news["news"].extend(article)
+            break
+
+    news["requested"] = datetime.datetime.strftime(datetime.datetime.now(datetime.UTC), "%Y-%m-%d")
+
+    with open(Config.get_path() + "/NoxLauncher/cache/minecraft_news.json", "w") as f: json.dump(news, f, indent= 4)
 
 def minecraft_news() -> List[flet.Container]:
 
@@ -32,24 +44,20 @@ def minecraft_news() -> List[flet.Container]:
 
             with open(Config.get_path() + "/NoxLauncher/cache/minecraft_news.json", "r", encoding= "utf-8") as f: 
 
-                news = json.load(f)
+                news: Dict[str, Any] = json.load(f)
 
                 if "news" not in news: Config.repair()
                 elif "requested" not in news: Config.repair()
                 elif not isinstance(news["news"], list): Config.repair()
                 elif not isinstance(news["requested"], str): Config.repair()
 
-                if datetime.datetime.strftime(datetime.datetime.now(datetime.UTC), "%Y-%m-%d") != news["requested"]:
+                if news["requested"] != "" and not news["requested"].isspace():
+                    if (
+                        datetime.datetime.strftime(datetime.datetime.now(datetime.UTC), "%Y-%m-%d") != news["requested"] and 
+                        datetime.datetime.strptime(news["requested"], "%Y-%m-%d").day != datetime.datetime.now(datetime.UTC).day
+                    ): update_minecraft_news(news)
 
-                    for article in minecraft_launcher_lib.utils.get_minecraft_news(5).values():
-
-                        if isinstance(article, list): 
-                            news["news"].extend(article)
-                            break
-
-                    news["requested"] = datetime.datetime.strftime(datetime.datetime.now(datetime.UTC), "%Y-%m-%d")
-            
-                    with open(Config.get_path() + "/NoxLauncher/cache/minecraft_news.json", "w") as f: json.dump(news, f, indent= 4)
+                else: update_minecraft_news(news)
 
         with open(Config.get_path() + "/NoxLauncher/cache/minecraft_news.json", "r", encoding= "utf-8") as f: 
 
@@ -65,7 +73,7 @@ def minecraft_news() -> List[flet.Container]:
                     if "news" not in news: Config.repair()
                     elif not isinstance(news["news"], list): Config.repair()
 
-                    for article in minecraft_launcher_lib.utils.get_minecraft_news(5).values():
+                    for article in minecraft_launcher_lib.utils.get_minecraft_news(1).values():
 
                         if isinstance(article, list): 
                             news["news"].extend(article)
@@ -82,7 +90,7 @@ def minecraft_news() -> List[flet.Container]:
                     height= 180,
                     width= 180,
                     border_radius= 20,
-                    bgcolor= "#272727",
+                    opacity= 0.9,
                     padding= flet.padding.all(20)
                 ))
 

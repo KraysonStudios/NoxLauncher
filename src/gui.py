@@ -19,7 +19,7 @@ try:
 
 except Exception as e: 
     
-    print(f"Report this error to the developers: \n{e.args[0]}\n")
+    print(f"Report this error to the developers: \n{e.args[0]}")
     exit(1)
 
 class NoxLauncher: 
@@ -598,14 +598,14 @@ class NoxLauncher:
 
             def ok(_: flet.ControlEvent) -> None:
 
-                page.close(UPDATE_JAVA_SETTINGS_BANNER)
+                page.close(UPDATE_SETTINGS_BANNER)
                 page.update()
 
-            UPDATE_JAVA_SETTINGS_BANNER: NoxLauncherBanner = NoxLauncherBanner(
+            UPDATE_SETTINGS_BANNER: NoxLauncherBanner = NoxLauncherBanner(
                 bgcolor= "#272727",
                 leading= flet.Icon(name= flet.icons.CHECK, color= "#148b47", size= 40),
                 content= flet.Text(
-                    value= "Java settings updated!",
+                    value= "Settings updated!",
                     color= "#ffffff",
                     size= 20,
                     font_family= "Minecraft"
@@ -615,7 +615,7 @@ class NoxLauncher:
                 ]
             )
 
-            page.open(UPDATE_JAVA_SETTINGS_BANNER)
+            page.open(UPDATE_SETTINGS_BANNER)
 
         if JAVA_INFO is False:
 
@@ -689,59 +689,84 @@ class NoxLauncher:
                     expand_loose= True, 
                     alignment= flet.alignment.center,
                     content= NoxLauncherContainer(
-                        width= 500, 
+                        width= 920, 
                         height= 610, 
                         bgcolor= "#272727", 
                         border_radius= 20, 
                         alignment= flet.alignment.center,
                         padding= flet.padding.all(20), 
-                        content= NoxLauncherColumn(expand= True, expand_loose= True, spacing= 5,
+                        content= NoxLauncherRow(
                             controls= [
-                                NoxLauncherContainer(content= flet.Text("Settings", size= 30, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center),
-                                NoxLauncherRow(expand_loose= True, height= 100, controls= [
-                                    NoxLauncherContainer(content= flet.Image(
-                                        src= "java.png", 
-                                        width= 90, 
-                                        height= 90,
-                                        filter_quality= flet.FilterQuality.HIGH
-                                    ), alignment= flet.alignment.center_left, padding= flet.padding.only(bottom= 28)),
-                                    NoxLauncherColumn(
+                                NoxLauncherColumn(expand= True, expand_loose= True, spacing= 5,
+                                    controls= [
+                                        NoxLauncherContainer(content= flet.Text("Java Settings", size= 30, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center),
+                                        NoxLauncherContainer(expand= True, expand_loose= True),
+                                        NoxLauncherRow(expand_loose= True, height= 100, controls= [
+                                            NoxLauncherContainer(content= flet.Image(
+                                                src= "java.png", 
+                                                width= 90, 
+                                                height= 90,
+                                                filter_quality= flet.FilterQuality.HIGH
+                                            ), alignment= flet.alignment.center_left, padding= flet.padding.only(bottom= 28)),
+                                            NoxLauncherColumn(
+                                                controls = [
+                                                    NoxLauncherContainer(content= location, expand_loose= True, alignment= flet.alignment.center_left),
+                                                    NoxLauncherContainer(content= version, expand_loose= True, alignment= flet.alignment.center_left)
+                                                ],
+                                                spacing= 15,
+                                                expand_loose= True
+                                            )
+                                        ], vertical_alignment= flet.CrossAxisAlignment.CENTER, alignment= flet.MainAxisAlignment.CENTER, spacing= 0),
+                                        flet.Text("Java source", size= 20, color= "#ffffff", font_family= "Minecraft"),
+                                        java_path,
+                                        flet.Text("JVM arguments", size= 20, color= "#ffffff", font_family= "Minecraft"),
+                                        java_args,
+                                        NoxLauncherContainer(content= flet.Text("Memory dedicated", size= 20, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center),
+                                        java_allocated_memory,
+                                        NoxLauncherContainer(expand= True, expand_loose= True)
+                                    ]
+                                ),
+                                NoxLauncherContainer(content= flet.VerticalDivider(width= 1, color= "#717171"), width= 50),
+                                NoxLauncherColumn(expand= True, expand_loose= True, spacing= 5, controls= [
+                                    NoxLauncherContainer(content= flet.Text("General Settings", size= 30, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center),
+                                    NoxLauncherContainer(expand= True),
+                                    NoxLauncherRow(
                                         controls = [
-                                            NoxLauncherContainer(content= location, expand_loose= True, alignment= flet.alignment.center_left),
-                                            NoxLauncherContainer(content= version, expand_loose= True, alignment= flet.alignment.center_left)
+                                            flet.Icon(name= flet.icons.CLOSE, color= "#717171", size= 40),
+                                            NoxLauncherContainer(content= flet.Text("close when playing", size= 20, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center),
+                                            close_when_playing
                                         ],
-                                        spacing= 15,
-                                        expand_loose= True
-                                    )
-                                ], vertical_alignment= flet.CrossAxisAlignment.CENTER, alignment= flet.MainAxisAlignment.CENTER, spacing= 0),
-                                flet.Text("Java settings", size= 20, color= "#ffffff", font_family= "Minecraft"),
-                                java_path,
-                                flet.Text("JVM arguments", size= 20, color= "#ffffff", font_family= "Minecraft"),
-                                java_args,
-                                NoxLauncherContainer(content= flet.Text("Memory dedicated", size= 20, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center),
-                                java_allocated_memory,
-                                NoxLauncherRow(
-                                    controls = [
-                                        NoxLauncherContainer(content= flet.Text("close the launcher when playing", size= 20, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center),
-                                        close_when_playing
-                                    ],
-                                    expand_loose= True,
-                                    alignment= flet.MainAxisAlignment.CENTER,
-                                    vertical_alignment= flet.CrossAxisAlignment.CENTER
-                                ),
-                                NoxLauncherRow(
-                                    controls = [
-                                        NoxLauncherContainer(content= flet.Text("Debug mode", size= 20, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center),
-                                        debug_mode
-                                    ],
-                                    expand_loose= True,
-                                    alignment= flet.MainAxisAlignment.CENTER,
-                                    vertical_alignment= flet.CrossAxisAlignment.CENTER
-                                ),
-                                NoxLauncherContainer(content= flet.TextButton(content= flet.Text("Save", size= 20, font_family= "Minecraft"), on_click= update_settings, style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 190, height= 45), alignment= flet.alignment.center, expand_loose= True, expand= True)
-                            ]
+                                        expand_loose= True,
+                                        alignment= flet.MainAxisAlignment.CENTER,
+                                        vertical_alignment= flet.CrossAxisAlignment.CENTER
+                                    ),
+                                    NoxLauncherRow(
+                                        controls = [
+                                            flet.Icon(name= flet.icons.BUG_REPORT, color= "#717171", size= 40),
+                                            NoxLauncherContainer(content= flet.Text("Debug mode", size= 20, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center),
+                                            debug_mode
+                                        ],
+                                        expand_loose= True,
+                                        alignment= flet.MainAxisAlignment.CENTER,
+                                        vertical_alignment= flet.CrossAxisAlignment.CENTER
+                                    ),
+                                    NoxLauncherContainer(expand= True)
+                                ]),
+                            ],
+                            expand= True,
+                            expand_loose= True
                         )
                     )
+                ),
+                NoxLauncherContainer(
+                    height= 100,
+                    expand_loose= True,
+                    content= flet.TextButton(
+                        content= flet.Text("Save", size= 20, font_family= "Minecraft"),
+                        on_click= update_settings,
+                        style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 190, height= 45
+                    ),
+                    alignment= flet.alignment.center
                 )
             ],
             padding= 0,
@@ -1011,7 +1036,7 @@ class NoxLauncher:
         return flet.View("/offline",
             controls= [
                 NoxLauncherContainer(expand= True, expand_loose= True, alignment= flet.alignment.center,
-                        content= main_container
+                    content= main_container
                 )
             ],
 
@@ -1038,15 +1063,9 @@ class NoxLauncher:
         VERSIONS: NoxLauncherDropdown = NoxLauncherDropdown(label= "Installed Versions", hint_text= "Minecraft version to play!", options= Config.get_versions_available(), border_color= "#717171", border_radius= 10, label_style= flet.TextStyle(color= "#ffffff"), border_width= 2)
 
         return flet.View("/play", 
-            controls= [
-                NoxLauncherContainer(content = NoxLauncherRow(expand= True, expand_loose= True, controls= constants.MINECRAFT_NEWS.value, 
-                alignment= flet.MainAxisAlignment.CENTER, vertical_alignment= flet.CrossAxisAlignment.CENTER, spacing= 30, scroll= flet.ScrollMode.AUTO), expand= True, expand_loose= True, alignment= flet.alignment.center),
-            ],
-
             appbar= flet.AppBar(
-                leading= flet.Image(src= "icon.png", width= 150, height= 100, filter_quality= flet.FilterQuality.HIGH),
+                leading= flet.Image(src= "icon.png", width= 170, height= 130, filter_quality= flet.FilterQuality.HIGH),
                 leading_width= 170,
-                bgcolor= "#272727", 
                 actions= [
                     NoxLauncherContainer(
                         width= 120,
@@ -1078,8 +1097,19 @@ class NoxLauncher:
                             vertical_alignment= flet.CrossAxisAlignment.CENTER
                         )
                     )
-                ]
+                ],
+                bgcolor= "#272727",
+                toolbar_height= 120
             ),
+            controls= [
+                NoxLauncherContainer(content = NoxLauncherRow(expand= True, expand_loose= True, controls= constants.MINECRAFT_NEWS.value, 
+                    alignment= flet.MainAxisAlignment.CENTER, vertical_alignment= flet.CrossAxisAlignment.CENTER, spacing= 30, scroll= flet.ScrollMode.AUTO), 
+                    expand= True, expand_loose= True, 
+                    alignment= flet.alignment.center,
+                    image_src= "test.jpg",
+                    image_fit= flet.ImageFit.COVER
+                )
+            ],
                                     
             bottom_appbar= flet.BottomAppBar(
                 bgcolor= "#272727",
@@ -1107,7 +1137,7 @@ class NoxLauncher:
                 ])
             ), 
             
-        padding= 0)
+        padding= 0,)
         
 class MinecraftDownloader:
 
@@ -1279,7 +1309,7 @@ class AccountManager:
         if not os.path.exists(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json"): Config.repair()
 
         with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "r", encoding= "utf-8") as f:
-            profiles = json.load(f)
+            profiles: Dict[str, Any] = json.load(f)
 
             if not "profiles" in profiles:
                 profiles["profiles"] = {}
@@ -1308,7 +1338,7 @@ class AccountManager:
         if not os.path.exists(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json"): Config.repair()
 
         with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "r", encoding= "utf-8") as f:
-            profiles = json.load(f)
+            profiles: Dict[str, Any] = json.load(f)
 
             if not "profiles" in profiles:
                 profiles["profiles"] = {}
@@ -1357,7 +1387,7 @@ class AccountManager:
         if not os.path.exists(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json"): Config.repair()
 
         with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "r", encoding= "utf-8") as f:
-            profiles = json.load(f)
+            profiles: Dict[str, Any] = json.load(f)
 
             if not "profiles" in profiles:
                 profiles["profiles"] = {}
@@ -1389,7 +1419,7 @@ class AccountManager:
         if not os.path.exists(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json"): Config.repair()
 
         with open(Config.get_path() + "/NoxLauncher/settings/profiles/profiles.json", "r", encoding= "utf-8") as f:
-            profiles = json.load(f)
+            profiles: Dict[str, Any] = json.load(f)
 
             if "profiles" not in profiles: 
 

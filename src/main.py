@@ -10,7 +10,7 @@ try:
 
 except Exception as e:
 
-    print(f"Report this error to the developers: \n{e.args[0]}\n")
+    print(f"Report this error to the developers: \n{e.args[0]}")
     exit(1)
 
 if __name__ == "__main__":

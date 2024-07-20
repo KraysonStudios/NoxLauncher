@@ -15,7 +15,7 @@ try:
     from typing import Any, Dict, List
 
 except Exception as e: 
-    print(f"Report this error to the developers: \n{e.args[0]}\n")
+    print(f"Report this error to the developers: \n{e.args[0]}")
     exit(1)
 
 class Config:
@@ -84,7 +84,7 @@ class Config:
                     "version": 3
                 }
 
-                profiles = json.load(f)
+                profiles: Dict[str, Any] = json.load(f)
 
                 if len(profiles.keys()) + len(profiles.values()) != len(META.keys()) + len(META.values()):
                     with open(Config.get_path() + "/NoxLauncher/launcher_profiles.json", "w") as f:
@@ -113,7 +113,7 @@ class Config:
         if os.path.exists(Config.get_path() + "/NoxLauncher/settings/settings.json"):
             with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r", encoding= "utf-8") as f:
 
-                settings = json.load(f)
+                settings: Dict[str, Any] = json.load(f)
 
                 META: Dict[str, Any] = {
                     "java": {
@@ -154,7 +154,7 @@ class Config:
 
         with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r") as f:
 
-            settings = json.load(f)
+            settings: Dict[str, Any] = json.load(f)
 
             if not isinstance(settings["java"]["path"], str):
                 showinfo("NoxLauncher", "Java is not installed. Please be patient while it is being installed. Don`t close app internally.", type= "ok")
@@ -176,7 +176,7 @@ class Config:
         if os.path.exists(Config.get_path() + "/NoxLauncher/settings/settings.json"):
             with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r", encoding= "utf-8") as f:
 
-                settings = json.load(f)
+                settings: Dict[str, Any] = json.load(f)
 
                 if "java" not in settings: return False
                 elif "path" not in settings["java"] or "args" not in settings["java"]: return False
@@ -264,7 +264,7 @@ class Config:
 
         with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r", encoding= "utf-8") as f:
 
-            settings = json.load(f)
+            settings: Dict[str, Any] = json.load(f)
 
             if "close-when-playing" not in settings: return False
             elif not isinstance(settings["close-when-playing"], bool): return False
@@ -276,7 +276,7 @@ class Config:
 
         with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r", encoding= "utf-8") as f:
 
-            settings = json.load(f)
+            settings: Dict[str, Any] = json.load(f)
             settings["close-when-playing"] = value
 
             with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w") as f:
@@ -321,7 +321,6 @@ class Config:
 
         match platform.system():
             case "Windows": 
-                
                 parsed_path: List[str] = [path for path in path.split("\\") if path != ""]
 
                 if len(parsed_path) <= 4 and parsed_path[1] == "bin": return "System"
@@ -345,7 +344,7 @@ class Config:
 
         with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r", encoding= "utf-8") as f:
 
-            settings = json.load(f)
+            settings: Dict[str, Any] = json.load(f)
             settings["java"]["args"] = args
 
             with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w", encoding= "utf-8") as f:
@@ -359,7 +358,7 @@ class Config:
 
         with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "r", encoding= "utf-8") as f:
 
-            settings = json.load(f)
+            settings: Dict[str, Any] = json.load(f)
             settings["java"]["path"] = path
 
             with open(Config.get_path() + "/NoxLauncher/settings/settings.json", "w", encoding= "utf-8") as f:
@@ -371,7 +370,7 @@ class Config:
 
         with open(f"{Config.get_path()}/NoxLauncher/launcher_profiles.json", "r", encoding= "utf-8") as f:    
 
-            profiles = json.load(f)
+            profiles: Dict[str, Any] = json.load(f)
 
             if not "profiles" in profiles: Config.repair()
             elif not isinstance(profiles["profiles"], dict): Config.repair()
@@ -401,7 +400,7 @@ class Config:
 
         with open(f"{Config.get_path()}/NoxLauncher/launcher_profiles.json", "r", encoding= "utf-8") as f:    
 
-            profiles = json.load(f)
+            profiles: Dict[str, Any] = json.load(f)
 
             if not "profiles" in profiles: Config.check_profiles_status()
             elif not isinstance(profiles["profiles"], dict): Config.check_profiles_status()
@@ -428,7 +427,7 @@ class Config:
 
         with open(f"{Config.get_path()}/NoxLauncher/launcher_profiles.json", "r", encoding= "utf-8") as f:    
 
-            profiles = json.load(f)
+            profiles: Dict[str, Any] = json.load(f)
 
             if not "profiles" in profiles: Config.check_profiles_status()
             elif not isinstance(profiles["profiles"], dict): Config.check_profiles_status()
@@ -439,11 +438,15 @@ class Config:
                     Config.check_profiles_status()
                     continue
 
-                if not "name" in profile.keys(): continue
-                elif not isinstance(profile["name"], str): continue
+                if not "name" in profile.keys(): Config.check_profiles_status()
+                elif not isinstance(profile["name"], str): Config.check_profiles_status()
+                elif not "path" in profile.keys(): Config.check_profiles_status()
+                elif not isinstance(profile["path"], str): Config.check_profiles_status()
 
                 if profile["name"].lower() == name.lower():
                     profiles["profiles"].pop(profile)
+                    if os.path.exists(f"{Config.get_path()}/NoxLauncher/versions/" + os.path.dirname(profile["path"])):  
+                        shutil.rmtree(f"{Config.get_path()}/NoxLauncher/versions/" + os.path.dirname(profile["path"]), ignore_errors= True)
                     break   
 
         with open(f"{Config.get_path()}/NoxLauncher/launcher_profiles.json", "w", encoding= "utf-8") as f:
@@ -457,7 +460,7 @@ class Config:
 
         with open(f"{Config.get_path()}/NoxLauncher/launcher_profiles.json", "r", encoding= "utf-8") as f:
 
-            profiles = json.load(f)
+            profiles: Dict[str, Any] = json.load(f)
 
             if not "profiles" in profiles: Config.reset_profiles_versions()
             elif not isinstance(profiles["profiles"], dict): Config.reset_profiles_versions()
@@ -534,9 +537,8 @@ class Config:
             fillvalue= None
         ):
             
-            if f"{Config.get_path()}/NoxLauncher/versions/{origin}/{origin}.jar" != target["path"]: 
-                shutil.rmtree(f"{Config.get_path()}/NoxLauncher/versions/{origin}", ignore_errors= True)
-                Config.remove_profile_version(target["name"])
+            if target is None or origin is None: continue
+            elif f"{Config.get_path()}/NoxLauncher/versions/{origin}/{origin}.jar" != target["path"]: Config.remove_profile_version(target["name"])
 
     @cache
     def reset_profiles_versions() -> None:

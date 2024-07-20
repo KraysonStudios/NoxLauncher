@@ -6,7 +6,7 @@ try:
 
 except Exception as e:
 
-    print(f"Report this error to the developers: \n{e.args[0]}\n")
+    print(f"Report this error to the developers: \n{e.args[0]}")
     exit(1)
 
 ##########################################################
@@ -29,6 +29,7 @@ class NoxLauncherContainer(flet.Container):
         border: flet.border.Border | None = None,
         border_radius: int | None = None,
         image_src: str | None = None,
+        image_fit: flet.ImageFit | None = None,
         callback: Callable | None = None
     ) -> None:
         super().__init__(
@@ -43,6 +44,7 @@ class NoxLauncherContainer(flet.Container):
             padding= padding,
             border= border,
             image_src= image_src,
+            image_fit= image_fit,
             on_click= callback
         )
 
