@@ -1106,7 +1106,7 @@ class NoxLauncher:
                     alignment= flet.MainAxisAlignment.CENTER, vertical_alignment= flet.CrossAxisAlignment.CENTER, spacing= 30, scroll= flet.ScrollMode.AUTO), 
                     expand= True, expand_loose= True, 
                     alignment= flet.alignment.center,
-                    image_src= "test.jpg",
+                    image_src= "play.png",
                     image_fit= flet.ImageFit.COVER
                 )
             ],
