@@ -91,6 +91,16 @@ def minecraft_news() -> List[flet.Container]:
                     width= 180,
                     border_radius= 20,
                     opacity= 0.9,
+                    blur= flet.Blur(
+                        30,
+                        20
+                    ),
+                    shadow= flet.BoxShadow(
+                        1,
+                        145,
+                        color= "#ffffff",
+                        offset= flet.Offset(0, 0)
+                    ),
                     padding= flet.padding.all(20)
                 ))
 

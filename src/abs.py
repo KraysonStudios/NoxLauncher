@@ -30,6 +30,10 @@ class NoxLauncherContainer(flet.Container):
         border_radius: int | None = None,
         image_src: str | None = None,
         image_fit: flet.ImageFit | None = None,
+        image_repeat: flet.ImageRepeat | None = None,
+        image_opacity: float | None = None,
+        opacity: float | None = None,
+        blur: flet.Blur | None = None,
         callback: Callable | None = None
     ) -> None:
         super().__init__(
@@ -45,6 +49,10 @@ class NoxLauncherContainer(flet.Container):
             border= border,
             image_src= image_src,
             image_fit= image_fit,
+            image_repeat= image_repeat,
+            image_opacity= image_opacity,
+            opacity= opacity,
+            blur = blur,
             on_click= callback
         )
 

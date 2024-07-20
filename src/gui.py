@@ -48,30 +48,51 @@ class NoxLauncher:
         return NoxLauncherView(
             controls= [
                 NoxLauncherContainer(
-                    height= 80,
-                    expand_loose= True,
-                    content= NoxLauncherRow(
+                    content= NoxLauncherColumn(
                         controls= [
-                            flet.Icon(name= flet.icons.ARROW_BACK, color= "#717171", size= 40),
-                            flet.TextButton(content= flet.Text("Back to play", size= 20, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 190, height= 45, on_click= lambda _: page.go("/play")),
+                            NoxLauncherContainer(
+                                height= 105,
+                                expand_loose= True,
+                                content= 
+                                    flet.Container(
+                                        content= NoxLauncherRow(
+                                            controls= [
+                                                flet.Icon(name= flet.icons.ARROW_BACK, color= "#717171", size= 40),
+                                                flet.TextButton(content= flet.Text("Back to play", size= 20, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 190, height= 45, on_click= lambda _: page.go("/play")),
+                                            ],
+                                            alignment= flet.MainAxisAlignment.START,
+                                            vertical_alignment= flet.CrossAxisAlignment.CENTER,
+                                            expand= True,
+                                            expand_loose= True,
+                                            spacing= 10
+                                        ), 
+                                        width= 270,
+                                        height= 120,
+                                        bgcolor= "#272727",
+                                        border_radius= 20,
+                                        padding= flet.padding.only(left= 10)
+                                    ),
+                                alignment= flet.alignment.center_left,
+                                padding= flet.padding.all(20)
+                            ),
+                            NoxLauncherColumn(
+                                expand= True, 
+                                expand_loose= True,
+                                alignment= flet.MainAxisAlignment.CENTER,
+                                horizontal_alignment= flet.CrossAxisAlignment.CENTER,
+                                scroll= flet.ScrollMode.AUTO,
+                                controls= [],
+                            )
                         ],
-                        alignment= flet.MainAxisAlignment.START,
-                        vertical_alignment= flet.CrossAxisAlignment.CENTER,
                         expand= True,
-                        expand_loose= True,
-                        spacing= 10
+                        expand_loose= True
                     ),
-                    alignment= flet.alignment.center_left,
-                    padding= flet.padding.all(20)
-                ),
-
-                NoxLauncherColumn(
-                    expand= True, 
+                    alignment= flet.alignment.center,
+                    expand= True,
                     expand_loose= True,
-                    alignment= flet.MainAxisAlignment.CENTER,
-                    horizontal_alignment= flet.CrossAxisAlignment.CENTER,
-                    scroll= flet.ScrollMode.AUTO,
-                    controls= []
+                    image_src= "news.png",
+                    image_fit= flet.ImageFit.COVER,
+                    image_repeat= flet.ImageRepeat.NO_REPEAT
                 )
             ]
         )
@@ -476,30 +497,58 @@ class NoxLauncher:
         return flet.View(
             controls= [
                 NoxLauncherContainer(
-                    height= 80,
-                    expand_loose= True,
-                    content= NoxLauncherRow(
-                        controls= [
-                            flet.Icon(name= flet.icons.ARROW_BACK, color= "#717171", size= 40),
-                            back_to_play
-                        ],
-                        alignment= flet.MainAxisAlignment.START,
-                        vertical_alignment= flet.CrossAxisAlignment.CENTER,
-                        expand= True,
-                        expand_loose= True,
-                        spacing= 10
-                    ),
-                    alignment= flet.alignment.center_left,
-                    padding= flet.padding.all(20)
-                ),
-                NoxLauncherContainer(
                     expand= True,
                     expand_loose= True, 
                     alignment= flet.alignment.center,
-                    content= main_container
+                    content= NoxLauncherColumn(       
+                        controls= [
+                            NoxLauncherContainer(
+                                height= 105,
+                                expand_loose= True,
+                                content= 
+                                    flet.Container(
+                                        content= NoxLauncherRow(
+                                            controls= [
+                                                flet.Icon(name= flet.icons.ARROW_BACK, color= "#717171", size= 40),
+                                                flet.TextButton(content= flet.Text("Back to play", size= 20, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 190, height= 45, on_click= lambda _: page.go("/play")),
+                                            ],
+                                            alignment= flet.MainAxisAlignment.START,
+                                            vertical_alignment= flet.CrossAxisAlignment.CENTER,
+                                            expand= True,
+                                            expand_loose= True,
+                                            spacing= 10
+                                        ), 
+                                        width= 270,
+                                        height= 120,
+                                        bgcolor= "#272727",
+                                        border_radius= 20,
+                                        padding= flet.padding.only(left= 10)
+                                    ),
+                                alignment= flet.alignment.center_left,
+                                padding= flet.padding.all(20)
+                            ),
+                            NoxLauncherContainer(
+                                expand_loose= True,
+                                expand= True
+                            ),
+                            main_container,
+                            NoxLauncherContainer(
+                                expand_loose= True,
+                                expand= True
+                            )
+                        ],
+                        expand_loose= True,
+                        expand= True,
+                        horizontal_alignment= flet.CrossAxisAlignment.CENTER
+                    ),
+                    image_fit= flet.ImageFit.COVER,
+                    image_src= "install.png",
+                    image_repeat= flet.ImageRepeat.NO_REPEAT
                 )
             ],
-            padding= 0,
+            horizontal_alignment= flet.MainAxisAlignment.CENTER, 
+            vertical_alignment= flet.CrossAxisAlignment.CENTER,
+            padding= 0
         )
 
     def info(page: flet.Page) -> flet.View:
@@ -507,61 +556,105 @@ class NoxLauncher:
         return flet.View(
             controls= [
                 NoxLauncherContainer(
-                    height= 80,
-                    expand_loose= True,
-                    content= NoxLauncherRow(
-                        controls= [
-                            flet.Icon(name= flet.icons.ARROW_BACK, color= "#717171", size= 40),
-                            flet.TextButton(content= flet.Text("Back to play", size= 20, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 190, height= 45, on_click= lambda _: page.go("/play")),
-                        ],
-                        alignment= flet.MainAxisAlignment.START,
-                        vertical_alignment= flet.CrossAxisAlignment.CENTER,
-                        expand= True,
-                        expand_loose= True,
-                        spacing= 10
-                    ),
-                    alignment= flet.alignment.center_left,
-                    padding= flet.padding.all(20)
-                ),
-                NoxLauncherContainer(
                     expand= True, 
                     expand_loose= True, 
                     alignment= flet.alignment.center,
-                    content= NoxLauncherContainer(
-                        width= 500, 
-                        height= 510, 
-                        bgcolor= "#272727", 
-                        border_radius= 20, 
-                        alignment= flet.alignment.center,
-                        padding= flet.padding.all(20), 
-                        content= NoxLauncherColumn(expand= True, expand_loose= True,
-                            controls= [
-                                NoxLauncherContainer(image_src= "icon.png", expand_loose= True, height= 180),
-                                NoxLauncherContainer(content= flet.Text("NoxLauncher is a powerful and easy-to-use Minecraft launcher develop by Krayson Studio.", size= 15, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center),
-                                NoxLauncherColumn(controls= [
-                                    flet.Text("Developed by: ", color= "#ffffff", size= 15, font_family= "Minecraft"),
-                                    NoxLauncherRow(controls= [
-                                        flet.TextButton(content= flet.Image(src= "github.png", width= 60, height= 60, filter_quality= flet.FilterQuality.HIGH), width= 60, height= 60, url_target= flet.UrlTarget.BLANK, url= "https://github.com/DevCheckOG"),
-                                        flet.Text("DevCheckOG", color= "#ffffff", size= 15, font_family= "Minecraft")
-                                    ], expand_loose= True, alignment= flet.MainAxisAlignment.START, vertical_alignment= flet.CrossAxisAlignment.CENTER, spacing= 10),
-                                    NoxLauncherRow(controls= [
-                                        flet.TextButton(content= flet.Image(src= "github.png", width= 60, height= 60, filter_quality= flet.FilterQuality.HIGH), width= 60, height= 60, url_target= flet.UrlTarget.BLANK, url= "https://github.com/aaronwayas"),
-                                        flet.Text("AaronWayas", color= "#ffffff", size= 15, font_family= "Minecraft")
-                                    ], expand_loose= True, alignment= flet.MainAxisAlignment.START, vertical_alignment= flet.CrossAxisAlignment.CENTER, spacing= 10)
-                                ], horizontal_alignment= flet.MainAxisAlignment.START, alignment= flet.CrossAxisAlignment.CENTER, spacing= 5, expand_loose= True),
-                                NoxLauncherRow(
+                    image_src= "info.png",
+                    image_fit= flet.ImageFit.COVER,
+                    image_repeat= flet.ImageRepeat.NO_REPEAT,
+                    content= NoxLauncherColumn(
+                        controls= [
+                            NoxLauncherContainer(
+                                height= 105,
+                                expand_loose= True,
+                                content= 
+                                    flet.Container(
+                                        content= NoxLauncherRow(
+                                            controls= [
+                                                flet.Icon(name= flet.icons.ARROW_BACK, color= "#717171", size= 40),
+                                                flet.TextButton(content= flet.Text("Back to play", size= 20, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 190, height= 45, on_click= lambda _: page.go("/play")),
+                                            ],
+                                            alignment= flet.MainAxisAlignment.START,
+                                            vertical_alignment= flet.CrossAxisAlignment.CENTER,
+                                            expand= True,
+                                            expand_loose= True,
+                                            spacing= 10
+                                        ), 
+                                        width= 270,
+                                        height= 120,
+                                        bgcolor= "#272727",
+                                        border_radius= 20,
+                                        padding= flet.padding.only(left= 10)
+                                    ),
+                                alignment= flet.alignment.center_left,
+                                padding= flet.padding.all(20)
+                            ),
+                            NoxLauncherContainer(
+                                expand_loose= True,
+                                expand= True
+                            ),
+                            NoxLauncherContainer(
+                                width= 580, 
+                                height= 605, 
+                                bgcolor= "#272727", 
+                                border_radius= 20, 
+                                alignment= flet.alignment.center,
+                                padding= flet.padding.all(20), 
+                                content= NoxLauncherColumn(expand= True, expand_loose= True,
                                     controls= [
-                                        flet.TextButton(content= flet.Image(src= "github.png", width= 60, height= 60, filter_quality= flet.FilterQuality.HIGH), width= 60, height= 60),
-                                        flet.TextButton(content= flet.Image(src= "discord.png", width= 60, height= 60, filter_quality= flet.FilterQuality.HIGH), width= 60, height= 60, url_target= flet.UrlTarget.BLANK, url= "https://discord.com/invite/DWfuQRsxwb"),
-                                        flet.TextButton(content= flet.Image(src= "kofi.png", width= 80, height= 60, filter_quality= flet.FilterQuality.HIGH), width= 60, height= 60, url_target= flet.UrlTarget.BLANK, url= "https://ko-fi.com/kraysonstudios")
-                                    ],
-                                    alignment= flet.MainAxisAlignment.CENTER,
-                                    vertical_alignment= flet.CrossAxisAlignment.CENTER,
-                                    spacing= 10,
-                                    expand_loose= True
+                                        NoxLauncherContainer(image_src= "icon.png", expand_loose= True, height= 158),
+                                        NoxLauncherContainer(content= flet.Text("NoxLauncher is a powerful and easy-to-use Minecraft launcher develop by Krayson Studio.", size= 20, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center, padding= flet.padding.all(15)),
+                                        NoxLauncherColumn(controls= [
+                                            NoxLauncherRow(
+                                                controls= [
+                                                    flet.Icon(name= flet.icons.BUG_REPORT, color= "#717171", size= 30),
+                                                    flet.Text("Main developers: ", color= "#ffffff", size= 20, font_family= "Minecraft")
+                                                ],
+                                                expand_loose= True
+                                            ),
+                                            NoxLauncherRow(controls= [
+                                                flet.TextButton(content= flet.Image(src= "github.png", width= 60, height= 60, filter_quality= flet.FilterQuality.HIGH), width= 60, height= 60, url_target= flet.UrlTarget.BLANK, url= "https://github.com/DevCheckOG"),
+                                                flet.Text("DevCheckOG", color= "#ffffff", size= 15, font_family= "Minecraft")
+                                            ], expand_loose= True, alignment= flet.MainAxisAlignment.START, vertical_alignment= flet.CrossAxisAlignment.CENTER, spacing= 10),
+                                            NoxLauncherRow(controls= [
+                                                flet.TextButton(content= flet.Image(src= "github.png", width= 60, height= 60, filter_quality= flet.FilterQuality.HIGH), width= 60, height= 60, url_target= flet.UrlTarget.BLANK, url= "https://github.com/aaronwayas"),
+                                                flet.Text("AaronWayas", color= "#ffffff", size= 15, font_family= "Minecraft")
+                                            ], expand_loose= True, alignment= flet.MainAxisAlignment.START, vertical_alignment= flet.CrossAxisAlignment.CENTER, spacing= 10),
+                                            NoxLauncherRow(
+                                                controls= [
+                                                    flet.Icon(name= flet.icons.DESIGN_SERVICES, color= "#717171", size= 30),
+                                                    flet.Text("Web dev / design: ", color= "#ffffff", size= 20, font_family= "Minecraft")
+                                                ],
+                                                expand_loose= True
+                                            ),
+                                            NoxLauncherRow(controls= [
+                                                flet.TextButton(content= flet.Image(src= "github.png", width= 60, height= 60, filter_quality= flet.FilterQuality.HIGH), width= 60, height= 60, url_target= flet.UrlTarget.BLANK, url= "https://github.com/FrannDV"),
+                                                flet.Text("FrannDV", color= "#ffffff", size= 15, font_family= "Minecraft")
+                                            ], expand_loose= True, alignment= flet.MainAxisAlignment.START, vertical_alignment= flet.CrossAxisAlignment.CENTER, spacing= 10),
+                                        ], horizontal_alignment= flet.MainAxisAlignment.START, alignment= flet.CrossAxisAlignment.CENTER, spacing= 5, expand_loose= True),
+                                        NoxLauncherRow(
+                                            controls= [
+                                                flet.TextButton(content= flet.Image(src= "github.png", width= 60, height= 60, filter_quality= flet.FilterQuality.HIGH), width= 60, height= 60),
+                                                flet.TextButton(content= flet.Image(src= "discord.png", width= 60, height= 60, filter_quality= flet.FilterQuality.HIGH), width= 60, height= 60, url_target= flet.UrlTarget.BLANK, url= "https://discord.com/invite/DWfuQRsxwb"),
+                                                flet.TextButton(content= flet.Image(src= "kofi.png", width= 80, height= 60, filter_quality= flet.FilterQuality.HIGH), width= 60, height= 60, url_target= flet.UrlTarget.BLANK, url= "https://ko-fi.com/kraysonstudios")
+                                            ],
+                                            alignment= flet.MainAxisAlignment.CENTER,
+                                            vertical_alignment= flet.CrossAxisAlignment.CENTER,
+                                            spacing= 10,
+                                            expand_loose= True
+                                        )
+                                    ]
                                 )
-                            ]
-                        )
+                            ),
+                            NoxLauncherContainer(
+                                expand_loose= True,
+                                expand= True
+                            )
+                        ],
+                        expand= True,
+                        expand_loose= True,
+                        alignment= flet.MainAxisAlignment.CENTER,
+                        horizontal_alignment= flet.CrossAxisAlignment.CENTER
                     )
                 )
             ],
@@ -668,106 +761,128 @@ class NoxLauncher:
         return flet.View(
             controls= [
                 NoxLauncherContainer(
-                    height= 80,
-                    expand_loose= True,
-                    content= NoxLauncherRow(
-                        controls= [
-                            flet.Icon(name= flet.icons.ARROW_BACK, color= "#717171", size= 40),
-                            flet.TextButton(content= flet.Text("Back to play", size= 20, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 190, height= 45, on_click= lambda _: page.go("/play")),
-                        ],
-                        alignment= flet.MainAxisAlignment.START,
-                        vertical_alignment= flet.CrossAxisAlignment.CENTER,
-                        expand= True,
-                        expand_loose= True,
-                        spacing= 10
-                    ),
-                    alignment= flet.alignment.center_left,
-                    padding= flet.padding.all(20)
-                ),
-                NoxLauncherContainer(
                     expand= True, 
                     expand_loose= True, 
                     alignment= flet.alignment.center,
-                    content= NoxLauncherContainer(
-                        width= 920, 
-                        height= 610, 
-                        bgcolor= "#272727", 
-                        border_radius= 20, 
-                        alignment= flet.alignment.center,
-                        padding= flet.padding.all(20), 
-                        content= NoxLauncherRow(
-                            controls= [
-                                NoxLauncherColumn(expand= True, expand_loose= True, spacing= 5,
-                                    controls= [
-                                        NoxLauncherContainer(content= flet.Text("Java Settings", size= 30, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center),
-                                        NoxLauncherContainer(expand= True, expand_loose= True),
-                                        NoxLauncherRow(expand_loose= True, height= 100, controls= [
-                                            NoxLauncherContainer(content= flet.Image(
-                                                src= "java.png", 
-                                                width= 90, 
-                                                height= 90,
-                                                filter_quality= flet.FilterQuality.HIGH
-                                            ), alignment= flet.alignment.center_left, padding= flet.padding.only(bottom= 28)),
-                                            NoxLauncherColumn(
-                                                controls = [
-                                                    NoxLauncherContainer(content= location, expand_loose= True, alignment= flet.alignment.center_left),
-                                                    NoxLauncherContainer(content= version, expand_loose= True, alignment= flet.alignment.center_left)
-                                                ],
-                                                spacing= 15,
-                                                expand_loose= True
-                                            )
-                                        ], vertical_alignment= flet.CrossAxisAlignment.CENTER, alignment= flet.MainAxisAlignment.CENTER, spacing= 0),
-                                        flet.Text("Java source", size= 20, color= "#ffffff", font_family= "Minecraft"),
-                                        java_path,
-                                        flet.Text("JVM arguments", size= 20, color= "#ffffff", font_family= "Minecraft"),
-                                        java_args,
-                                        NoxLauncherContainer(content= flet.Text("Memory dedicated", size= 20, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center),
-                                        java_allocated_memory,
-                                        NoxLauncherContainer(expand= True, expand_loose= True)
-                                    ]
+                    image_src= "settings.png",
+                    image_fit= flet.ImageFit.COVER,
+                    image_repeat= flet.ImageRepeat.NO_REPEAT,
+                    content= flet.Column(
+                        controls= [
+                            NoxLauncherContainer(
+                                height= 105,
+                                expand_loose= True,
+                                content= 
+                                    flet.Container(
+                                        content= NoxLauncherRow(
+                                            controls= [
+                                                flet.Icon(name= flet.icons.ARROW_BACK, color= "#717171", size= 40),
+                                                flet.TextButton(content= flet.Text("Back to play", size= 20, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 190, height= 45, on_click= lambda _: page.go("/play")),
+                                            ],
+                                            alignment= flet.MainAxisAlignment.START,
+                                            vertical_alignment= flet.CrossAxisAlignment.CENTER,
+                                            expand= True,
+                                            expand_loose= True,
+                                            spacing= 10
+                                        ), 
+                                        width= 270,
+                                        height= 120,
+                                        bgcolor= "#272727",
+                                        border_radius= 20,
+                                        padding= flet.padding.only(left= 10)
+                                    ),
+                                alignment= flet.alignment.center_left,
+                                padding= flet.padding.all(20)
+                            ),
+                            NoxLauncherContainer(
+                                content= NoxLauncherContainer(
+                                    width= 920, 
+                                    height= 520, 
+                                    bgcolor= "#272727", 
+                                    border_radius= 20, 
+                                    alignment= flet.alignment.center,
+                                    padding= flet.padding.all(20), 
+                                    content= NoxLauncherRow(
+                                        controls= [
+                                            NoxLauncherColumn(expand= True, expand_loose= True, spacing= 5,
+                                                controls= [
+                                                    NoxLauncherContainer(content= flet.Text("Java Settings", size= 30, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center),
+                                                    NoxLauncherContainer(expand= True, expand_loose= True),
+                                                    NoxLauncherRow(expand_loose= True, height= 100, controls= [
+                                                        NoxLauncherContainer(content= flet.Image(
+                                                            src= "java.png", 
+                                                            width= 90, 
+                                                            height= 90,
+                                                            filter_quality= flet.FilterQuality.HIGH
+                                                        ), alignment= flet.alignment.center_left, padding= flet.padding.only(bottom= 28)),
+                                                        NoxLauncherColumn(
+                                                            controls = [
+                                                                NoxLauncherContainer(content= location, expand_loose= True, alignment= flet.alignment.center_left),
+                                                                NoxLauncherContainer(content= version, expand_loose= True, alignment= flet.alignment.center_left)
+                                                            ],
+                                                            spacing= 15,
+                                                            expand_loose= True
+                                                        )
+                                                    ], vertical_alignment= flet.CrossAxisAlignment.CENTER, alignment= flet.MainAxisAlignment.CENTER, spacing= 0),
+                                                    flet.Text("Java source", size= 20, color= "#ffffff", font_family= "Minecraft"),
+                                                    java_path,
+                                                    flet.Text("JVM arguments", size= 20, color= "#ffffff", font_family= "Minecraft"),
+                                                    java_args,
+                                                    NoxLauncherContainer(content= flet.Text("Memory dedicated", size= 20, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center),
+                                                    java_allocated_memory,
+                                                    NoxLauncherContainer(expand= True, expand_loose= True)
+                                                ]
+                                            ),
+                                            NoxLauncherContainer(content= flet.VerticalDivider(width= 1, color= "#717171"), width= 50),
+                                            NoxLauncherColumn(expand= True, expand_loose= True, spacing= 5, controls= [
+                                                NoxLauncherContainer(content= flet.Text("General Settings", size= 30, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center),
+                                                NoxLauncherContainer(expand= True),
+                                                NoxLauncherRow(
+                                                    controls = [
+                                                        flet.Icon(name= flet.icons.CLOSE, color= "#717171", size= 40),
+                                                        NoxLauncherContainer(content= flet.Text("close when playing", size= 20, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center),
+                                                        close_when_playing
+                                                    ],
+                                                    expand_loose= True,
+                                                    alignment= flet.MainAxisAlignment.CENTER,
+                                                    vertical_alignment= flet.CrossAxisAlignment.CENTER
+                                                ),
+                                                NoxLauncherRow(
+                                                    controls = [
+                                                        flet.Icon(name= flet.icons.BUG_REPORT, color= "#717171", size= 40),
+                                                        NoxLauncherContainer(content= flet.Text("Debug mode", size= 20, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center),
+                                                        debug_mode
+                                                    ],
+                                                    expand_loose= True,
+                                                    alignment= flet.MainAxisAlignment.CENTER,
+                                                    vertical_alignment= flet.CrossAxisAlignment.CENTER
+                                                ),
+                                                NoxLauncherContainer(expand= True)
+                                            ]),
+                                        ],
+                                        expand= True,
+                                        expand_loose= True
+                                    )
                                 ),
-                                NoxLauncherContainer(content= flet.VerticalDivider(width= 1, color= "#717171"), width= 50),
-                                NoxLauncherColumn(expand= True, expand_loose= True, spacing= 5, controls= [
-                                    NoxLauncherContainer(content= flet.Text("General Settings", size= 30, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center),
-                                    NoxLauncherContainer(expand= True),
-                                    NoxLauncherRow(
-                                        controls = [
-                                            flet.Icon(name= flet.icons.CLOSE, color= "#717171", size= 40),
-                                            NoxLauncherContainer(content= flet.Text("close when playing", size= 20, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center),
-                                            close_when_playing
-                                        ],
-                                        expand_loose= True,
-                                        alignment= flet.MainAxisAlignment.CENTER,
-                                        vertical_alignment= flet.CrossAxisAlignment.CENTER
-                                    ),
-                                    NoxLauncherRow(
-                                        controls = [
-                                            flet.Icon(name= flet.icons.BUG_REPORT, color= "#717171", size= 40),
-                                            NoxLauncherContainer(content= flet.Text("Debug mode", size= 20, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center),
-                                            debug_mode
-                                        ],
-                                        expand_loose= True,
-                                        alignment= flet.MainAxisAlignment.CENTER,
-                                        vertical_alignment= flet.CrossAxisAlignment.CENTER
-                                    ),
-                                    NoxLauncherContainer(expand= True)
-                                ]),
-                            ],
-                            expand= True,
-                            expand_loose= True
-                        )
+                                alignment= flet.alignment.center,
+                                expand_loose= True,
+                                expand= True
+                            ),
+                            NoxLauncherContainer(
+                                height= 100,
+                                expand_loose= True,
+                                content= flet.TextButton(
+                                    content= flet.Text("Save", size= 20, font_family= "Minecraft"),
+                                    on_click= update_settings,
+                                    style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 190, height= 45
+                                ),
+                                alignment= flet.alignment.center
+                            )
+                        ],
+                        expand= True,
+                        expand_loose= True
                     )
                 ),
-                NoxLauncherContainer(
-                    height= 100,
-                    expand_loose= True,
-                    content= flet.TextButton(
-                        content= flet.Text("Save", size= 20, font_family= "Minecraft"),
-                        on_click= update_settings,
-                        style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 190, height= 45
-                    ),
-                    alignment= flet.alignment.center
-                )
             ],
             padding= 0,
             horizontal_alignment= flet.MainAxisAlignment.CENTER, 
@@ -785,34 +900,73 @@ class NoxLauncher:
 
         skin: flet.Image = AccountManager.get_skin(ACC["skin"], ACC["name"], size= 50, width= 120, height= 120)
 
+        def auth(_: flet.ControlEvent) -> None:
+
+            def ok(_: flet.ControlEvent) -> None:
+
+                page.close(AUTH_UNIMPLEMENTED)
+
+            AUTH_UNIMPLEMENTED: flet.AlertDialog = flet.AlertDialog(
+                modal= True,
+                icon= flet.Icon(name= flet.icons.WARNING_AMBER_ROUNDED, color= flet.colors.YELLOW_400, size= 45),
+                title= NoxLauncherContainer(
+                    content= flet.Text("No premiun auth is unimplemented!", size= 25, font_family= "Minecraft"),
+                    alignment= flet.alignment.center,
+                    expand_loose= True
+                ),
+                bgcolor= "#272727",
+                content= flet.Row(
+                    controls= [
+                        flet.Icon(name= flet.icons.TIPS_AND_UPDATES, color= "#717171", size= 30),
+                        flet.Text("In the near future, we will add non-premiun auth.", size= 18, font_family= "Minecraft")
+                    ],
+                    spacing= 10
+                ),
+                actions= [
+                    flet.TextButton(content= flet.Text("Ok", size= 20, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 120, height= 45, on_click= ok),
+                ]
+            )
+
+            page.open(AUTH_UNIMPLEMENTED)
+
         return flet.View("/accounts",  
             controls= [
                 NoxLauncherContainer(expand= True, expand_loose= True, alignment= flet.alignment.center, 
-                content= NoxLauncherContainer(width= 420, height= 420, bgcolor= "#272727", border_radius= 20, alignment= flet.alignment.center,
-                padding= flet.padding.all(20), 
-                content= NoxLauncherColumn(expand= True, expand_loose= True, spacing= 5,
-                controls= [
-                    NoxLauncherContainer(content= flet.Text("Accounts", size= 30, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center),
-                    NoxLauncherRow(controls= [
-                            skin, 
-                            NoxLauncherContainer(expand_loose= True),
-                            NoxLauncherColumn(controls= [
-                            flet.Text(ACC["name"], size= 20, color= "#ffffff", font_family= "Minecraft"),
-                            flet.Text("Type: " + ACC["type"], size= 20, color= "#ffffff", font_family= "Minecraft"),
-                        ],
-                        expand_loose= True),
-                    ], spacing= 5, expand_loose= True),
-                    NoxLauncherContainer(expand= True),
-                    NoxLauncherContainer(content= NoxLauncherColumn(controls= [
-                        flet.TextButton(content= flet.Text("Offline", size= 20, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 190, height= 45, on_click= lambda _: page.go("/offline")),
-                        flet.TextButton(content= flet.Text("Auth", size= 20, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 190, height= 45),
-                        flet.TextButton(content= flet.Text("Premiun", size= 20, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 190, height= 45),
-                        flet.TextButton(content= flet.Text("Back to play", size= 20, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 190, height= 45, on_click= lambda _: page.go("/play")),
-                    ], expand_loose= True, expand= True, spacing= 5, alignment= flet.MainAxisAlignment.CENTER), alignment= flet.alignment.center),
-                ], alignment= flet.MainAxisAlignment.START)))
+                    content= NoxLauncherContainer(
+                        width= 420, 
+                        height= 430, 
+                        bgcolor= "#272727", 
+                        border_radius= 20, 
+                        alignment= flet.alignment.center,
+                        padding= flet.padding.all(20), 
+                        content= NoxLauncherColumn(expand= True, expand_loose= True, spacing= 5,
+                        controls= [
+                            NoxLauncherContainer(content= flet.Text("Accounts", size= 30, color= "#ffffff", font_family= "Minecraft"), expand_loose= True, alignment= flet.alignment.center),
+                            NoxLauncherRow(controls= [
+                                    skin, 
+                                    NoxLauncherContainer(expand_loose= True),
+                                    NoxLauncherColumn(controls= [
+                                    flet.Text(ACC["name"], size= 20, color= "#ffffff", font_family= "Minecraft"),
+                                    flet.Text("Type: " + ACC["type"], size= 20, color= "#ffffff", font_family= "Minecraft"),
+                                ],
+                                expand_loose= True),
+                            ], spacing= 5, expand_loose= True),
+                            NoxLauncherContainer(expand_loose= True, height= 5),
+                            NoxLauncherContainer(content= NoxLauncherColumn(controls= [
+                                flet.TextButton(content= flet.Text("Offline", size= 20, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 190, height= 45, on_click= lambda _: page.go("/offline")),
+                                flet.TextButton(content= flet.Text("Auth", size= 20, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 190, height= 45, on_click= auth),
+                                flet.TextButton(content= flet.Text("Premiun", size= 20, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 190, height= 45),
+                                flet.TextButton(content= flet.Text("Back to play", size= 20, font_family= "Minecraft"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 190, height= 45, on_click= lambda _: page.go("/play")),
+                            ], expand_loose= True, expand= True, spacing= 5, alignment= flet.MainAxisAlignment.CENTER), alignment= flet.alignment.center),
+                        ], alignment= flet.MainAxisAlignment.START)
+                    ),
+                    image_src= "accounts.png",
+                    image_fit= flet.ImageFit.COVER,
+                    image_repeat= flet.ImageRepeat.NO_REPEAT
+                )
             ],
             
-       horizontal_alignment= flet.MainAxisAlignment.CENTER, vertical_alignment= flet.CrossAxisAlignment.CENTER, padding= 0)
+       horizontal_alignment= flet.MainAxisAlignment.CENTER, vertical_alignment= flet.CrossAxisAlignment.CENTER, padding= 0 )
 
     def offline(page: flet.Page) -> flet.View:
 
@@ -1036,7 +1190,10 @@ class NoxLauncher:
         return flet.View("/offline",
             controls= [
                 NoxLauncherContainer(expand= True, expand_loose= True, alignment= flet.alignment.center,
-                    content= main_container
+                    content= main_container,
+                    image_src= "accounts.png",
+                    image_fit= flet.ImageFit.COVER,
+                    image_repeat= flet.ImageRepeat.NO_REPEAT
                 )
             ],
 
@@ -1107,7 +1264,8 @@ class NoxLauncher:
                     expand= True, expand_loose= True, 
                     alignment= flet.alignment.center,
                     image_src= "play.png",
-                    image_fit= flet.ImageFit.COVER
+                    image_fit= flet.ImageFit.COVER,
+                    image_repeat= flet.ImageRepeat.NO_REPEAT
                 )
             ],
                                     
