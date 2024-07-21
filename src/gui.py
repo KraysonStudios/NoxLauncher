@@ -13,6 +13,8 @@ try:
     from fs import Config
     from skinlib.skin import Skin, Perspective
     from constants import constants
+    from api import NoxLauncherAPI
+    from functools import cache
     from tkinter.messagebox import showerror
     from typing import Any, Callable, Dict, List
     from PIL import Image
@@ -75,13 +77,22 @@ class NoxLauncher:
                                 alignment= flet.alignment.center_left,
                                 padding= flet.padding.all(20)
                             ),
-                            NoxLauncherColumn(
-                                expand= True, 
+                            flet.Row(
+                                controls= [
+                                    NoxLauncherColumn(
+                                        expand= True, 
+                                        width= 300,
+                                        alignment= flet.MainAxisAlignment.CENTER,
+                                        horizontal_alignment= flet.CrossAxisAlignment.CENTER,
+                                        scroll= flet.ScrollMode.AUTO,
+                                        controls= NoxLauncherAPI.retrieve_all_news(),
+                                        spacing= 10
+                                    ),
+                                ],
                                 expand_loose= True,
-                                alignment= flet.MainAxisAlignment.CENTER,
-                                horizontal_alignment= flet.CrossAxisAlignment.CENTER,
-                                scroll= flet.ScrollMode.AUTO,
-                                controls= [],
+                                expand= True,
+                                vertical_alignment= flet.CrossAxisAlignment.CENTER,
+                                alignment= flet.MainAxisAlignment.CENTER
                             )
                         ],
                         expand= True,
@@ -1217,6 +1228,12 @@ class NoxLauncher:
             if VERSIONS.value is not None and VERSIONS.value != "Install an minecraft version!": 
                 Launcher(VERSIONS.value, page)
 
+        @cache
+        def open_folder(_: flet.ControlEvent) -> None:
+            match platform.system():
+                case "Windows": os.system(f"start explorer .", shell= True, cwd= f"{Config.get_path()}/NoxLauncher/", stderr= subprocess.DEVNULL, stdout= subprocess.DEVNULL)
+                case "Linux": subprocess.call("nohup xdg-open .", shell= True, cwd= f"{Config.get_path()}/NoxLauncher/", stderr= subprocess.DEVNULL, stdout= subprocess.DEVNULL)
+
         VERSIONS: NoxLauncherDropdown = NoxLauncherDropdown(label= "Installed Versions", hint_text= "Minecraft version to play!", options= Config.get_versions_available(), border_color= "#717171", border_radius= 10, label_style= flet.TextStyle(color= "#ffffff"), border_width= 2)
 
         return flet.View("/play", 
@@ -1225,7 +1242,7 @@ class NoxLauncher:
                 leading_width= 170,
                 actions= [
                     NoxLauncherContainer(
-                        width= 120,
+                        width= 250,
                         height= 44, 
                         alignment= flet.alignment.center,
                         content= NoxLauncherRow(
@@ -1249,6 +1266,9 @@ class NoxLauncher:
                                     width= 42,
                                     on_click= lambda _: page.go("/news")
                                 ),
+                                flet.VerticalDivider(color= "#717171", width= 1),
+                                flet.IconButton(icon= flet.icons.SETTINGS_ROUNDED, icon_color= "#717171", icon_size= 30, on_click= lambda _: page.go("/settings")),
+                                flet.IconButton(icon= flet.icons.FOLDER_OPEN, icon_color= "#717171", icon_size= 30, on_click= open_folder)
                             ],
                             alignment= flet.MainAxisAlignment.CENTER,
                             vertical_alignment= flet.CrossAxisAlignment.CENTER
@@ -1290,8 +1310,7 @@ class NoxLauncher:
                             ),
                         ]), 
                         alignment= flet.alignment.center,
-                    ),
-                    flet.IconButton(icon= flet.icons.SETTINGS_ROUNDED, icon_color= "#717171", icon_size= 30, on_click= lambda _: page.go("/settings")),
+                    )
                 ])
             ), 
             

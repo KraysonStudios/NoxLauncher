@@ -9,6 +9,7 @@ try:
     import flet
     import platform
     import uuid
+    import subprocess
 
     from functools import cache
     from tkinter.messagebox import showinfo
