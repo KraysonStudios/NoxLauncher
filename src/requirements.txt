@@ -6,3 +6,4 @@ attrs
 pillow
 psutil
 pyinstaller
+pypresence

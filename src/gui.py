@@ -21,7 +21,7 @@ try:
 
 except Exception as e: 
     
-    print(f"Report this error to the developers: \n{e.args[0]}")
+    print(f"Report this error to the developers:\n{e.args[0]}")
     exit(1)
 
 class NoxLauncher: 
@@ -77,22 +77,17 @@ class NoxLauncher:
                                 alignment= flet.alignment.center_left,
                                 padding= flet.padding.all(20)
                             ),
-                            flet.Row(
-                                controls= [
-                                    NoxLauncherColumn(
-                                        expand= True, 
-                                        width= 300,
-                                        alignment= flet.MainAxisAlignment.CENTER,
-                                        horizontal_alignment= flet.CrossAxisAlignment.CENTER,
-                                        scroll= flet.ScrollMode.AUTO,
-                                        controls= NoxLauncherAPI.retrieve_all_news(),
-                                        spacing= 10
-                                    ),
-                                ],
-                                expand_loose= True,
+                            NoxLauncherContainer(
+                                content= NoxLauncherColumn(
+                                    controls= NoxLauncherAPI.retrieve_all_news(),
+                                    expand= True,
+                                    spacing= 20, 
+                                    width= 570,
+                                    scroll= flet.ScrollMode.AUTO
+                                ),
                                 expand= True,
-                                vertical_alignment= flet.CrossAxisAlignment.CENTER,
-                                alignment= flet.MainAxisAlignment.CENTER
+                                expand_loose= True,
+                                alignment= flet.alignment.center
                             )
                         ],
                         expand= True,

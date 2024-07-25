@@ -34,6 +34,13 @@ class Config:
                     "requested": ""
                 }, f, indent= 4)
 
+        if not os.path.exists(Config.get_path() + "/NoxLauncher/cache/launcher_news.json"):
+            with open(Config.get_path() + "/NoxLauncher/cache/launcher_news.json", "w", encoding= "utf-8") as f:
+                json.dump({
+                    "news": None,
+                    "requested": ""
+                }, f, indent= 4)
+
         if not os.path.exists(Config.get_path() + "/NoxLauncher/launcher_profiles.json"):
             with open(Config.get_path() + "/NoxLauncher/launcher_profiles.json", "w", encoding= "utf-8") as f:
                 json.dump({
@@ -480,7 +487,7 @@ class Config:
                     Config.reset_profiles_versions()
                     break 
                    
-                if not "name" in profile.keys(): 
+                if not "name" in profile: 
                     Config.reset_profiles_versions()
                     break
                 elif not isinstance(profile["name"], str): 
@@ -504,7 +511,7 @@ class Config:
                 elif not isinstance(profile["icon"], str): 
                     Config.reset_profiles_versions()
                     break
-                elif not "resolution" in profile.keys():
+                elif not "resolution" in profile:
                     Config.reset_profiles_versions()
                     break
                 elif not isinstance(profile["resolution"], dict): 
@@ -541,10 +548,69 @@ class Config:
             if target is None or origin is None: continue
             elif f"{Config.get_path()}/NoxLauncher/versions/{origin}/{origin}.jar" != target["path"]: Config.remove_profile_version(target["name"])
 
+    def update_launcher_news(news: Dict[str, Any]) -> None:
+
+        if not os.path.exists(f"{Config.get_path()}/NoxLauncher/cache/launcher_news.json"): Config.repair()
+
+        with open(f"{Config.get_path()}/NoxLauncher/cache/launcher_news.json", "r", encoding= "utf-8") as f:
+            launcher_news: Dict[str, Any] = json.load(f)
+
+            if not "news" in launcher_news: Config.reset_launcher_news()
+            elif not isinstance(launcher_news["news"], list): Config.reset_launcher_news()
+
+            if launcher_news["news"] is None: launcher_news["news"] = news
+            else: launcher_news["news"].extend(news)
+
+        with open(f"{Config.get_path()}/NoxLauncher/cache/launcher_news.json", "w", encoding= "utf-8") as f:
+            json.dump(launcher_news, f, indent= 4)
+
+    def check_launcher_news() -> bool:
+
+        if not os.path.exists(f"{Config.get_path()}/NoxLauncher/cache/launcher_news.json"): Config.repair()
+
+        with open(f"{Config.get_path()}/NoxLauncher/cache/launcher_news.json", "r", encoding= "utf-8") as f:
+            news: Dict[str, Any] = json.load(f)
+
+            if not "news" in news: Config.reset_launcher_news()
+            elif not "requested" in news: Config.reset_launcher_news()
+            elif not isinstance(news["requested"], str): Config.reset_launcher_news()
+            elif not isinstance(news["news"], list) and not news["news"] is None: Config.reset_launcher_news()
+
+        with open(f"{Config.get_path()}/NoxLauncher/cache/launcher_news.json", "r", encoding= "utf-8") as f:
+            news: Dict[str, Any] = json.load(f)
+
+            if news["news"] is None: return False
+            elif len(news["news"]) == 0: return False
+            elif len(news["news"]) > 0: return True
+
+    def get_launcher_news() -> List[Dict[str, Any]]:
+
+        if not os.path.exists(f"{Config.get_path()}/NoxLauncher/cache/launcher_news.json"): Config.repair()
+
+        with open(f"{Config.get_path()}/NoxLauncher/cache/launcher_news.json", "r", encoding= "utf-8") as f:
+            news: Dict[str, Any] = json.load(f)
+
+            if not "news" in news: Config.reset_launcher_news()
+            elif not isinstance(news["news"], list) and not news["news"] is None: Config.reset_launcher_news()
+
+        with open(f"{Config.get_path()}/NoxLauncher/cache/launcher_news.json", "r", encoding= "utf-8") as f:
+            news: Dict[str, Any] = json.load(f)
+
+            if news["news"] is None: return []
+            elif len(news["news"]) == 0: return []
+            elif len(news["news"]) > 0: return news["news"]
+
+    @cache
+    def reset_launcher_news() -> None:
+
+        with open(f"{Config.get_path()}/NoxLauncher/cache/launcher_news.json", "w", encoding= "utf-8") as f:
+            json.dump({
+                "news": None,
+                "requested": ""
+            }, f, indent= 4)
+
     @cache
     def reset_profiles_versions() -> None:
-
-        if not os.path.exists(f"{Config.get_path()}/NoxLauncher/launcher_profiles.json"): Config.repair()
 
         with open(f"{Config.get_path()}/NoxLauncher/launcher_profiles.json", "w", encoding= "utf-8") as f:
             json.dump({

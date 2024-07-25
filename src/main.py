@@ -2,15 +2,17 @@ try:
 
     import flet
     import platform
-
+    
     from gui import NoxLauncher
     from constants import constants
     from fs import Config
+    from presence import DiscordRPC
+    from utils import NOXLAUNCHER_THREAD_POOL
     from tkinter.messagebox import showerror
 
 except Exception as e:
 
-    print(f"Report this error to the developers: \n{e.args[0]}")
+    print(f"Report this error to the developers:\n{e.args[0]}")
     exit(1)
 
 if __name__ == "__main__":
@@ -36,5 +38,7 @@ if __name__ == "__main__":
         page.update()
 
         NoxLauncher.build(page)
+        DiscordRPC()
 
     flet.app(target= main, name= "Nox Launcher")
+    NOXLAUNCHER_THREAD_POOL.flush()

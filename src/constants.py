@@ -110,4 +110,5 @@ class constants(Enum):
     FABRIC_SNAPSHOTS = NoxLauncherDropdown(label= "Fabric Snapshots", hint_text= "Select a snapshot and install it!", options= [flet.dropdown.Option(version["version"]) for version in minecraft_launcher_lib.fabric.get_all_minecraft_versions() if version["stable"] == False], border_color= "#717171", border_radius= 10, border_width= 2, label_style= flet.TextStyle(color= "#ffffff"))
     FABRIC_RELEASES = NoxLauncherDropdown(label= "Fabric Releases", hint_text= "Select a release and install it!", options= [flet.dropdown.Option(version["version"]) for version in minecraft_launcher_lib.fabric.get_all_minecraft_versions() if version["stable"]], border_color= "#717171", border_radius= 10, border_width= 2, label_style= flet.TextStyle(color= "#ffffff"))
     FORGE = NoxLauncherDropdown(label= "Forge versions", hint_text= "Select a version and install it!", options= [flet.dropdown.Option(version) for version in minecraft_launcher_lib.forge.list_forge_versions()], border_color= "#717171", border_radius= 10, border_width= 2, label_style= flet.TextStyle(color= "#ffffff"))
-    NOX_LAUNCHER_API = "https://kraysonapi.onrender.com/noxlauncher/"
+    NOX_LAUNCHER_API = "https://kraysonapi.onrender.com/NoxLauncher"
+    DISCORD_CLIENT_ID = "1264755410695491605"  
