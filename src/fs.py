@@ -7,7 +7,6 @@ import psutil
 import flet
 import platform
 import uuid
-import subprocess
 
 from functools import cache
 from tkinter.messagebox import showinfo
@@ -619,5 +618,5 @@ class Config:
     @cache
     def get_path() -> str:
         match platform.system():
-            case "Windows": return os.environ.get("APPDATA")
-            case "Linux": return os.environ.get("HOME")
+            case "Windows": return os.environ.get("APPDATA").replace("\\", "/")
+            case "Linux": return os.environ.get("HOME").replace("\\", "/")
