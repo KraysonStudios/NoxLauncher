@@ -14,9 +14,9 @@ if __name__ == "__main__":
         showerror(title= "Nox Launcher", message= "Unsupported Operating System.", type= "ok")
         exit(1)
 
-    def main(page: flet.Page) -> None:
+    Config.repair()
 
-        Config.repair()
+    def main(page: flet.Page) -> None:
 
         page.title = "Nox Launcher"
 
