@@ -1,28 +1,21 @@
-try:
+import platform
+import flet
+import os
+import json
+import time
+import uuid
+import subprocess
+import minecraft_launcher_lib
 
-    import platform
-    import flet
-    import os
-    import json
-    import time
-    import uuid
-    import subprocess
-    import minecraft_launcher_lib
-    
-    from abs import NoxLauncherView, NoxLauncherContainer, NoxLauncherDropdown, NoxLauncherColumn, NoxLauncherBanner, NoxLauncherRow
-    from fs import Config
-    from skinlib.skin import Skin, Perspective
-    from constants import constants
-    from api import NoxLauncherAPI
-    from functools import cache
-    from tkinter.messagebox import showerror
-    from typing import Any, Callable, Dict, List
-    from PIL import Image
-
-except Exception as e: 
-    
-    print(f"Report this error to the developers:\n{e.args[0]}")
-    exit(1)
+from abs import NoxLauncherView, NoxLauncherContainer, NoxLauncherDropdown, NoxLauncherColumn, NoxLauncherBanner, NoxLauncherRow
+from fs import Config
+from skinlib.skin import Skin, Perspective
+from constants import constants
+from api import NoxLauncherAPI
+from functools import cache
+from tkinter.messagebox import showerror
+from typing import Any, Callable, Dict, List
+from PIL import Image
 
 class NoxLauncher: 
 

@@ -1,13 +1,6 @@
-try:
+import flet
 
-    import flet
-
-    from typing import Callable, List
-
-except Exception as e:
-
-    print(f"Report this error to the developers: \n{e.args[0]}")
-    exit(1)
+from typing import Callable, List
 
 ##########################################################
 

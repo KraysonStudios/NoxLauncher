@@ -1,23 +1,17 @@
-try:
+import os
+import json
+import jdk
+import itertools
+import shutil
+import psutil
+import flet
+import platform
+import uuid
+import subprocess
 
-    import os
-    import json
-    import jdk
-    import itertools
-    import shutil
-    import psutil
-    import flet
-    import platform
-    import uuid
-    import subprocess
-
-    from functools import cache
-    from tkinter.messagebox import showinfo
-    from typing import Any, Dict, List
-
-except Exception as e: 
-    print(f"Report this error to the developers: \n{e.args[0]}")
-    exit(1)
+from functools import cache
+from tkinter.messagebox import showinfo
+from typing import Any, Dict, List
 
 class Config:
 

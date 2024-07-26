@@ -1,19 +1,13 @@
-try:
-    import flet
-    import os
-    import json
-    import datetime
-    import minecraft_launcher_lib
+import flet
+import os
+import json
+import datetime
+import minecraft_launcher_lib
 
-    from abs import NoxLauncherDropdown
-    from fs import Config
-    from typing import List, Dict, Any
-    from enum import Enum
-
-except Exception as e: 
-    
-    print(f"Report this error to the developers: \n{e.args[0]}")
-    exit(1)
+from abs import NoxLauncherDropdown
+from fs import Config
+from typing import List, Dict, Any
+from enum import Enum
 
 def update_minecraft_news(news: Dict[str, Any]) -> None:
 

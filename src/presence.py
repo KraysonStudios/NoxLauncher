@@ -1,16 +1,9 @@
-try:
+import pypresence
+import time
+import psutil
 
-    import pypresence
-    import time
-    import psutil
-
-    from utils import NOXLAUNCHER_THREAD_POOL
-    from constants import constants
-
-except Exception as e: 
-    
-    print(f"Report this error to the developers:\n{e.args[0]}")
-    exit(1)
+from utils import NOXLAUNCHER_THREAD_POOL
+from constants import constants
 
 RPC: pypresence.Presence = pypresence.Presence(constants.DISCORD_CLIENT_ID.value)
 
