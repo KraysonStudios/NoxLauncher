@@ -41,7 +41,7 @@ def _start() -> None:
                 RPC.close()
                 discord_opened = False
                 rpc_connected = False
-                break
+                return
 
 def DiscordRPC() -> None:
 
