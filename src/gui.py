@@ -10,7 +10,7 @@ import minecraft_launcher_lib
 from abs import NoxLauncherView, NoxLauncherContainer, NoxLauncherDropdown, NoxLauncherColumn, NoxLauncherBanner, NoxLauncherRow
 from fs import Config
 from skinlib.skin import Skin, Perspective
-from constants import constants
+from constants import constants, minecraft_news
 from api import NoxLauncherAPI
 from functools import cache
 from tkinter.messagebox import showerror
@@ -1267,7 +1267,7 @@ class NoxLauncher:
                 toolbar_height= 120
             ),
             controls= [
-                NoxLauncherContainer(content = NoxLauncherRow(expand= True, expand_loose= True, controls= constants.MINECRAFT_NEWS.value, 
+                NoxLauncherContainer(content = NoxLauncherRow(expand= True, expand_loose= True, controls= minecraft_news(), 
                     alignment= flet.MainAxisAlignment.CENTER, vertical_alignment= flet.CrossAxisAlignment.CENTER, spacing= 30, scroll= flet.ScrollMode.AUTO), 
                     expand= True, expand_loose= True, 
                     alignment= flet.alignment.center,

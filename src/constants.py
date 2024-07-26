@@ -98,7 +98,6 @@ class constants(Enum):
     MAX_HEIGHT = 1080
     MIN_WIDTH = 900
     MIN_HEIGHT = 700
-    MINECRAFT_NEWS = minecraft_news()
     VANILLA_SNAPSHOTS = NoxLauncherDropdown(label= "Vanilla Snapshots", hint_text= "Select a snapshot and install it!", options= [flet.dropdown.Option(version["id"]) for version in minecraft_launcher_lib.utils.get_version_list() if version["type"] == "snapshot"], border_color= "#717171", border_radius= 10, border_width= 2, label_style= flet.TextStyle(color= "#ffffff"))
     VANILLA_RELEASES = NoxLauncherDropdown(label= "Vanilla Releases", hint_text= "Select a release and install it!", options= [flet.dropdown.Option(version["id"]) for version in minecraft_launcher_lib.utils.get_version_list() if version["type"] == "release"], border_color= "#717171", border_radius= 10, border_width= 2, label_style= flet.TextStyle(color= "#ffffff"))
     FABRIC_SNAPSHOTS = NoxLauncherDropdown(label= "Fabric Snapshots", hint_text= "Select a snapshot and install it!", options= [flet.dropdown.Option(version["version"]) for version in minecraft_launcher_lib.fabric.get_all_minecraft_versions() if version["stable"] == False], border_color= "#717171", border_radius= 10, border_width= 2, label_style= flet.TextStyle(color= "#ffffff"))

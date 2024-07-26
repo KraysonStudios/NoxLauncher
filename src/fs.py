@@ -618,5 +618,5 @@ class Config:
     @cache
     def get_path() -> str:
         match platform.system():
-            case "Windows": return os.environ.get("APPDATA").replace("\\", "/")
-            case "Linux": return os.environ.get("HOME").replace("\\", "/")
+            case "Windows": return os.environ.get("APPDATA")
+            case "Linux": return os.environ.get("HOME")
