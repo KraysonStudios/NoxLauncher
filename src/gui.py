@@ -1529,13 +1529,13 @@ class AccountManager:
                             
                         return profile
             else:
-
+                
                 profiles["profiles"].update({
                     "default": {
                         "name": "Default",
                         "type": "offline",
                         "selected": True,
-                        "skin": "extensions/assets/steve.png"
+                        "skin": "assets/steve.png",
                     },
                     "premium": {},
                     "no_premium": {}
