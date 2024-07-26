@@ -2,7 +2,7 @@ import pypresence
 import time
 import psutil
 
-from utils import NOXLAUNCHER_THREAD_POOL
+from threads import NOXLAUNCHER_THREAD_POOL
 from constants import constants
 
 RPC: pypresence.Presence = pypresence.Presence(constants.DISCORD_CLIENT_ID.value)

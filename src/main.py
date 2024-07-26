@@ -5,7 +5,7 @@ from gui import NoxLauncher
 from constants import constants
 from fs import Config
 from presence import DiscordRPC
-from utils import NOXLAUNCHER_THREAD_POOL
+from threads import NOXLAUNCHER_THREAD_POOL
 from tkinter.messagebox import showerror
 
 if __name__ == "__main__":
@@ -31,7 +31,7 @@ if __name__ == "__main__":
         page.update()
 
         NoxLauncher.build(page)
-        DiscordRPC()
+        NOXLAUNCHER_THREAD_POOL.submit(DiscordRPC)
 
     flet.app(target= main, name= "Nox Launcher")
     NOXLAUNCHER_THREAD_POOL.flush()

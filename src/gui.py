@@ -1226,8 +1226,8 @@ class NoxLauncher:
 
         return flet.View("/play", 
             appbar= flet.AppBar(
-                leading= flet.Image(src= "icon.png", width= 170, height= 130, filter_quality= flet.FilterQuality.HIGH),
-                leading_width= 170,
+                title= flet.Image(src= "icon.png", width= 200, height= 170, filter_quality= flet.FilterQuality.HIGH),
+                center_title= True,
                 actions= [
                     NoxLauncherContainer(
                         width= 250,

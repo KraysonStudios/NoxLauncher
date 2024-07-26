@@ -4,7 +4,8 @@ import json
 import datetime
 import minecraft_launcher_lib
 
-from abs import NoxLauncherDropdown
+from utils import check_internet
+from abs import NoxLauncherDropdown, NoxLauncherContainer
 from fs import Config
 from typing import List, Dict, Any
 from enum import Enum
@@ -46,6 +47,29 @@ def minecraft_news() -> List[flet.Container]:
                 elif "requested" not in news: Config.repair()
                 elif not isinstance(news["news"], list): Config.repair()
                 elif not isinstance(news["requested"], str): Config.repair()
+
+                if not check_internet():
+                    return [
+                        NoxLauncherContainer(
+                            content= flet.Row(
+                                controls= [
+                                    NoxLauncherContainer(
+                                        width= 10,
+                                        height= 180,
+                                        bgcolor= flet.colors.RED_500,
+                                        border_radius= 10
+                                    ),
+                                    flet.Container(content= flet.Text("No internet connection to update the Minecraft News!", size= 17, color= "#ffffff", font_family= "Minecraft"), expand= True, expand_loose= True, alignment= flet.alignment.center),
+                                ],
+                                expand= True,
+                                expand_loose= True
+                            ),
+                            height= 180,
+                            width= 180,
+                            border_radius= 20,
+                            bgcolor= "#272727"
+                        )
+                    ]
 
                 if news["requested"] != "" and not news["requested"].isspace():
                     if (
