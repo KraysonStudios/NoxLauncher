@@ -628,7 +628,7 @@ class NoxLauncher:
                                             ),
                                             NoxLauncherRow(controls= [
                                                 flet.TextButton(content= flet.Image(src= "github.png", width= 60, height= 60, filter_quality= flet.FilterQuality.HIGH), width= 60, height= 60, url_target= flet.UrlTarget.BLANK, url= "https://github.com/FrannDV"),
-                                                flet.Text("FrannDV", color= "#ffffff", size= 15, font_family= "Minecraft")
+                                                flet.Text("ItzFrannDV", color= "#ffffff", size= 15, font_family= "Minecraft")
                                             ], expand_loose= True, alignment= flet.MainAxisAlignment.START, vertical_alignment= flet.CrossAxisAlignment.CENTER, spacing= 10),
                                         ], horizontal_alignment= flet.MainAxisAlignment.START, alignment= flet.CrossAxisAlignment.CENTER, spacing= 5, expand_loose= True),
                                         NoxLauncherRow(
