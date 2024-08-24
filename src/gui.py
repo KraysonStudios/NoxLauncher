@@ -868,14 +868,22 @@ class NoxLauncher:
                                 expand= True
                             ),
                             NoxLauncherContainer(
-                                height= 100,
+                                content= NoxLauncherContainer(
+                                    content= flet.TextButton(
+                                        content= flet.Text("Save", size= 20, font_family= "Minecraft"),
+                                        on_click= update_settings,
+                                        style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 190, height= 45
+                                    ),
+                                    alignment= flet.alignment.center,
+                                    width= 240,
+                                    height= 80,
+                                    bgcolor= "#272727",
+                                    border_radius= 20
+                                ), 
+                                alignment= flet.alignment.center, 
+                                height= 100, 
                                 expand_loose= True,
-                                content= flet.TextButton(
-                                    content= flet.Text("Save", size= 20, font_family= "Minecraft"),
-                                    on_click= update_settings,
-                                    style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 190, height= 45
-                                ),
-                                alignment= flet.alignment.center
+                                padding= flet.padding.only(bottom= 10)
                             )
                         ],
                         expand= True,
