@@ -14,11 +14,11 @@ def update_minecraft_news(news: Dict[str, Any]) -> None:
 
     news["news"].clear()
 
-    for article in minecraft_launcher_lib.utils.get_minecraft_news(5).values():
+    # for article in minecraft_launcher_lib.utils.get_minecraft_news(5).values():
 
-        if isinstance(article, list): 
-            news["news"].extend(article)
-            break
+        # if isinstance(article, list): 
+           #  news["news"].extend(article)
+           #  break
 
     news["requested"] = datetime.datetime.strftime(datetime.datetime.now(datetime.UTC), "%Y-%m-%d")
 
@@ -93,11 +93,11 @@ def minecraft_news() -> List[flet.Container]:
                     if "news" not in news: Config.repair()
                     elif not isinstance(news["news"], list): Config.repair()
 
-                    for article in minecraft_launcher_lib.utils.get_minecraft_news(1).values():
+                    # for article in minecraft_launcher_lib.utils.get_minecraft_news(1).values():
 
-                        if isinstance(article, list): 
-                            news["news"].extend(article)
-                            break
+                        # if isinstance(article, list): 
+                          #  news["news"].extend(article)
+                          #  break
                 
                 with open(Config.get_path() + "/NoxLauncher/cache/minecraft_news.json", "w", encoding= "utf-8") as f: json.dump(news, f, indent= 4)
             
