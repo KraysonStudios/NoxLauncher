@@ -222,6 +222,7 @@ class NoxLauncher:
                 )
 
                 page.open(BANNER)
+                
                 return
 
             banner_info_text: str = ''
