@@ -2,7 +2,7 @@
    <img alt= "icon" src= "https://github.com/KraysonStudios/NoxLauncher/blob/master/assets/icon.png" style= "width: 75%; height: 55%;">
 </p>
 
-# NoxLauncher
+<h1 align="center">NoxLauncher</h1>
 
 > [!NOTE]  
 > This repo is __**official**__ and nothing else. Pls contribute in this only repo.
