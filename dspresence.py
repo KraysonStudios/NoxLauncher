@@ -29,8 +29,7 @@ def _start() -> None:
                     state= "Playing NoxLauncher...",
                     details= "Powerful and easy-to-use Minecraft Launcher develop by Krayson Studio.",
                     large_image= "discord_rpc",
-                    large_text= "Krayson Studio",
-                    start= int(time.time())
+                    large_text= "Krayson Studio"
                 )
 
                 time.sleep(10)

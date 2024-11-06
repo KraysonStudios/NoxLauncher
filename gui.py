@@ -25,11 +25,16 @@ class NoxLauncherStandardWindowConfig:
         self.page.title = f"NoxLauncher {VERSION}"
 
         self.page.fonts = {
-            "NoxLauncher": "fonts/minecraft.ttf",
+            "NoxLauncher": "assets/fonts/minecraft.ttf",
         }
 
         self.page.window.min_height = 720
         self.page.window.min_width = 1280
+
+        self.page.window.width = 1280
+        self.page.window.height = 720
+
+        self.page.theme_mode = flet.ThemeMode.DARK
 
         self.page.update()
 
@@ -94,7 +99,7 @@ class NoxLauncherHomeGUI:
                     alignment= flet.alignment.center,
                     expand= True,
                     expand_loose= True,
-                    image= flet.DecorationImage(src= "bghome.png", fit= flet.ImageFit.COVER, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT),
+                    image= flet.DecorationImage(src= "assets/bghome.png", fit= flet.ImageFit.COVER, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT),
                     content= flet.Row(
                         controls= [
                             flet.Column(
@@ -104,7 +109,7 @@ class NoxLauncherHomeGUI:
                                         height= 280,
                                         border_radius= 20,
                                         content= flet.Image(
-                                            src= "play.png", 
+                                            src= "assets/play.png", 
                                             repeat= flet.ImageRepeat.NO_REPEAT, 
                                             filter_quality= flet.FilterQuality.HIGH,
                                             tooltip= flet.Tooltip(
@@ -131,7 +136,7 @@ class NoxLauncherHomeGUI:
                                         width= 300,
                                         height= 280,
                                         border_radius= 20,
-                                        content= flet.Image(src= "mods.png", repeat= flet.ImageRepeat.NO_REPEAT, filter_quality= flet.FilterQuality.HIGH, width= 80, height= 80),
+                                        content= flet.Image(src= "assets/mods.png", repeat= flet.ImageRepeat.NO_REPEAT, filter_quality= flet.FilterQuality.HIGH, width= 80, height= 80),
                                         tooltip= flet.Tooltip(
                                             message= "Download and install mod loaders like Fabric, Forge or simple Vanilla.",
                                             bgcolor= "#272727",
@@ -155,7 +160,7 @@ class NoxLauncherHomeGUI:
                                         width= 300,
                                         height= 280,
                                         border_radius= 20,
-                                        content= flet.Image(src= "accounts.png", repeat= flet.ImageRepeat.NO_REPEAT, filter_quality= flet.FilterQuality.HIGH),
+                                        content= flet.Image(src= "assets/accounts.png", repeat= flet.ImageRepeat.NO_REPEAT, filter_quality= flet.FilterQuality.HIGH),
                                         tooltip= flet.Tooltip(
                                             message= "Change the account or skin.",
                                             bgcolor= "#272727",
@@ -195,7 +200,7 @@ class NoxLauncherHomeAppBar:
     def build(self) -> flet.AppBar:
 
         return flet.AppBar(
-            title= flet.Image(src= "icon.png", width= 200, height= 170, filter_quality= flet.FilterQuality.HIGH),
+            title= flet.Image(src= "assets/icon.png", width= 200, height= 170, filter_quality= flet.FilterQuality.HIGH),
             center_title= True,
             actions= [
                 flet.Container(
@@ -261,7 +266,7 @@ class NoxLauncherInfoGUI:
                                 content= flet.Container(
                                     content= flet.Column(
                                         controls= [
-                                            flet.Image(src= "icon.png", width= 230, height= 140, filter_quality= flet.FilterQuality.HIGH),
+                                            flet.Image(src= "assets/icon.png", width= 230, height= 140, filter_quality= flet.FilterQuality.HIGH),
                                             flet.Container(
                                                 content= flet.Text("\" NoxLauncher is a powerful Open Source launcher created by Krayson Studio and its main developers, to provide secure access to a minecraft launcher. \" This launcher is not affiliated with Mojang Studios and their games.", size= 17, font_family= "NoxLauncher"), 
                                                 alignment= flet.alignment.center,
@@ -294,9 +299,9 @@ class NoxLauncherInfoGUI:
                                             flet.Container(
                                                 content= flet.Row(
                                                     controls= [
-                                                        flet.Container(content= flet.Image(src= "discord.png", width= 52, height= 52, filter_quality= flet.FilterQuality.HIGH), on_click= lambda _: open_discord()),
-                                                        flet.Container(content= flet.Image(src= "github.png", width= 52, height= 52, filter_quality= flet.FilterQuality.HIGH), on_click= lambda _: open_github()),
-                                                        flet.Container(content= flet.Image(src= "kofi.png", width= 52, height= 52, filter_quality= flet.FilterQuality.HIGH), on_click= lambda _: open_kofi())
+                                                        flet.Container(content= flet.Image(src= "assets/discord.png", width= 52, height= 52, filter_quality= flet.FilterQuality.HIGH), on_click= lambda _: open_discord()),
+                                                        flet.Container(content= flet.Image(src= "assets/github.png", width= 52, height= 52, filter_quality= flet.FilterQuality.HIGH), on_click= lambda _: open_github()),
+                                                        flet.Container(content= flet.Image(src= "assets/kofi.png", width= 52, height= 52, filter_quality= flet.FilterQuality.HIGH), on_click= lambda _: open_kofi())
                                                     ],
                                                     run_spacing= 50,
                                                     spacing= 50,
@@ -329,7 +334,7 @@ class NoxLauncherInfoGUI:
                     ),
                     expand= True,
                     expand_loose= True,
-                    image= flet.DecorationImage(src= "bginfo.png", fit= flet.ImageFit.COVER, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT),
+                    image= flet.DecorationImage(src= "assets/bginfo.png", fit= flet.ImageFit.COVER, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT),
                     alignment= flet.alignment.center,
                 )
             ],
@@ -370,7 +375,7 @@ class NoxLauncherSettingsGUI:
                                                         flet.Container(
                                                             content= flet.Row(
                                                                 controls= [
-                                                                    flet.Image(src= "java.png", width= 100, height= 100, filter_quality= flet.FilterQuality.HIGH),
+                                                                    flet.Image(src= "assets/java.png", width= 100, height= 100, filter_quality= flet.FilterQuality.HIGH),
                                                                     flet.Container(content= flet.Text("Java Settings", size= 30, font_family= "NoxLauncher"), expand_loose= True, alignment= flet.alignment.center, padding= flet.padding.only(top= 25))
                                                                 ],
                                                                 alignment= flet.MainAxisAlignment.CENTER,
@@ -433,7 +438,7 @@ class NoxLauncherSettingsGUI:
                                             flet.Container(
                                                 content= flet.Column(
                                                     controls= [
-                                                        flet.Image(src= "icon.png", width= 150, height= 130, filter_quality= flet.FilterQuality.HIGH),
+                                                        flet.Image(src= "assets/icon.png", width= 150, height= 130, filter_quality= flet.FilterQuality.HIGH),
                                                         flet.Container(
                                                             content= flet.Text("Close NoxLauncher when Minecraft starts", size= 18, font_family= "NoxLauncher"),
                                                             expand_loose= True,
@@ -494,7 +499,7 @@ class NoxLauncherSettingsGUI:
                     ),
                     expand= True,
                     expand_loose= True,
-                    image= flet.DecorationImage(src= "bgsettings.png", fit= flet.ImageFit.COVER, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT),
+                    image= flet.DecorationImage(src= "assets/bgsettings.png", fit= flet.ImageFit.COVER, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT),
                     alignment= flet.alignment.center
                 )
             ],
@@ -535,7 +540,7 @@ class NoxLauncherInstallGUI:
             appbar= NoxLauncherInstallAppBar(self.page).build(),
             controls= [
                 flet.Container(
-                    image= flet.DecorationImage(src= "bginstall.png", fit= flet.ImageFit.COVER, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT),
+                    image= flet.DecorationImage(src= "assets/bginstall.png", fit= flet.ImageFit.COVER, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT),
                     expand= True,
                     expand_loose= True,
                     content= flet.Column(
@@ -590,7 +595,7 @@ class NoxLauncherInstallAppBar:
         return flet.AppBar(
             leading= BackToPlayButton(self.page).build(),
             leading_width= 240,
-            title= flet.Image(src= "icon.png", width= 200, height= 170, filter_quality= flet.FilterQuality.HIGH),
+            title= flet.Image(src= "assets/icon.png", width= 200, height= 170, filter_quality= flet.FilterQuality.HIGH),
             center_title= True,
             actions= [
                 flet.Container(
@@ -605,7 +610,7 @@ class NoxLauncherInstallAppBar:
                         controls= [
                             flet.Container(
                                 content= flet.Image(
-                                    src= "fabric.png", 
+                                    src= "assets/fabric.png", 
                                     width= 80, 
                                     height= 80, 
                                     filter_quality= flet.FilterQuality.HIGH, 
@@ -623,7 +628,7 @@ class NoxLauncherInstallAppBar:
                             ),
                             flet.Container(
                                 content= flet.Image(
-                                    src= "forge.png", 
+                                    src= "assets/forge.png", 
                                     width= 80, 
                                     height= 80, 
                                     filter_quality= flet.FilterQuality.HIGH,
@@ -641,7 +646,7 @@ class NoxLauncherInstallAppBar:
                             ),
                             flet.Container(
                                 content= flet.Image(
-                                    src= "vanilla.png", 
+                                    src= "assets/vanilla.png", 
                                     width= 80, 
                                     height= 80, 
                                     filter_quality= flet.FilterQuality.HIGH,
@@ -766,7 +771,7 @@ class NoxLauncherInstallFabricGUI:
                         alignment= flet.MainAxisAlignment.CENTER,
                         vertical_alignment= flet.CrossAxisAlignment.CENTER
                     ),
-                    image= flet.DecorationImage(src= "bgfabric.png", fit= flet.ImageFit.COVER, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT),
+                    image= flet.DecorationImage(src= "assets/bgfabric.png", fit= flet.ImageFit.COVER, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT),
                     expand= True,
                     expand_loose= True,
                     alignment= flet.alignment.center
@@ -783,7 +788,7 @@ class NoxLauncherInstallFabricGUI:
 
         installer_alert: flet.AlertDialog = flet.AlertDialog(
             modal= True,
-            icon= flet.Image(src= "fabric.png", width= 160, height= 130, filter_quality= flet.FilterQuality.HIGH),
+            icon= flet.Image(src= "assets/fabric.png", width= 160, height= 130, filter_quality= flet.FilterQuality.HIGH),
             title= flet.Container(
                 content= flet.Text(value= event.control.value, size= 18, font_family= "NoxLauncher", color= "#FFFFFF"),
                 alignment= flet.alignment.center,
@@ -891,7 +896,7 @@ class NoxLauncherInstallVanillaGUI:
                         alignment= flet.MainAxisAlignment.CENTER,
                         horizontal_alignment= flet.CrossAxisAlignment.CENTER
                     ),
-                    image= flet.DecorationImage(src= "bgvanilla.png", fit= flet.ImageFit.COVER, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT),
+                    image= flet.DecorationImage(src= "assets/bgvanilla.png", fit= flet.ImageFit.COVER, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT),
                     expand= True,
                     expand_loose= True,
                     alignment= flet.alignment.center
@@ -908,7 +913,7 @@ class NoxLauncherInstallVanillaGUI:
 
         installer_alert: flet.AlertDialog =  flet.AlertDialog(
             modal= True,
-            icon= flet.Image(src= "mods.png", width= 160, height= 130, filter_quality= flet.FilterQuality.HIGH),
+            icon= flet.Image(src= "assets/mods.png", width= 160, height= 130, filter_quality= flet.FilterQuality.HIGH),
             title= flet.Container(
                 content= flet.Text(value= event.control.value, size= 18, font_family= "NoxLauncher", color= "#FFFFFF"),
                 alignment= flet.alignment.center,
@@ -1057,7 +1062,7 @@ class NoxLauncherInstallForgeGUI:
                         alignment= flet.MainAxisAlignment.CENTER,
                         vertical_alignment= flet.CrossAxisAlignment.CENTER
                     ),
-                    image= flet.DecorationImage(src= "bgforge.png", fit= flet.ImageFit.COVER, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT),
+                    image= flet.DecorationImage(src= "assets/bgforge.png", fit= flet.ImageFit.COVER, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT),
                     expand= True,
                     expand_loose= True,
                     alignment= flet.alignment.center
@@ -1074,7 +1079,7 @@ class NoxLauncherInstallForgeGUI:
 
         installer_alert: flet.AlertDialog =  flet.AlertDialog(
             modal= True,
-            icon= flet.Image(src= "forge.png", width= 160, height= 130, filter_quality= flet.FilterQuality.HIGH),
+            icon= flet.Image(src= "assets/forge.png", width= 160, height= 130, filter_quality= flet.FilterQuality.HIGH),
             title= flet.Container(
                 content= flet.Text(value= event.control.value, size= 18, font_family= "NoxLauncher", color= "#FFFFFF"),
                 alignment= flet.alignment.center,
@@ -1208,7 +1213,7 @@ class NoxLauncherPlayGUI:
                         horizontal_alignment= flet.CrossAxisAlignment.CENTER,
                         alignment= flet.MainAxisAlignment.CENTER
                     ),
-                    image= flet.DecorationImage(src= "bgplay.png", fit= flet.ImageFit.COVER, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT),
+                    image= flet.DecorationImage(src= "assets/bgplay.png", fit= flet.ImageFit.COVER, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT),
                     expand= True,
                     expand_loose= True,
                     alignment= flet.alignment.center,
@@ -1233,7 +1238,7 @@ class NoxLauncherPlayGUI:
                 if FREE_ACC_OPTIONS["executablePath"] is None:
 
                     not_java_found_alert: flet.AlertDialog = flet.AlertDialog(
-                        icon= flet.Image(src= "java.png", width= 160, height= 130, filter_quality= flet.FilterQuality.HIGH),
+                        icon= flet.Image(src= "assets/java.png", width= 160, height= 130, filter_quality= flet.FilterQuality.HIGH),
                         title= flet.Container(
                             content= flet.Text(value= "Error at java", size= 30, font_family= "NoxLauncher", color= "#FFFFFF"),
                             alignment= flet.alignment.center,
@@ -1261,7 +1266,7 @@ class NoxLauncherPlayGUI:
             case _:
 
                 not_selected_acc_alert: flet.AlertDialog = flet.AlertDialog(
-                    icon= flet.Image(src= "accounts.png", width= 160, height= 130, filter_quality= flet.FilterQuality.HIGH),
+                    icon= flet.Image(src= "assets/accounts.png", width= 160, height= 130, filter_quality= flet.FilterQuality.HIGH),
                     title= flet.Container(
                         content= flet.Text(value= "Error at accounts", size= 30, font_family= "NoxLauncher", color= "#FFFFFF"),
                         alignment= flet.alignment.center,
@@ -1326,13 +1331,13 @@ class NoxLauncherAccountsGUI:
             appbar= NoxLauncherGenericAppBar(self.page, "Back to home", "/home").build(),
             controls= [
                 flet.Container(
-                    image= flet.DecorationImage(src= "bgaccounts.png", fit= flet.ImageFit.COVER, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT),
+                    image= flet.DecorationImage(src= "assets/bgaccounts.png", fit= flet.ImageFit.COVER, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT),
                     content= flet.Row(
                         controls= [
                             flet.Container(
                                 content= flet.Column(
                                     controls= [
-                                        flet.Image(src= "freeaccounts.png", width= 240, height= 200, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT), 
+                                        flet.Image(src= "assets/freeaccounts.png", width= 240, height= 200, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT), 
                                         flet.Text("Free Accounts", size= 25, font_family= "NoxLauncher", color= "#FFFFFF"), 
                                     ],
                                     expand= True,
@@ -1383,7 +1388,7 @@ class NoxLauncherFreeAccountsGUI:
             appbar= NoxLauncherGenericAppBar(self.page, "Back", "/accounts").build(),
             controls= [
                 flet.Container(
-                    image= flet.DecorationImage(src= "bgaccounts.png", fit= flet.ImageFit.COVER, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT),
+                    image= flet.DecorationImage(src= "assets/bgaccounts.png", fit= flet.ImageFit.COVER, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT),
                     content= flet.Row(
                         controls= [
                             flet.Container(
@@ -1826,7 +1831,7 @@ class NoxLauncherGenericAppBar:
         return flet.AppBar(
             leading= BackToPlayButton(self.page, text= self.text, path= self.path, bgcolor= None).build(),
             leading_width= 240,
-            title= flet.Image(src= "icon.png", width= 200, height= 170, filter_quality= flet.FilterQuality.HIGH),
+            title= flet.Image(src= "assets/icon.png", width= 200, height= 170, filter_quality= flet.FilterQuality.HIGH),
             center_title= True,
             bgcolor= "#272727",
             toolbar_height= 120
@@ -1851,7 +1856,7 @@ class BackToPlayButton:
                 content= flet.Row(
                     controls= [
                         flet.Icon(name= flet.icons.ARROW_BACK, color= "#717171", size= 40),
-                        flet.Container(content= flet.Text(self.text, size= 20, font_family= "NoxLauncher"), expand_loose= True, alignment= flet.alignment.center, padding= flet.padding.only(top= 5))
+                        flet.Container(content= flet.Text(self.text, size= 20, font_family= "NoxLauncher"), expand_loose= True, alignment= flet.alignment.center, padding= flet.padding.only(top= 2))
                     ],
                     height= self.height,
                     width= self.width,

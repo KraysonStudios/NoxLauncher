@@ -12,6 +12,7 @@ import minecraft_launcher_lib
 from typing import List
 from functools import cache
 
+from constants import VERSION
 from utils import has_internet
 
 @cache
@@ -19,7 +20,6 @@ def check_noxlauncher_filesystem() -> None:
     
     if not os.path.exists(get_home()): os.mkdir(get_home())
     if not os.path.exists(get_home() + "/mods"): os.mkdir(get_home() + "/mods")
-    if not os.path.exists(get_home() + "/stdjava"): os.mkdir(get_home() + "/stdjava")
     if not os.path.exists(get_home() + "/accounts.json"): 
 
         with open(get_home() + "/accounts.json", "w") as file: 
@@ -27,7 +27,8 @@ def check_noxlauncher_filesystem() -> None:
             json.dump({
                 "premium": [],
                 "free": [],
-                "nopremium": []
+                "nopremium": [],
+                "version": VERSION
             }, file, indent= 4)
 
     if not os.path.exists(get_home() + "/config.json"): 
@@ -40,7 +41,7 @@ def check_noxlauncher_filesystem() -> None:
                 "autoclose": True,
                 "receivenews": True,
                 "discordrpc": True,
-                "version": "1.0.0"
+                "version": VERSION
             }, file, indent= 4)
 
     if not os.path.exists(get_home() + "/launcher_profiles.json"):
@@ -66,7 +67,7 @@ def check_noxlauncher_filesystem() -> None:
                     "snapshots": [version["id"] for version in minecraft_launcher_lib.utils.get_version_list() if version["type"] == "snapshot"] if has_internet() else []
                 },
                 "updated": datetime.datetime.strftime(datetime.datetime.now(datetime.UTC), "%Y-%m-%d"),
-                "version": "1.0.0"
+                "version": VERSION
             }, file, indent= 4)
     
     with open(get_home() + "/versions/vanilla.json", "r") as file:
@@ -83,7 +84,7 @@ def check_noxlauncher_filesystem() -> None:
                         "snapshots": [version["id"] for version in minecraft_launcher_lib.utils.get_version_list() if version["type"] == "snapshot"]
                     },
                     "updated": datetime.datetime.strftime(datetime.datetime.now(datetime.UTC), "%Y-%m-%d"),
-                    "version": "1.0.0"
+                    "version": VERSION
                 }, file, indent= 4)
 
     if not os.path.exists(get_home() + "/versions/fabric.json"): 
@@ -96,7 +97,7 @@ def check_noxlauncher_filesystem() -> None:
                     "snapshots": [version["version"] for version in minecraft_launcher_lib.fabric.get_all_minecraft_versions() if version["stable"] == False] if has_internet() else [],
                 },
                 "updated": datetime.datetime.strftime(datetime.datetime.now(datetime.UTC), "%Y-%m-%d"),
-                "version": "1.0.0"
+                "version": VERSION
             }, file, indent= 4)
 
     with open(get_home() + "/versions/fabric.json", "r") as file:
@@ -113,7 +114,7 @@ def check_noxlauncher_filesystem() -> None:
                         "snapshots": [version["version"] for version in minecraft_launcher_lib.fabric.get_all_minecraft_versions() if version["stable"] == False],
                     },
                     "updated": datetime.datetime.strftime(datetime.datetime.now(datetime.UTC), "%Y-%m-%d"),
-                    "version": "1.0.0"
+                    "version": VERSION
                 }, file, indent= 4)
 
     if not os.path.exists(get_home() + "/versions/forge.json"): 
@@ -123,7 +124,7 @@ def check_noxlauncher_filesystem() -> None:
             json.dump({
                 "versions": minecraft_launcher_lib.forge.list_forge_versions() if has_internet() else [],
                 "updated": datetime.datetime.strftime(datetime.datetime.now(datetime.UTC), "%Y-%m-%d"),
-                "version": "1.0.0"
+                "version": VERSION
             }, file, indent= 4)
 
     with open(get_home() + "/versions/forge.json", "r") as file:
@@ -137,7 +138,7 @@ def check_noxlauncher_filesystem() -> None:
                 json.dump({
                     "versions": minecraft_launcher_lib.forge.list_forge_versions(),
                     "updated": datetime.datetime.strftime(datetime.datetime.now(datetime.UTC), "%Y-%m-%d"),
-                    "version": "1.0.0"
+                    "version": VERSION
                 }, file, indent= 4)
 
 def get_home() -> str:
@@ -164,20 +165,26 @@ def get_all_java_instances() -> List[flet.dropdown.Option]:
 
     match platform.system():
         case "Windows": 
+
+            try:
                     
-            for path_one, path_two in itertools.zip_longest(
-                [path for path in os.listdir('C:/Program Files/') if os.path.isdir('C:/Program Files/' + path)], 
-                [path for path in os.listdir('C:/Program Files (x86)/') if os.path.isdir('C:/Program Files (x86)/' + path)], 
-                fillvalue= None
-            ):
-                for java_one, java_two in itertools.zip_longest(
-                    [java for java in os.listdir('C:/Program Files/' + path_one) if os.path.isdir(f'C:/Program Files/{path_one}/{java}/') and java.find('jdk') != -1 and os.path.exists(f'C:/Program Files/{path_one}/{java}/bin/java.exe') and os.path.isfile(f'C:/Program Files/{path_one}/{java}/bin/java.exe')], 
-                    [java for java in os.listdir('C:/Program Files (x86)/' + path_two) if os.path.isdir(f'C:/Program Files (x86)/{path_two}/{java}/') and java.find('jdk') != -1 and os.path.exists(f'C:/Program Files (x86)/{path_two}/{java}/bin/java.exe') and os.path.isfile(f'C:/Program Files (x86)/{path_two}/{java}/bin/java.exe')], 
+                for path_one, path_two in itertools.zip_longest(
+                    [path for path in os.listdir('C:/Program Files/') if os.path.isdir('C:/Program Files/' + path)], 
+                    [path for path in os.listdir('C:/Program Files (x86)/') if os.path.isdir('C:/Program Files (x86)/' + path)], 
                     fillvalue= None
                 ):
-                    
-                    if java_one is not None: options.append(flet.dropdown.Option(f'C:/Program Files/{path_one}/{java_one}/bin/java.exe', text_style= flet.TextStyle(font_family= "NoxLauncher", size= 14)))
-                    if java_two is not None: options.append(flet.dropdown.Option(f'C:/Program Files (x86)/{path_two}/{java_two}/bin/java.exe', text_style= flet.TextStyle(font_family= "NoxLauncher", size= 14)))
+                    for java_one, java_two in itertools.zip_longest(
+                        [java for java in os.listdir('C:/Program Files/' + path_one) if os.path.isdir(f'C:/Program Files/{path_one}/{java}/') and java.find('jdk') != -1 and os.path.exists(f'C:/Program Files/{path_one}/{java}/bin/java.exe') and os.path.isfile(f'C:/Program Files/{path_one}/{java}/bin/java.exe')], 
+                        [java for java in os.listdir('C:/Program Files (x86)/' + path_two) if os.path.isdir(f'C:/Program Files (x86)/{path_two}/{java}/') and java.find('jdk') != -1 and os.path.exists(f'C:/Program Files (x86)/{path_two}/{java}/bin/java.exe') and os.path.isfile(f'C:/Program Files (x86)/{path_two}/{java}/bin/java.exe')], 
+                        fillvalue= None
+                    ):
+                        
+                        if java_one is not None: options.append(flet.dropdown.Option(f'C:/Program Files/{path_one}/{java_one}/bin/java.exe', text_style= flet.TextStyle(font_family= "NoxLauncher", size= 14)))
+                        if java_two is not None: options.append(flet.dropdown.Option(f'C:/Program Files (x86)/{path_two}/{java_two}/bin/java.exe', text_style= flet.TextStyle(font_family= "NoxLauncher", size= 14)))
+
+            except Exception as e:
+
+                print(e)
 
             return options
         
