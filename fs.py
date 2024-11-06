@@ -12,6 +12,7 @@ import minecraft_launcher_lib
 from typing import List
 from functools import cache
 
+from logs import error
 from constants import VERSION
 from utils import has_internet
 
@@ -174,17 +175,15 @@ def get_all_java_instances() -> List[flet.dropdown.Option]:
                     fillvalue= None
                 ):
                     for java_one, java_two in itertools.zip_longest(
-                        [java for java in os.listdir('C:/Program Files/' + path_one) if os.path.isdir(f'C:/Program Files/{path_one}/{java}/') and java.find('jdk') != -1 and os.path.exists(f'C:/Program Files/{path_one}/{java}/bin/java.exe') and os.path.isfile(f'C:/Program Files/{path_one}/{java}/bin/java.exe')], 
-                        [java for java in os.listdir('C:/Program Files (x86)/' + path_two) if os.path.isdir(f'C:/Program Files (x86)/{path_two}/{java}/') and java.find('jdk') != -1 and os.path.exists(f'C:/Program Files (x86)/{path_two}/{java}/bin/java.exe') and os.path.isfile(f'C:/Program Files (x86)/{path_two}/{java}/bin/java.exe')], 
+                        [java for java in os.listdir('C:/Program Files/' + path_one) if os.path.isdir(f'C:/Program Files/{path_one}/{java}/') and java.find('jdk') != -1 and os.path.exists(f'C:/Program Files/{path_one}/{java}/bin/java.exe') and os.path.isfile(f'C:/Program Files/{path_one}/{java}/bin/java.exe')] if path_one is not None else [], 
+                        [java for java in os.listdir('C:/Program Files (x86)/' + path_two) if os.path.isdir(f'C:/Program Files (x86)/{path_two}/{java}/') and java.find('jdk') != -1 and os.path.exists(f'C:/Program Files (x86)/{path_two}/{java}/bin/java.exe') and os.path.isfile(f'C:/Program Files (x86)/{path_two}/{java}/bin/java.exe')] if path_two is not None else [], 
                         fillvalue= None
                     ):
                         
-                        if java_one is not None: options.append(flet.dropdown.Option(f'C:/Program Files/{path_one}/{java_one}/bin/java.exe', text_style= flet.TextStyle(font_family= "NoxLauncher", size= 14)))
-                        if java_two is not None: options.append(flet.dropdown.Option(f'C:/Program Files (x86)/{path_two}/{java_two}/bin/java.exe', text_style= flet.TextStyle(font_family= "NoxLauncher", size= 14)))
+                        if java_one is not None and path_one is not None: options.append(flet.dropdown.Option(f'C:/Program Files/{path_one}/{java_one}/bin/java.exe', text_style= flet.TextStyle(font_family= "NoxLauncher", size= 14)))
+                        if java_two is not None and path_two is not None: options.append(flet.dropdown.Option(f'C:/Program Files (x86)/{path_two}/{java_two}/bin/java.exe', text_style= flet.TextStyle(font_family= "NoxLauncher", size= 14)))
 
-            except Exception as e:
-
-                print(e)
+            except Exception as e: error(f"Failed to get all java instances: {e}")
 
             return options
         

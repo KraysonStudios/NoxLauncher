@@ -27,7 +27,7 @@ def _start() -> None:
         
                 RPC.update(
                     state= "Playing NoxLauncher...",
-                    details= "Powerful and easy-to-use Minecraft Launcher develop by Krayson Studio.",
+                    details= "NoxLauncher is a powerful Open Source launcher created by Krayson Studio and its main developers, to provide secure access to a minecraft launcher.",
                     large_image= "discord_rpc",
                     large_text= "Krayson Studio"
                 )

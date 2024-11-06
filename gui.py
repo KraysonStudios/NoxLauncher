@@ -3,7 +3,6 @@ import flet
 import time
 import uuid
 
-from minecraft_launcher_lib.types import VanillaLauncherProfile
 from threadpool import NOXLAUNCHER_THREADPOOL
 from accounts import FreeACC, Account
 from modrinthapi import ModrinthAPI
@@ -512,6 +511,8 @@ class NoxLauncherSettingsGUI:
     
     def update_memory_in_jvm_args(self, event: flet.ControlEvent) -> None:
 
+        time.sleep(0.5)
+
         jvm_args: List[str] = get_current_jvm_args()
 
         if len(jvm_args) >= 2: jvm_args[1] = f"-Xmx{round(event.control.value)}M"
@@ -945,14 +946,12 @@ class NoxLauncherInstallVanillaGUI:
             minecraft_launcher_lib.install.install_minecraft_version(event.control.value, get_home(), {"setStatus": setStatus})
 
             check_noxlauncher_filesystem()
-
-            vanilla_profile: VanillaLauncherProfile = {
+            
+            minecraft_launcher_lib.vanilla_launcher.add_vanilla_launcher_profile(get_home() + "/", {
                 "name": event.control.value,
                 "version": event.control.value,
                 "versionType": "custom"
-            }
-
-            minecraft_launcher_lib.vanilla_launcher.add_vanilla_launcher_profile(get_home() + "/", vanilla_profile)
+            })
 
             installer_alert.content = flet.Container(
                 content= flet.Text(value= "Done!", size= 18, font_family= "NoxLauncher", color= "#FFFFFF"),

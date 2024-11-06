@@ -11,9 +11,7 @@ class Logging:
         if not os.path.exists("noxlauncher.log"): 
             with open("noxlauncher.log", "w") as file: file.write("")
     
-        with open("noxlauncher.log", "a") as file: 
-
-            file.write(message + "\n")
+        with open("noxlauncher.log", "a") as file: file.write(message + "\n")
     
 def log(message: str) -> None: 
 
