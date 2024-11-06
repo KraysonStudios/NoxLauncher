@@ -1,0 +1,1 @@
+wine "/home/linuxu/.wine/drive_c/Program Files/Python312/Scripts/pyinstaller.exe" --clean --name="NoxLauncher" --optimize=2 --nowindowed --icon="../assets/icon.ico" --target-architecture=x86_64 --workpath="./work" --distpath="./windows" "../main.py"
