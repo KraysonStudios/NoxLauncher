@@ -196,7 +196,7 @@ def get_all_java_instances() -> List[flet.dropdown.Option]:
 
             return options
         
-def get_current_java_instance(get_system: bool = False) -> str | None:
+def get_current_java_instance() -> str | None:
 
     check_noxlauncher_filesystem()
 
@@ -204,9 +204,16 @@ def get_current_java_instance(get_system: bool = False) -> str | None:
 
         data = json.load(file)
 
-        if get_system: return shutil.which("java")
+        if "java" not in data: return get_system_java_instance()
+        elif data["java"] == "System" or data["java"] == "" or data["java"].isspace(): return get_system_java_instance()
 
-        return (data["java"] if not data["java"].isspace() and data["java"] != "" else "System") if "java" in data else "System"
+        return f"\"{data["java"]}\""
+    
+def get_system_java_instance() -> str | None:
+
+    which: str | None = shutil.which("java")
+    
+    return None if which is None else f"\"{which}\""
     
 def get_current_jvm_args() -> List[str]:
 

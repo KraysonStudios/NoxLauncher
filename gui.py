@@ -946,7 +946,7 @@ class NoxLauncherInstallVanillaGUI:
             minecraft_launcher_lib.install.install_minecraft_version(event.control.value, get_home(), {"setStatus": setStatus})
 
             check_noxlauncher_filesystem()
-            
+
             minecraft_launcher_lib.vanilla_launcher.add_vanilla_launcher_profile(get_home() + "/", {
                 "name": event.control.value,
                 "version": event.control.value,
@@ -1231,7 +1231,7 @@ class NoxLauncherPlayGUI:
                     "uuid": uuid.uuid4().hex,
                     "token": "",
                     'jvmArguments': get_current_jvm_args(),
-                    'executablePath': get_current_java_instance(True)
+                    'executablePath': get_current_java_instance()
                 }
 
                 if FREE_ACC_OPTIONS["executablePath"] is None:
