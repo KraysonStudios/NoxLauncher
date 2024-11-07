@@ -1,7 +1,8 @@
-import webbrowser
 import flet
 import time
 import uuid
+import webbrowser
+import atexit
 
 from threadpool import NOXLAUNCHER_THREADPOOL
 from accounts import FreeACC, Account
@@ -1298,12 +1299,12 @@ class NoxLauncherPlayGUI:
 
         match platform.system():
 
-            case "Windows": subprocess.call(f'start /i cmd /k {minecraft_command}', shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True)
+            case "Windows": subprocess.call(f'start {minecraft_command}', shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True)
             case "Linux": subprocess.call(f"nohup {minecraft_command}", shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True)
 
     def _launch_with_console(self, minecraft_command: str) -> None:
 
-        process = subprocess.Popen(f'start /i cmd /k {minecraft_command}', shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True) if platform.system() == "Windows" else subprocess.Popen(f"nohup {minecraft_command}", shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True)
+        process = subprocess.Popen(f'start {minecraft_command}', shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True) if platform.system() == "Windows" else subprocess.Popen(f"nohup {minecraft_command}", shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True)
         
         NOXLAUNCHER_THREADPOOL.submit(self._update_console, process)
 

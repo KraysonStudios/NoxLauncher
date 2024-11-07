@@ -1,11 +1,15 @@
 import flet
-import fs
+import signal
 
+from fs import *
 from gui import *
 from logs import *
 from constants import *
+from utils import *
 
 from dspresence import DiscordRPC
+
+signal.signal(signal.SIGINT, signal.SIG_IGN)
 
 log("")
 log(f"Welcome to NoxLauncher - {VERSION}")
@@ -15,9 +19,9 @@ log("")
 log("Github Repo: https://github.com/KraysonStudios/NoxLauncher")
 log("")
 
-fs.check_noxlauncher_filesystem()
+check_noxlauncher_filesystem()
 
-if fs.get_discordrpc(): DiscordRPC()
+if get_discordrpc(): DiscordRPC()
 
 def main(page: flet.Page) -> None: 
 
@@ -25,3 +29,6 @@ def main(page: flet.Page) -> None:
     NoxLauncher(page)
 
 flet.app(target= main, name= f"NoxLauncher {VERSION}")
+
+NOXLAUNCHER_THREADPOOL.shutdown(wait= False, cancel_futures= True)
+exit(0)
