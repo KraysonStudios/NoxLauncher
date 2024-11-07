@@ -24,6 +24,8 @@ class NoxLauncherStandardWindowConfig:
 
         self.page.title = f"NoxLauncher {VERSION}"
 
+        self.page.window.icon = "assets/icon.png"
+
         self.page.fonts = {
             "NoxLauncher": "assets/fonts/minecraft.ttf",
         }
