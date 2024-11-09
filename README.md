@@ -65,4 +65,4 @@ https://github.com/gitlimes/discord-md-badge?
    ### Installation
 
    - Arch Distros: `sudo pacman -S mpv`
-   - Ubuntu / Debian Distros: `sudo apt install libmpv-dev mpv`
+   - Ubuntu / Debian Distros: `sudo apt install libmpv-dev mpv && sudo ln -s /usr/lib/x86_64-linux-gnu/libmpv.so /usr/lib/libmpv.so.1 `
