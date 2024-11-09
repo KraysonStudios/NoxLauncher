@@ -53,3 +53,16 @@ https://github.com/gitlimes/discord-md-badge?
 ### It FOSS 👐
 
 - If you want to know if the launcher is a *virus*, have the source code at hand, wink wink...
+
+-------------------------------------------
+
+## Dependencies
+
+**Linux**:
+
+   *libmpv.so*
+
+   ### Installation
+
+   - Arch Distros: `sudo pacman -S mpv`
+   - Ubuntu / Debian Distros: `sudo apt install libmpv-dev mpv`
