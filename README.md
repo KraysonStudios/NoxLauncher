@@ -56,11 +56,11 @@ https://github.com/gitlimes/discord-md-badge?
 
 -------------------------------------------
 
-## Dependencies
+# Dependencies
 
-**Linux**:
+## Linux
 
-   *libmpv.so*
+   - **libmpv.so**
 
    ### Installation
 
