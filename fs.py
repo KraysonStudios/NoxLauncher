@@ -207,13 +207,13 @@ def get_current_java_instance() -> str | None:
         if "java" not in data: return get_system_java_instance()
         elif data["java"] == "System" or data["java"] == "" or data["java"].isspace(): return get_system_java_instance()
 
-        return f"\"{data["java"]}\""
+        return data["java"]
     
 def get_system_java_instance() -> str | None:
 
     which: str | None = shutil.which("java")
     
-    return None if which is None else f"\"{which}\""
+    return None if which is None else which
     
 def get_current_jvm_args() -> List[str]:
 

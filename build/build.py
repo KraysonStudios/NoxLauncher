@@ -24,7 +24,7 @@ upx --best linux/NoxLauncher/_internal/uvloop/loop.cpython-312-x86_64-linux-gnu.
         if os.path.exists("linux/NoxLauncher"): shutil.rmtree("linux/NoxLauncher", ignore_errors= True)
         if os.path.exists("NoxLauncher.spec"): os.remove("NoxLauncher.spec")
 
-        process: subprocess.Popen = subprocess.Popen(f'pyinstaller --clean --name="NoxLauncher" --optimize=2 --strip --nowindowed --noconsole --icon="../assets/icon.png" --target-architecture=x86_64 --workpath="./work" --distpath="./linux" "../main.py"', shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True)
+        process: subprocess.Popen = subprocess.Popen(f'pyinstaller --clean --name="NoxLauncher" --optimize=2 --strip --nowindowed --noconsole --target-architecture=x86_64 --workpath="./work" --distpath="./linux" "../main.py"', shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True)
 
         if process.wait(): 
             print(process.stderr.read()) 
@@ -39,7 +39,7 @@ upx --best linux/NoxLauncher/_internal/uvloop/loop.cpython-312-x86_64-linux-gnu.
         if os.path.exists("windows/NoxLauncher"): shutil.rmtree("windows/NoxLauncher", ignore_errors= True)
         if os.path.exists("NoxLauncher.spec"): os.remove("NoxLauncher.spec")
 
-        process = subprocess.run(f'pyinstaller --onedir --noconsole --name="NoxLauncher" --optimize=2 --icon="../assets/icon.ico" --workpath="./work" --distpath="./windows" "../main.py"', shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True)
+        process = subprocess.run(f'pyinstaller --onedir --name="NoxLauncher" --optimize=2 --icon="../assets/icon.ico" --workpath="./work" --distpath="./windows" "../main.py"', shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True)
         
         if process.returncode != 0:
             print(process.stderr)

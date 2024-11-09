@@ -1,4 +1,5 @@
 import flet
+import os
 import time
 import uuid
 import webbrowser
@@ -23,7 +24,7 @@ class NoxLauncherStandardWindowConfig:
 
         self.page.title = f"NoxLauncher ({DEPLOYMENT_TYPE}) - v{VERSION}"
 
-        self.page.window.icon = "assets/icon.png"
+        self.page.window.icon = os.path.join(os.getcwd().replace("\\", "/"), "assets/icon.ico")
 
         self.page.fonts = {
             "NoxLauncher": "assets/fonts/minecraft.ttf",
@@ -1257,7 +1258,7 @@ class NoxLauncherPlayGUI:
 
                     return
 
-                self.launch(" ".join(minecraft_launcher_lib.command.get_minecraft_command(event.control.value, get_home(), FREE_ACC_OPTIONS)))
+                self.launch(minecraft_launcher_lib.command.get_minecraft_command(event.control.value, get_home(), FREE_ACC_OPTIONS))
 
             case (acc, "premiun"): ...
 
@@ -1284,27 +1285,22 @@ class NoxLauncherPlayGUI:
 
                 return
             
-    def launch(self, minecraft_command: str) -> None:
+    def launch(self, minecraft_command: List[str]) -> None:
 
         match get_autoclose():
 
             case True: self._launch_with_autoclose(minecraft_command)
             case False: self._launch_with_console(minecraft_command)
 
-    def _launch_with_autoclose(self, minecraft_command: str) -> None:
-
-        self.page.window.destroy()
-
-        match platform.system():
-
-            case "Windows": subprocess.call(f'start {minecraft_command}', shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True)
-            case "Linux": subprocess.call(f"nohup {minecraft_command}", shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True)
-
-    def _launch_with_console(self, minecraft_command: str) -> None:
-
-        process = subprocess.Popen(f'start {minecraft_command}', shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True) if platform.system() == "Windows" else subprocess.Popen(f"nohup {minecraft_command}", shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True)
+    def _launch_with_autoclose(self, minecraft_command: List[str]) -> None:
         
-        NOXLAUNCHER_THREADPOOL.submit(self._update_console, process)
+        self.page.window.destroy()
+        subprocess.call(minecraft_command, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True)
+
+    def _launch_with_console(self, minecraft_command: List[str]) -> None:
+
+        mc_proccess: subprocess.Popen = subprocess.Popen(minecraft_command, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True)
+        NOXLAUNCHER_THREADPOOL.submit(self._update_console, mc_proccess)
 
     def _update_console(self, process: subprocess.Popen) -> None:
 

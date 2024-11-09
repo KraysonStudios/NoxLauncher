@@ -30,5 +30,5 @@ def main(page: flet.Page) -> None:
 
 flet.app(target= main, name= f"NoxLauncher {VERSION}")
 
-NOXLAUNCHER_THREADPOOL.shutdown(wait= False, cancel_futures= True)
+NOXLAUNCHER_THREADPOOL.shutdown(wait= True)
 os._exit(0)
