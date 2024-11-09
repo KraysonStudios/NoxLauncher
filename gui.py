@@ -2,7 +2,6 @@ import flet
 import time
 import uuid
 import webbrowser
-import atexit
 
 from threadpool import NOXLAUNCHER_THREADPOOL
 from accounts import FreeACC, Account
@@ -22,17 +21,14 @@ class NoxLauncherStandardWindowConfig:
 
     def define_standard_config(self):
 
-        self.page.title = f"NoxLauncher {VERSION}"
+        self.page.title = f"NoxLauncher ({DEPLOYMENT_TYPE}) - v{VERSION}"
 
         self.page.window.icon = "assets/icon.png"
 
         self.page.fonts = {
             "NoxLauncher": "assets/fonts/minecraft.ttf",
         }
-
-        self.page.window.min_height = 720
-        self.page.window.min_width = 1280
-
+        
         self.page.window.width = 1280
         self.page.window.height = 720
 

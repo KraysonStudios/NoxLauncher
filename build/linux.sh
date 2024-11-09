@@ -1,1 +1,0 @@
-pyinstaller --clean --name="NoxLauncher" --optimize=2 --strip --nowindowed --noconsole --icon="../assets/icon.png" --target-architecture=x86_64 --workpath="./work" --distpath="./linux" "../main.py"
