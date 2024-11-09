@@ -6,7 +6,8 @@
 
 **NoxLauncher** is a powerful **Open Source** launcher created by **Krayson Studio** and its main developers, to provide secure access to a minecraft launcher. 
 
-~ *This launcher is not affiliated with Mojang Studios and their games.*
+> [!NOTE]  
+> **This launcher is not affiliated with Mojang Studios and their games.**
 
 > [!WARNING]  
 > Any error caused by the **user's interference** with the launcher's configuration center is not considered an error or bug of the launcher.
@@ -26,8 +27,8 @@ https://github.com/gitlimes/discord-md-badge?
 
 ### Automatic installation of mods via Modrinth 🚀
 
-- **Fabric** Mods
-- **Forge** Mods
+- **Fabric** mods
+- **Forge** mods
 
 ### It easy-to-use 👑
 
@@ -64,5 +65,5 @@ https://github.com/gitlimes/discord-md-badge?
 
    ### Installation
 
-   - Arch Distros: `sudo pacman -S mpv && sudo ln -s /usr/lib/x86_64-linux-gnu/libmpv.so /usr/lib/libmpv.so.1`
-   - Ubuntu / Debian Distros: `sudo apt install libmpv-dev mpv && sudo ln -s /usr/lib/x86_64-linux-gnu/libmpv.so /usr/lib/libmpv.so.1`
+   - Distributions derived from Arch: `sudo pacman -S mpv && sudo ln -s /usr/lib/x86_64-linux-gnu/libmpv.so /usr/lib/libmpv.so.1`
+   - Distributions derived from Ubuntu/Debian: `sudo apt install libmpv-dev mpv && sudo ln -s /usr/lib/x86_64-linux-gnu/libmpv.so /usr/lib/libmpv.so.1`
