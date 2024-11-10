@@ -3,6 +3,7 @@ import os
 import time
 import uuid
 import webbrowser
+import threading
 
 from threadpool import NOXLAUNCHER_THREADPOOL
 from accounts import FreeACC, Account
@@ -1295,6 +1296,10 @@ class NoxLauncherPlayGUI:
     def _launch_with_autoclose(self, minecraft_command: List[str]) -> None:
         
         self.page.window.destroy()
+        threading.Thread(target= self._execute_mc_in_another_thread, args= [minecraft_command], daemon= True).run()
+
+    def _execute_mc_in_another_thread(self, minecraft_command: List[str]) -> None:
+        
         subprocess.call(minecraft_command, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True)
 
     def _launch_with_console(self, minecraft_command: List[str]) -> None:

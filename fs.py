@@ -168,22 +168,14 @@ def get_all_java_instances() -> List[flet.dropdown.Option]:
         case "Windows": 
 
             try:
-                    
-                for path_one, path_two in itertools.zip_longest(
-                    [path for path in os.listdir('C:/Program Files/') if os.path.isdir('C:/Program Files/' + path)], 
-                    [path for path in os.listdir('C:/Program Files (x86)/') if os.path.isdir('C:/Program Files (x86)/' + path)], 
-                    fillvalue= None
-                ):
-                    for java_one, java_two in itertools.zip_longest(
-                        [java for java in os.listdir('C:/Program Files/' + path_one) if os.path.isdir(f'C:/Program Files/{path_one}/{java}/') and java.find('jdk') != -1 and os.path.exists(f'C:/Program Files/{path_one}/{java}/bin/java.exe') and os.path.isfile(f'C:/Program Files/{path_one}/{java}/bin/java.exe')] if path_one is not None else [], 
-                        [java for java in os.listdir('C:/Program Files (x86)/' + path_two) if os.path.isdir(f'C:/Program Files (x86)/{path_two}/{java}/') and java.find('jdk') != -1 and os.path.exists(f'C:/Program Files (x86)/{path_two}/{java}/bin/java.exe') and os.path.isfile(f'C:/Program Files (x86)/{path_two}/{java}/bin/java.exe')] if path_two is not None else [], 
-                        fillvalue= None
-                    ):
-                        
-                        if java_one is not None and path_one is not None: options.append(flet.dropdown.Option(f'C:/Program Files/{path_one}/{java_one}/bin/java.exe', text_style= flet.TextStyle(font_family= "NoxLauncher", size= 14)))
-                        if java_two is not None and path_two is not None: options.append(flet.dropdown.Option(f'C:/Program Files (x86)/{path_two}/{java_two}/bin/java.exe', text_style= flet.TextStyle(font_family= "NoxLauncher", size= 14)))
 
-            except Exception as e: error(f"Failed to get all java instances: {e}")
+                for root, dirs, _ in os.walk("C:/Program Files/"):
+                    for dir in dirs:
+                        if os.access(os.path.join(root, dir), os.R_OK):
+                            if dir.find("java") != -1 or dir.find("OpenJDK") != -1 or dir.find("jdk") != -1 or dir.find("jre") != -1 or dir.find("Adoptium") != -1 and os.path.exists(f'{root}/{dir}/bin/java.exe'):
+                                options.append(flet.dropdown.Option(f'{root}/{dir}/bin/java.exe', text_style= flet.TextStyle(font_family= "NoxLauncher", size= 14)))
+                
+            except Exception as e: error(f"Failed to get all java instances: {e}, {e.args}")
 
             return options
         
