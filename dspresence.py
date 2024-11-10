@@ -2,6 +2,7 @@ import time
 import psutil
 import pypresence
 
+from fs import *
 from threadpool import NOXLAUNCHER_THREADPOOL
 from constants import DISCORD_CLIENT_ID
 
@@ -48,7 +49,7 @@ def DiscordRPC() -> None:
 
         global discord_opened
 
-        while True:
+        while get_discordrpc():
 
             if not discord_opened:
 
@@ -62,6 +63,6 @@ def DiscordRPC() -> None:
 
                 else: discord_opened = False
 
-            time.sleep(10)
+            time.sleep(15)
 
     NOXLAUNCHER_THREADPOOL.submit(_init)

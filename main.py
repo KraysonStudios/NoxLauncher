@@ -12,7 +12,7 @@ from dspresence import DiscordRPC
 signal.signal(signal.SIGINT, signal.SIG_IGN)
 
 log("")
-log(f"Welcome to NoxLauncher - {VERSION}")
+log(f"Welcome to NoxLauncher ({DEPLOYMENT_TYPE}) - v{VERSION}")
 log("")
 log("Creators: @DevCheckOG & @aaronwayas at Github")
 log("")
@@ -30,5 +30,5 @@ def main(page: flet.Page) -> None:
 
 flet.app(target= main, name= f"NoxLauncher {VERSION}")
 
-NOXLAUNCHER_THREADPOOL.shutdown(wait= True)
+NOXLAUNCHER_THREADPOOL.shutdown(wait= False, cancel_futures= True)
 os._exit(0)

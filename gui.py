@@ -1,10 +1,12 @@
 import flet
+import sys
 import os
 import time
 import uuid
 import webbrowser
 import threading
 
+from logs import error
 from threadpool import NOXLAUNCHER_THREADPOOL
 from accounts import FreeACC, Account
 from modrinthapi import ModrinthAPI
@@ -12,6 +14,7 @@ from constants import *
 from fs import *
 
 from typing import Dict, Any
+from types import TracebackType
 
 class NoxLauncherStandardWindowConfig: 
 
@@ -45,11 +48,56 @@ class NoxLauncher:
         self.page: flet.Page = page
         self.routing: NoxLauncherRouting = NoxLauncherRouting(self.page)
 
+        sys.excepthook = self.handle_uncaught_exception
+
         self.build()
 
     def build(self):
 
         self.routing.go("/home")
+
+    def handle_uncaught_exception(self, type : type[BaseException], value : BaseException, traceback : TracebackType | None) -> None:   
+
+        error(f"Exception Type: {type}")
+        error(f"Exception: {value}")
+
+        if traceback is not None: error(f"Traceback: {traceback}")
+
+        self.page.open(
+            flet.AlertDialog(
+                icon= flet.Icon(name= flet.icons.ERROR, color= flet.colors.RED_600, size= 40),
+                title= flet.Container(
+                    content= flet.Text(value= "Uncaught Exception", size= 30, font_family= "NoxLauncher", color= "#FFFFFF"),
+                    alignment= flet.alignment.center,
+                    expand_loose= True
+                ),
+                bgcolor= "#272727",
+                content= flet.Column(
+                    [
+                        flet.Text(value= f"Exception Type: {type}\nException: {value}\nTraceback: {traceback if traceback is not None else 'none'}", size= 18, font_family= "NoxLauncher", color= "#FFFFFF"),
+                        flet.Container(height= 10),
+                        flet.Text(value= f"Please report this error to our Discord Server or GitHub.", size= 18, font_family= "NoxLauncher", color= "#717171"),
+                        flet.Container(height= 10),
+                        flet.Row(
+                            controls= [
+                                flet.Container(content= flet.Image(src= "assets/discord.png", width= 52, height= 52, filter_quality= flet.FilterQuality.HIGH), on_click= lambda _: open_discord()),
+                                flet.Container(content= flet.Image(src= "assets/github.png", width= 52, height= 52, filter_quality= flet.FilterQuality.HIGH), on_click= lambda _: open_github()),
+                            ],
+                            expand_loose= True,
+                            alignment= flet.MainAxisAlignment.CENTER,
+                            vertical_alignment= flet.CrossAxisAlignment.CENTER,
+                            height= 55,
+                            spacing= 40,
+                            run_spacing= 40
+                        )
+                    ],
+                    alignment= flet.MainAxisAlignment.CENTER,
+                    horizontal_alignment= flet.CrossAxisAlignment.CENTER,
+                    height= 200,
+                    expand_loose= True
+                )
+            )
+        ) 
 
 class NoxLauncherRouting:
 
