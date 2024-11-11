@@ -8,7 +8,7 @@ import threading
 
 from logs import error
 from threadpool import NOXLAUNCHER_THREADPOOL
-from accounts import FreeACC, Account
+from accounts import NoPremium, Account
 from modrinthapi import ModrinthAPI
 from constants import *
 from fs import *
@@ -114,9 +114,10 @@ class NoxLauncherRouting:
             match self.page.route:
                 case "/home": self.append(NoxLauncherHomeGUI(self.page).build())
                 case "/settings": self.append(NoxLauncherSettingsGUI(self.page).build())
+                case "/help": self.append(NoxLauncherHelpGUI(self.page).build())
                 case "/play": self.append(NoxLauncherPlayGUI(self.page).build())
                 case "/accounts": self.append(NoxLauncherAccountsGUI(self.page).build())
-                case "/accounts/free": self.append(NoxLauncherFreeAccountsGUI(self.page).build())
+                case "/accounts/nopremium": self.append(NoxLauncherNoPremiumAccountsGUI(self.page).build())
                 case "/info": self.append(NoxLauncherInfoGUI(self.page).build())
                 case "/install": self.append(NoxLauncherInstallGUI(self.page).build())
                 case "/install/fabric": self.append(NoxLauncherInstallFabricGUI(self.page).build())
@@ -252,7 +253,7 @@ class NoxLauncherHomeAppBar:
             center_title= True,
             actions= [
                 flet.Container(
-                    width= 250,
+                    width= 400,
                     height= 44, 
                     alignment= flet.alignment.center,
                     content= flet.Row(
@@ -268,17 +269,11 @@ class NoxLauncherHomeAppBar:
                                 width= 42,
                                 on_click= lambda _: self.page.go("/info")
                             ),
-                            flet.IconButton(
-                                icon= flet.icons.NEWSPAPER_ROUNDED,
-                                icon_size= 26,
-                                icon_color= "#717171",
-                                height= 42,
-                                width= 42,
-                                on_click= lambda _: None
-                            ),
                             flet.VerticalDivider(color= "#717171", width= 1),
                             flet.IconButton(icon= flet.icons.SETTINGS_ROUNDED, icon_color= "#717171", icon_size= 30, on_click= lambda _: self.page.go("/settings")),
-                            flet.IconButton(icon= flet.icons.FOLDER_OPEN, icon_color= "#717171", icon_size= 30, on_click= open_home)
+                            flet.IconButton(icon= flet.icons.FOLDER_OPEN, icon_color= "#717171", icon_size= 30, on_click= open_home),
+                            flet.VerticalDivider(color= "#717171", width= 1),
+                            flet.FilledButton(icon= flet.icons.HELP_CENTER, icon_color= "#717171", text= "You need help?", style= flet.ButtonStyle(text_style= flet.TextStyle(font_family= "NoxLauncher", size= 16), bgcolor= "#272727", color= "#FFFFFF"), height= 60)
                         ],
                         alignment= flet.MainAxisAlignment.CENTER,
                         vertical_alignment= flet.CrossAxisAlignment.CENTER
@@ -286,7 +281,7 @@ class NoxLauncherHomeAppBar:
                 )
             ],
             bgcolor= "#272727",
-            toolbar_height= 120
+            toolbar_height= 120,
         )
     
 class NoxLauncherInfoGUI:
@@ -587,44 +582,78 @@ class NoxLauncherInstallGUI:
     def build(self) -> flet.View:
 
         return flet.View(
-            appbar= NoxLauncherInstallAppBar(self.page).build(),
+            appbar= NoxLauncherGenericAppBar(self.page, "Back to home", "/home").build(),
             controls= [
                 flet.Container(
                     image= flet.DecorationImage(src= "assets/bginstall.png", fit= flet.ImageFit.COVER, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT),
                     expand= True,
                     expand_loose= True,
-                    content= flet.Column(
+                    content= flet.Row(
                         controls= [
                             flet.Container(
-                                content= flet.Image(
-                                    src= "mods.png", 
-                                    width= 280, 
-                                    height= 180, 
-                                    filter_quality= flet.FilterQuality.HIGH,
-                                    tooltip= flet.Tooltip(
-                                        message= "Welcome to the NoxLauncher Forge, a a simple but powerful system that\n allows you to install mod loaders and mods via modrinth.",
-                                        bgcolor= "#272727",
-                                        text_style= flet.TextStyle(
-                                            size= 14,
-                                            color= "#FFFFFF",
-                                            font_family= "NoxLauncher"
-                                        )
-                                    )
+                                content= flet.Column(
+                                    controls= [
+                                        flet.Image(src= "assets/fabric.png", width= 200, height= 150, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT), 
+                                        flet.Text("Fabric", size= 25, font_family= "NoxLauncher", color= "#FFFFFF"), 
+                                    ],
+                                    expand= True,
+                                    expand_loose= True,
+                                    horizontal_alignment= flet.CrossAxisAlignment.CENTER,
+                                    alignment= flet.MainAxisAlignment.CENTER,
+                                    spacing= 40,
+                                    run_spacing= 40
                                 ),
-                                alignment= flet.alignment.center,
-                                expand_loose= True
+                                bgcolor= "#272727",
+                                border_radius= 20,
+                                width= 300,
+                                height= 280,
+                                on_click= lambda _: self.page.go("/install/fabric")
                             ),
                             flet.Container(
-                                content= flet.Text("NoxLauncher Forge", size= 40, font_family= "NoxLauncher", color= "#FFFFFF"),
-                                alignment= flet.alignment.center,
-                                expand_loose= True,
-                                padding= flet.padding.only(top= 20),
+                                content= flet.Column(
+                                    controls= [
+                                        flet.Image(src= "assets/vanilla.png", width= 130, height= 130, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT), 
+                                        flet.Text("Vanilla", size= 25, font_family= "NoxLauncher", color= "#FFFFFF"), 
+                                    ],
+                                    expand= True,
+                                    expand_loose= True,
+                                    horizontal_alignment= flet.CrossAxisAlignment.CENTER,
+                                    alignment= flet.MainAxisAlignment.CENTER,
+                                    spacing= 40,
+                                    run_spacing= 40
+                                ),
+                                bgcolor= "#272727",
+                                border_radius= 20,
+                                width= 300,
+                                height= 280,
+                                on_click= lambda _: self.page.go("/install/vanilla")
+                            ), 
+                            flet.Container(
+                                content= flet.Column(
+                                    controls= [
+                                        flet.Image(src= "assets/forge.png", width= 200, height= 150, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT), 
+                                        flet.Text("Forge", size= 25, font_family= "NoxLauncher", color= "#FFFFFF"), 
+                                    ],
+                                    expand= True,
+                                    expand_loose= True,
+                                    horizontal_alignment= flet.CrossAxisAlignment.CENTER,
+                                    alignment= flet.MainAxisAlignment.CENTER,
+                                    spacing= 40,
+                                    run_spacing= 40
+                                ),
+                                bgcolor= "#272727",
+                                border_radius= 20,
+                                width= 300,
+                                height= 280,
+                                on_click= lambda _: self.page.go("/install/forge")
                             )
                         ],
-                        horizontal_alignment= flet.MainAxisAlignment.CENTER,  
+                        vertical_alignment= flet.CrossAxisAlignment.CENTER,  
                         alignment= flet.MainAxisAlignment.CENTER,
                         expand= True,
-                        expand_loose= True
+                        expand_loose= True,
+                        spacing= 60,
+                        run_spacing= 60
                     ),
                     alignment= flet.alignment.center
                 )
@@ -1201,7 +1230,7 @@ class NoxLauncherPlayGUI:
                                     flet.Container(
                                         content= flet.Row(
                                             controls= [
-                                                flet.Dropdown(hint_text= "Select a version to play!", options= get_minecraft_versions(), border_color= "#717171", border_radius= 10, border_width= 2, hint_style= flet.TextStyle(size= 14, font_family= "NoxLauncher"), on_change= self.build_launch),
+                                                flet.Dropdown(hint_text= "Install a Minecraft version first!" if len(get_minecraft_versions()) == 0 else "Select a version to play!", options= get_minecraft_versions(), border_color= "#717171", border_radius= 10, border_width= 2, hint_style= flet.TextStyle(size= 14, font_family= "NoxLauncher"), on_change= self.build_launch),
                                             ],
                                             expand= True,
                                             expand_loose= True,
@@ -1274,16 +1303,16 @@ class NoxLauncherPlayGUI:
 
         match Account.get_selected():
 
-            case (acc, "free"):
-                FREE_ACC_OPTIONS: Dict[str, Any] = {
+            case (acc, "nopremium"):
+                NOPREMIUM_ACC_OPTIONS: Dict[str, Any] = {
                     "username": acc["name"],
-                    "uuid": uuid.uuid4().hex,
-                    "token": "",
-                    'jvmArguments': get_current_jvm_args(),
-                    'executablePath': get_current_java_instance()
+                    "uuid": acc["uuid"],
+                    "token": acc["token"],
+                    "jvmArguments": get_current_jvm_args(),
+                    "executablePath": get_current_java_instance()
                 }
 
-                if FREE_ACC_OPTIONS["executablePath"] is None:
+                if NOPREMIUM_ACC_OPTIONS["executablePath"] is None:
 
                     not_java_found_alert: flet.AlertDialog = flet.AlertDialog(
                         icon= flet.Image(src= "assets/java.png", width= 160, height= 130, filter_quality= flet.FilterQuality.HIGH),
@@ -1307,7 +1336,11 @@ class NoxLauncherPlayGUI:
 
                     return
 
-                self.launch(minecraft_launcher_lib.command.get_minecraft_command(event.control.value, get_home(), FREE_ACC_OPTIONS))
+                MC_COMMAND: List[str] = minecraft_launcher_lib.command.get_minecraft_command(event.control.value, get_home(), NOPREMIUM_ACC_OPTIONS)
+
+                MC_COMMAND.insert(1, f'-javaagent:{os.path.join(os.getcwd().replace("\\", "/"), "authlib/authlib.jar")}=ely.by')
+
+                self.launch(MC_COMMAND)
 
             case (acc, "premiun"): ...
 
@@ -1357,13 +1390,15 @@ class NoxLauncherPlayGUI:
 
     def _update_console(self, process: subprocess.Popen) -> None:
 
-        self.console.content.controls.pop(0)
+        if process.wait():
 
-        self.console.content.controls.append(
-            flet.Text(process.stdout.read(), size= 13, font_family= "NoxLauncher", color= "#FFFFFF")
-        )
+            self.console.content.controls.pop(0)
 
-        self.console.update()
+            self.console.content.controls.append(flet.Text(process.stdout.read() + process.stderr.read(), size= 13, font_family= "NoxLauncher", color= "#FFFFFF"))
+            
+            self.console.content.update()
+
+            error(process.stdout.read() + "\n\n"+ process.stderr.read())
 
 class NoxLauncherAccountsGUI:
 
@@ -1384,7 +1419,7 @@ class NoxLauncherAccountsGUI:
                             flet.Container(
                                 content= flet.Column(
                                     controls= [
-                                        flet.Image(src= "assets/freeaccounts.png", width= 240, height= 200, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT), 
+                                        flet.Image(src= "assets/nopremiumacc.png", width= 240, height= 200, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT), 
                                         flet.Text("Free Accounts", size= 25, font_family= "NoxLauncher", color= "#FFFFFF"), 
                                     ],
                                     expand= True,
@@ -1395,7 +1430,7 @@ class NoxLauncherAccountsGUI:
                                 border_radius= 20,
                                 width= 360,
                                 height= 280,
-                                on_click= lambda _: self.page.go("/accounts/free")
+                                on_click= lambda _: self.page.go("/accounts/nopremium")
                             ),
                             flet.Container(
                                 content= flet.Text("Coming Soon...", size= 25, font_family= "NoxLauncher", color= "#FFFFFF"),
@@ -1420,13 +1455,16 @@ class NoxLauncherAccountsGUI:
             padding= 0
         )
     
-class NoxLauncherFreeAccountsGUI:
+class NoxLauncherNoPremiumAccountsGUI:
 
     def __init__(self, page: flet.Page) -> None:
 
         self.page: flet.Page = page
-        self.select_account_dropdown: flet.Dropdown = flet.Dropdown(hint_text= "Select a default account!", options= [flet.dropdown.Option(account["name"], text_style= flet.TextStyle(size= 14, font_family= "NoxLauncher")) for account in FreeACC.get_accounts()], border_color= "#717171", border_radius= 10, border_width= 2, hint_style= flet.TextStyle(size= 14, font_family= "NoxLauncher"), on_change= self.select_account)
-        self.delete_account_dropdown: flet.Dropdown = flet.Dropdown(hint_text= "Select a account to delete!", options= [flet.dropdown.Option(account["name"], text_style= flet.TextStyle(size= 14, font_family= "NoxLauncher")) for account in FreeACC.get_accounts()], border_color= "#717171", border_radius= 10, border_width= 2, hint_style= flet.TextStyle(size= 14, font_family= "NoxLauncher"), on_change= self.delete_account)
+        self.select_account_dropdown: flet.Dropdown = flet.Dropdown(hint_text= "Select a default account!", options= [flet.dropdown.Option(account["name"], text_style= flet.TextStyle(size= 14, font_family= "NoxLauncher")) for account in NoPremium.get_accounts()], border_color= "#717171", border_radius= 10, border_width= 2, hint_style= flet.TextStyle(size= 14, font_family= "NoxLauncher"), on_change= self.select_account)
+        self.delete_account_dropdown: flet.Dropdown = flet.Dropdown(hint_text= "Select a account to delete!", options= [flet.dropdown.Option(account["name"], text_style= flet.TextStyle(size= 14, font_family= "NoxLauncher")) for account in NoPremium.get_accounts()], border_color= "#717171", border_radius= 10, border_width= 2, hint_style= flet.TextStyle(size= 14, font_family= "NoxLauncher"), on_change= self.delete_account)
+        self.email_textfield: flet.TextField = flet.TextField(multiline= False, expand_loose= True, height= 70, border_radius= 10, border_color= "#717171", label= "Email", label_style= flet.TextStyle(size= 16, font_family= "NoxLauncher", color= "#FFFFFF"), hint_text= "Email of the account in elyby", hint_style= flet.TextStyle(size= 16, font_family= "NoxLauncher"), text_style= flet.TextStyle(size= 14, font_family= "NoxLauncher", color= "#FFFFFF"))
+        self.password_textfield: flet.TextField = flet.TextField(multiline= False, expand_loose= True, height= 70, border_radius= 10, border_color= "#717171", label= "Password", label_style= flet.TextStyle(size= 16, font_family= "NoxLauncher", color= "#FFFFFF"), hint_text= "Password of the account in elyby", hint_style= flet.TextStyle(size= 16, font_family= "NoxLauncher"), text_style= flet.TextStyle(size= 14, font_family= "NoxLauncher", color= "#FFFFFF"), password= True, can_reveal_password= True)
+
         self.build()
 
     def build(self) -> flet.View:
@@ -1444,8 +1482,8 @@ class NoxLauncherFreeAccountsGUI:
                                         flet.Container(
                                             content= flet.Row(
                                                 controls= [
-                                                    flet.Icon(name= flet.icons.CREATE, color= "#717171", size= 40),
-                                                    flet.Container(flet.Text("Create Account", size= 25, font_family= "NoxLauncher", color= "#FFFFFF"), alignment= flet.alignment.center, expand_loose= True, padding= flet.padding.only(top= 5)),  
+                                                    flet.Icon(name= flet.icons.LOGIN, color= "#717171", size= 40),
+                                                    flet.Container(flet.Text("Login", size= 25, font_family= "NoxLauncher", color= "#FFFFFF"), alignment= flet.alignment.center, expand_loose= True, padding= flet.padding.only(top= 5)),  
                                                 ],
                                                 expand_loose= True,
                                                 alignment= flet.MainAxisAlignment.CENTER
@@ -1453,7 +1491,40 @@ class NoxLauncherFreeAccountsGUI:
                                             padding= flet.padding.only(top= 20, bottom= 20)
                                         ),
                                         flet.Container(
-                                            content= flet.TextField(multiline= False, expand_loose= True, height= 70, border_radius= 10, border_color= "#717171", label= "Create account by name", label_style= flet.TextStyle(size= 16, font_family= "NoxLauncher", color= "#FFFFFF"), hint_text= "Name of the account", hint_style= flet.TextStyle(size= 16, font_family= "NoxLauncher"), text_style= flet.TextStyle(size= 14, font_family= "NoxLauncher", color= "#FFFFFF"), on_submit= self.create_account),
+                                            content= flet.Row(
+                                                controls= [
+                                                    flet.Icon(name= flet.icons.ACCOUNT_BOX, color= "#717171", size= 35),
+                                                    flet.Text("First create a account at https://ely.by/", size= 18, font_family= "NoxLauncher", color= "#FFFFFF"),
+                                                ],
+                                                expand_loose= True,
+                                                alignment= flet.MainAxisAlignment.CENTER,
+                                                vertical_alignment= flet.CrossAxisAlignment.CENTER
+                                            ),
+                                            expand_loose= True,
+                                            alignment= flet.alignment.center,
+                                            padding= flet.padding.only(left= 10, right= 10, bottom= 15)
+                                        ),
+                                        flet.Container(
+                                            content= self.email_textfield,
+                                            expand_loose= True,
+                                            alignment= flet.alignment.center,
+                                            padding= flet.padding.only(left= 15, right= 15)
+                                        ),
+                                        flet.Container(
+                                            content= self.password_textfield,
+                                            expand_loose= True,
+                                            alignment= flet.alignment.center,
+                                            padding= flet.padding.only(left= 15, right= 15)
+                                        ),
+                                        flet.Container(
+                                            content= flet.FilledButton(
+                                                icon= flet.icons.LOGIN,
+                                                icon_color= "#717171",
+                                                text= "Login at Elyby",
+                                                style= flet.ButtonStyle(bgcolor= "#272727", color= "#FFFFFF", text_style= flet.TextStyle(size= 20, font_family= "NoxLauncher")),
+                                                height= 50,
+                                                on_click= self.login_account
+                                            ),
                                             expand_loose= True,
                                             alignment= flet.alignment.center,
                                             padding= flet.padding.only(left= 15, right= 15)
@@ -1465,8 +1536,8 @@ class NoxLauncherFreeAccountsGUI:
                                 ),
                                 bgcolor= "#272727",
                                 border_radius= 20,
-                                width= 340,
-                                height= 180,
+                                width= 480,
+                                height= 380
                             ),
                             flet.Container(
                                 content= flet.Column(
@@ -1533,8 +1604,8 @@ class NoxLauncherFreeAccountsGUI:
                         expand_loose= True,
                         alignment= flet.MainAxisAlignment.CENTER,
                         vertical_alignment= flet.CrossAxisAlignment.CENTER,
-                        run_spacing= 80,
-                        spacing= 80
+                        run_spacing= 30,
+                        spacing= 30
                     ),
                     expand= True,
                     expand_loose= True,
@@ -1544,38 +1615,98 @@ class NoxLauncherFreeAccountsGUI:
             padding= 0
         )
     
-    def create_account(self, event: flet.ControlEvent) -> None:
+    def login_account(self, event: flet.ControlEvent) -> None:
 
-        if event.control.value.isnumeric() or event.control.value == "" or event.control.value.isspace(): 
+        if self.email_textfield.value == "" or self.email_textfield.value.isspace() or self.email_textfield.value.find("@") == -1: 
 
-            event.control.value = ""
-            event.control.update()
-
-            created_account_banner: flet.Banner = flet.Banner(
+            email_account_banner: flet.Banner = flet.Banner(
                 bgcolor= "#272727",
                 leading= flet.Icon(name= flet.icons.WARNING, color= flet.colors.AMBER_400, size= 40),
                 content= flet.Text(
-                    value= f"The account name \" {event.control.value} \" is invalid name to minecraft!",
+                    value= f"The email \" {self.email_textfield.value} \" is invalid name to be signed!",
                     color= "#ffffff",
                     size= 20,
                     font_family= "NoxLauncher"
                 ),
                 actions= [
-                    flet.TextButton(content= flet.Text("Ok", size= 20, font_family= "NoxLauncher"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 150, height= 40, on_click= lambda _: self.page.close(created_account_banner))
+                    flet.TextButton(content= flet.Text("Ok", size= 20, font_family= "NoxLauncher"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 150, height= 40, on_click= lambda _: self.page.close(email_account_banner))
                 ]
             )
 
-            self.page.open(created_account_banner)
+            self.page.open(email_account_banner)
+
+            self.email_textfield.value = ""
+            self.email_textfield.update()
 
             return
+        
+        elif self.password_textfield.value == "" or self.password_textfield.value.isspace():
 
-        FreeACC.new(event.control.value)
+            password_account_banner: flet.Banner = flet.Banner(
+                bgcolor= "#272727",
+                leading= flet.Icon(name= flet.icons.WARNING, color= flet.colors.AMBER_400, size= 40),
+                content= flet.Text(
+                    value= f"The password \" {self.password_textfield.value} \" is invalid name to be signed!",
+                    color= "#ffffff",
+                    size= 20,
+                    font_family= "NoxLauncher"
+                ),
+                actions= [
+                    flet.TextButton(content= flet.Text("Ok", size= 20, font_family= "NoxLauncher"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 150, height= 40, on_click= lambda _: self.page.close(password_account_banner))
+                ]
+            )
+
+            self.page.open(password_account_banner)
+
+            self.password_textfield.value = ""
+            self.password_textfield.update() 
+
+            return
+        
+        if not has_internet():
+            internet_banner: flet.Banner = flet.Banner(
+                bgcolor= "#272727",
+                leading= flet.Icon(name= flet.icons.ERROR, color= flet.colors.RED_500, size= 40),
+                content= flet.Text(
+                    value= f"You have no internet connection! Please check your internet connection and try again.",
+                    color= "#ffffff",
+                    size= 20,
+                    font_family= "NoxLauncher"
+                ),
+                actions= [
+                    flet.TextButton(content= flet.Text("Ok", size= 20, font_family= "NoxLauncher"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 150, height= 40, on_click= lambda _: self.page.close(internet_banner))
+                ]
+            )
+
+            self.page.open(internet_banner)
+
+        account: str | None = NoPremium().new(self.email_textfield.value, self.password_textfield.value)
+
+        if account is None:
+            
+            account_error_banner: flet.Banner = flet.Banner(
+                bgcolor= "#272727",
+                leading= flet.Icon(name= flet.icons.ERROR, color= flet.colors.RED_500, size= 40),
+                content= flet.Text(
+                    value= f"Failed to login account! Please check your email and password and try again.",
+                    color= "#ffffff",
+                    size= 20,
+                    font_family= "NoxLauncher"
+                ),
+                actions= [
+                    flet.TextButton(content= flet.Text("Ok", size= 20, font_family= "NoxLauncher"), style= flet.ButtonStyle(bgcolor= "#148b47", color= "#ffffff", shape= flet.RoundedRectangleBorder(radius= 5)), width= 150, height= 40, on_click= lambda _: self.page.close(account_error_banner))
+                ]
+            )
+
+            self.page.open(account_error_banner)
+
+            return
 
         created_account_banner: flet.Banner = flet.Banner(
             bgcolor= "#272727",
             leading= flet.Icon(name= flet.icons.CREATE, color= "#717171", size= 40),
             content= flet.Text(
-                value= f"Free account \" {event.control.value} \" created successfully!",
+                value= f"Logged as \" {account} \" successfully!",
                 color= "#ffffff",
                 size= 20,
                 font_family= "NoxLauncher"
@@ -1585,20 +1716,26 @@ class NoxLauncherFreeAccountsGUI:
             ]
         )
 
+        self.email_textfield.value = ""
+        self.password_textfield.value = ""
+
+        self.email_textfield.update()
+        self.password_textfield.update()
+
         self.page.open(created_account_banner)
 
-        self.delete_account_dropdown.options = [flet.dropdown.Option(account["name"], text_style= flet.TextStyle(size= 14, font_family= "NoxLauncher")) for account in FreeACC.get_accounts()]
-        self.select_account_dropdown.options = [flet.dropdown.Option(account["name"], text_style= flet.TextStyle(size= 14, font_family= "NoxLauncher")) for account in FreeACC.get_accounts()]
+        self.delete_account_dropdown.options = [flet.dropdown.Option(account["name"], text_style= flet.TextStyle(size= 14, font_family= "NoxLauncher")) for account in NoPremium.get_accounts()]
+        self.select_account_dropdown.options = [flet.dropdown.Option(account["name"], text_style= flet.TextStyle(size= 14, font_family= "NoxLauncher")) for account in NoPremium.get_accounts()]
 
         self.delete_account_dropdown.update()
         self.select_account_dropdown.update()
 
     def delete_account(self, event: flet.ControlEvent) -> None:
 
-        FreeACC.delete(event.control.value)
+        NoPremium.delete(event.control.value)
 
-        self.delete_account_dropdown.options = [flet.dropdown.Option(account["name"], text_style= flet.TextStyle(size= 14, font_family= "NoxLauncher")) for account in FreeACC.get_accounts()]
-        self.select_account_dropdown.options = [flet.dropdown.Option(account["name"], text_style= flet.TextStyle(size= 14, font_family= "NoxLauncher")) for account in FreeACC.get_accounts()]
+        self.delete_account_dropdown.options = [flet.dropdown.Option(account["name"], text_style= flet.TextStyle(size= 14, font_family= "NoxLauncher")) for account in NoPremium.get_accounts()]
+        self.select_account_dropdown.options = [flet.dropdown.Option(account["name"], text_style= flet.TextStyle(size= 14, font_family= "NoxLauncher")) for account in NoPremium.get_accounts()]
 
         self.delete_account_dropdown.update()
         self.select_account_dropdown.update()
@@ -1621,7 +1758,7 @@ class NoxLauncherFreeAccountsGUI:
 
     def select_account(self, event: flet.ControlEvent) -> None:
 
-        FreeACC.select(event.control.value)
+        NoPremium.select(event.control.value)
 
         selected_account_banner: flet.Banner = flet.Banner(
             bgcolor= "#272727",
@@ -1644,8 +1781,8 @@ class NoxLauncherFreeAccountsGUI:
     def __init__(self, page: flet.Page) -> None:
 
         self.page: flet.Page = page
-        self.select_account_dropdown: flet.Dropdown = flet.Dropdown(hint_text= "Select a default account!", options= [flet.dropdown.Option(account["name"], text_style= flet.TextStyle(size= 14, font_family= "NoxLauncher")) for account in FreeACC.get_accounts()], border_color= "#717171", border_radius= 10, border_width= 2, hint_style= flet.TextStyle(size= 14, font_family= "NoxLauncher"), on_change= self.select_account)
-        self.delete_account_dropdown: flet.Dropdown = flet.Dropdown(hint_text= "Select a account to delete!", options= [flet.dropdown.Option(account["name"], text_style= flet.TextStyle(size= 14, font_family= "NoxLauncher")) for account in FreeACC.get_accounts()], border_color= "#717171", border_radius= 10, border_width= 2, hint_style= flet.TextStyle(size= 14, font_family= "NoxLauncher"), on_change= self.delete_account)
+        self.select_account_dropdown: flet.Dropdown = flet.Dropdown(hint_text= "Select a default account!", options= [flet.dropdown.Option(account["name"], text_style= flet.TextStyle(size= 14, font_family= "NoxLauncher")) for account in NoPremium.get_accounts()], border_color= "#717171", border_radius= 10, border_width= 2, hint_style= flet.TextStyle(size= 14, font_family= "NoxLauncher"), on_change= self.select_account)
+        self.delete_account_dropdown: flet.Dropdown = flet.Dropdown(hint_text= "Select a account to delete!", options= [flet.dropdown.Option(account["name"], text_style= flet.TextStyle(size= 14, font_family= "NoxLauncher")) for account in NoPremium.get_accounts()], border_color= "#717171", border_radius= 10, border_width= 2, hint_style= flet.TextStyle(size= 14, font_family= "NoxLauncher"), on_change= self.delete_account)
         self.build()
 
     def build(self) -> flet.View:
@@ -1792,7 +1929,7 @@ class NoxLauncherFreeAccountsGUI:
 
             return
 
-        FreeACC.new(event.control.value)
+        NoPremium.new(event.control.value)
 
         created_account_banner: flet.Banner = flet.Banner(
             bgcolor= "#272727",
@@ -1810,18 +1947,18 @@ class NoxLauncherFreeAccountsGUI:
 
         self.page.open(created_account_banner)
 
-        self.delete_account_dropdown.options = [flet.dropdown.Option(account["name"], text_style= flet.TextStyle(size= 14, font_family= "NoxLauncher")) for account in FreeACC.get_accounts()]
-        self.select_account_dropdown.options = [flet.dropdown.Option(account["name"], text_style= flet.TextStyle(size= 14, font_family= "NoxLauncher")) for account in FreeACC.get_accounts()]
+        self.delete_account_dropdown.options = [flet.dropdown.Option(account["name"], text_style= flet.TextStyle(size= 14, font_family= "NoxLauncher")) for account in NoPremium.get_accounts()]
+        self.select_account_dropdown.options = [flet.dropdown.Option(account["name"], text_style= flet.TextStyle(size= 14, font_family= "NoxLauncher")) for account in NoPremium.get_accounts()]
 
         self.delete_account_dropdown.update()
         self.select_account_dropdown.update()
 
     def delete_account(self, event: flet.ControlEvent) -> None:
 
-        FreeACC.delete(event.control.value)
+        NoPremium.delete(event.control.value)
 
-        self.delete_account_dropdown.options = [flet.dropdown.Option(account["name"], text_style= flet.TextStyle(size= 14, font_family= "NoxLauncher")) for account in FreeACC.get_accounts()]
-        self.select_account_dropdown.options = [flet.dropdown.Option(account["name"], text_style= flet.TextStyle(size= 14, font_family= "NoxLauncher")) for account in FreeACC.get_accounts()]
+        self.delete_account_dropdown.options = [flet.dropdown.Option(account["name"], text_style= flet.TextStyle(size= 14, font_family= "NoxLauncher")) for account in NoPremium.get_accounts()]
+        self.select_account_dropdown.options = [flet.dropdown.Option(account["name"], text_style= flet.TextStyle(size= 14, font_family= "NoxLauncher")) for account in NoPremium.get_accounts()]
 
         self.delete_account_dropdown.update()
         self.select_account_dropdown.update()
@@ -1844,7 +1981,7 @@ class NoxLauncherFreeAccountsGUI:
 
     def select_account(self, event: flet.ControlEvent) -> None:
 
-        FreeACC.select(event.control.value)
+        NoPremium.select(event.control.value)
 
         selected_account_banner: flet.Banner = flet.Banner(
             bgcolor= "#272727",
@@ -1863,6 +2000,83 @@ class NoxLauncherFreeAccountsGUI:
      self.page.open(selected_account_banner)
 
 """
+
+class NoxLauncherHelpGUI:
+
+    def __init__(self, page: flet.Page) -> None:
+
+        self.page: flet.Page = page
+        self.build()
+
+    def build(self) -> flet.View:
+
+        return flet.View(
+            appbar= NoxLauncherGenericAppBar(self.page, "Back to home", "/home").build(),
+            controls= [
+                flet.Container(
+                    content= flet.Row(
+                        controls= [
+                            flet.Container(
+                                content= flet.Column(
+                                    controls= [
+                                        flet.Image(src= "assets/java.png", width= 240, height= 200, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT), 
+                                        flet.Text("Java Help", size= 25, font_family= "NoxLauncher", color= "#FFFFFF"), 
+                                    ],
+                                    expand= True,
+                                    expand_loose= True,
+                                    horizontal_alignment= flet.CrossAxisAlignment.CENTER
+                                ),
+                                bgcolor= "#272727",
+                                border_radius= 20,
+                                width= 360,
+                                height= 280
+                            ),
+                            flet.Container(
+                                content= flet.Column(
+                                    controls= [
+                                        flet.Image(src= "assets/mods.png", width= 240, height= 200, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT), 
+                                        flet.Text("Mods Help", size= 25, font_family= "NoxLauncher", color= "#FFFFFF"), 
+                                    ],
+                                    expand= True,
+                                    expand_loose= True,
+                                    horizontal_alignment= flet.CrossAxisAlignment.CENTER
+                                ),
+                                bgcolor= "#272727",
+                                border_radius= 20,
+                                width= 360,
+                                height= 280
+                            ),
+                            flet.Container(
+                                content= flet.Column(
+                                    controls= [
+                                        flet.Image(src= "assets/play.png", width= 240, height= 200, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT), 
+                                        flet.Text("Launcher Help", size= 25, font_family= "NoxLauncher", color= "#FFFFFF"), 
+                                    ],
+                                    expand= True,
+                                    expand_loose= True,
+                                    horizontal_alignment= flet.CrossAxisAlignment.CENTER
+                                ),
+                                bgcolor= "#272727",
+                                border_radius= 20,
+                                width= 360,
+                                height= 280
+                            )
+                        ],
+                        expand= True,
+                        expand_loose= True,
+                        alignment= flet.MainAxisAlignment.CENTER,
+                        vertical_alignment= flet.CrossAxisAlignment.CENTER,  
+                        run_spacing= 40,
+                        spacing= 40
+                    ),
+                    image= flet.DecorationImage(src= "assets/bghelp.png", fit= flet.ImageFit.COVER, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT),
+                    expand= True,
+                    expand_loose= True,
+                    alignment= flet.alignment.center
+                )
+            ],
+            padding= 0
+        )
 
 class NoxLauncherGenericAppBar:
 

@@ -27,7 +27,6 @@ def check_noxlauncher_filesystem() -> None:
 
             json.dump({
                 "premium": [],
-                "free": [],
                 "nopremium": [],
                 "version": VERSION
             }, file, indent= 4)
@@ -387,8 +386,6 @@ def get_minecraft_versions() -> List[flet.dropdown.Option]:
 
         if os.path.exists(get_home() + "/versions/" + f"{version}/{version}.jar") and os.path.isfile(get_home() + "/versions/" + f"{version}/{version}.jar"):
             versions.append(flet.dropdown.Option(version, text_style= flet.TextStyle(font_family= "NoxLauncher", size= 14)))
-
-    if len(versions) == 0: return [flet.dropdown.Option(key= "empty", text="Install a Minecraft version first!", text_style= flet.TextStyle(font_family= "NoxLauncher", size= 14))]
 
     return versions
 
