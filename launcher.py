@@ -95,3 +95,5 @@ class Routing:
         self.page.on_route_change = routing
 
     def append(self, view: flet.View) -> None: self.page.views.append(view)
+
+    def go(self, route: str) -> None: self.page.go(route)
