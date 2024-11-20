@@ -1,11 +1,12 @@
+import os
 import flet
 import signal
 
-from fs import *
-from gui import *
-from logs import *
+from fs import check_noxlauncher_filesystem, get_discordrpc
+from logs import log
 from constants import *
-from utils import *
+from launcher import NoxLauncher
+from threadpool import NOXLAUNCHER_THREADPOOL
 
 from dspresence import DiscordRPC
 
@@ -25,7 +26,20 @@ if get_discordrpc(): DiscordRPC()
 
 def main(page: flet.Page) -> None: 
 
-    NoxLauncherStandardWindowConfig(page)
+    page.title = f"NoxLauncher ({DEPLOYMENT_TYPE}) - v{VERSION}"
+
+    page.window.icon = os.path.join(os.getcwd().replace("\\", "/"), "assets/icon.ico")
+
+    page.fonts = {
+        "NoxLauncher": "assets/fonts/minecraft.ttf",
+    }
+    
+    page.window.width = 1280
+    page.window.height = 720
+    page.theme_mode = flet.ThemeMode.DARK
+
+    page.update()
+
     NoxLauncher(page)
 
 flet.app(target= main, name= f"NoxLauncher {VERSION}")

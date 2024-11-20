@@ -3,10 +3,10 @@ import platform
 import subprocess
 import os
 import json
-import itertools
 import psutil
 import shutil
 import datetime
+import requests
 import minecraft_launcher_lib
 
 from typing import List
@@ -14,7 +14,6 @@ from functools import cache
 
 from logs import error
 from constants import VERSION
-from utils import has_internet
 
 @cache
 def check_noxlauncher_filesystem() -> None:
@@ -403,3 +402,12 @@ def parse_memory(args: List[str]) -> int:
     for arg in [arg for arg in args if isinstance(arg, str)]:
         if arg.startswith("-Xmx") and arg.find("M") != -1 and arg.index("M") == len(arg) - 1: return int(arg.replace("-Xmx", "").replace("M", ""))
     else: return 2048
+
+    
+@cache
+def has_internet() -> bool:
+
+    try:
+        return requests.get("https://google.com", timeout= 20).ok
+    except:
+        return False

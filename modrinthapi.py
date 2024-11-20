@@ -3,8 +3,8 @@ import requests
 import datetime
 import time
 
-from fs import *
-from utils import has_internet
+from fs import check_noxlauncher_filesystem, get_home
+from gui.utils import has_internet
 from typing import Dict, Any, List
 
 class ModrinthAPI:
