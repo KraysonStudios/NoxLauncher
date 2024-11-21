@@ -6,7 +6,7 @@ from gui.fabric import NoxLauncherInstallFabricGUI
 from gui.vanilla import NoxLauncherInstallVanillaGUI
 from gui.forge import NoxLauncherInstallForgeGUI
 from gui.accounts import NoxLauncherAccountsGUI
-from gui.accounts import NoxLauncherNoPremiumAccountsGUI
+from gui.accounts import NoxLauncherOfflineAccountsGUI
 from gui.help import NoxLauncherHelpGUI
 from gui.play import NoxLauncherPlayGUI
 from gui.mclogs import NoxLauncherMCLogsGUI

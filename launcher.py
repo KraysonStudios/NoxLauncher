@@ -1,7 +1,7 @@
 import flet
 import sys
 
-from gui import NoxLauncherAccountsGUI, NoxLauncherHelpGUI, NoxLauncherHomeGUI, NoxLauncherInfoGUI, NoxLauncherPlayGUI, NoxLauncherInstallFabricGUI, NoxLauncherInstallForgeGUI, NoxLauncherInstallGUI, NoxLauncherInstallVanillaGUI, NoxLauncherNoPremiumAccountsGUI, NoxLauncherSettingsGUI, NoxLauncherMCLogsGUI
+from gui import NoxLauncherAccountsGUI, NoxLauncherHelpGUI, NoxLauncherHomeGUI, NoxLauncherInfoGUI, NoxLauncherPlayGUI, NoxLauncherInstallFabricGUI, NoxLauncherInstallForgeGUI, NoxLauncherInstallGUI, NoxLauncherInstallVanillaGUI, NoxLauncherOfflineAccountsGUI, NoxLauncherSettingsGUI, NoxLauncherMCLogsGUI
 from gui.utils import open_github, open_discord
 from logs import error
 
@@ -83,7 +83,7 @@ class Routing:
                 case "/help": self.append(NoxLauncherHelpGUI(self.page).build())
                 case "/play": self.append(NoxLauncherPlayGUI(self.page).build())
                 case "/accounts": self.append(NoxLauncherAccountsGUI(self.page).build())
-                case "/accounts/nopremium": self.append(NoxLauncherNoPremiumAccountsGUI(self.page).build())
+                case "/accounts/offline": self.append(NoxLauncherOfflineAccountsGUI(self.page).build())
                 case "/info": self.append(NoxLauncherInfoGUI(self.page).build())
                 case "/install": self.append(NoxLauncherInstallGUI(self.page).build())
                 case "/install/fabric": self.append(NoxLauncherInstallFabricGUI(self.page).build())

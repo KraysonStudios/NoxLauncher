@@ -3,13 +3,15 @@ import platform
 import flet
 import threading
 import subprocess
+import uuid
 import minecraft_launcher_lib
 
 from gui.appbar import NoxLauncherGenericAppBar
 
 from typing import List, Dict, Any
-from accounts import Account
 
+from constants import VERSION
+from accounts import Account
 from fs import get_current_jvm_args, get_current_java_instance, get_home, get_minecraft_versions, get_autoclose
 from threadpool import NOXLAUNCHER_THREADPOOL
 
@@ -109,16 +111,18 @@ class NoxLauncherPlayGUI:
 
         match Account.get_selected():
 
-            case (acc, "nopremium"):
-                NOPREMIUM_ACC_OPTIONS: Dict[str, Any] = {
+            case (acc, "offline"):
+
+                OFFLINE_ACC_OPTIONS: Dict[str, Any] = {
                     "username": acc["name"],
-                    "uuid": acc["uuid"],
-                    "token": acc["token"],
+                    "uuid": uuid.uuid4().hex,
                     "jvmArguments": get_current_jvm_args(),
-                    "executablePath": get_current_java_instance()
+                    "executablePath": get_current_java_instance(),
+                    "launcherName": "NoxLauncher",
+                    "launcherVersion": VERSION
                 }
 
-                if NOPREMIUM_ACC_OPTIONS["executablePath"] is None:
+                if OFFLINE_ACC_OPTIONS["executablePath"] is None:
 
                     not_java_found_alert: flet.AlertDialog = flet.AlertDialog(
                         icon= flet.Image(src= "assets/java.png", width= 160, height= 130, filter_quality= flet.FilterQuality.HIGH),
@@ -141,12 +145,8 @@ class NoxLauncherPlayGUI:
                     self.page.open(not_java_found_alert)
 
                     return
-
-                MC_COMMAND: List[str] = minecraft_launcher_lib.command.get_minecraft_command(event.control.value, get_home(), NOPREMIUM_ACC_OPTIONS)
-
-                MC_COMMAND.insert(1, f'-javaagent:{os.path.join(os.getcwd().replace("\\", "/"), "authlib/authlib.jar")}=ely.by')
-
-                self.launch(MC_COMMAND)
+                
+                self.launch(minecraft_launcher_lib.command.get_minecraft_command(event.control.value, get_home(), OFFLINE_ACC_OPTIONS))
 
             case (acc, "premiun"): ...
 
@@ -199,6 +199,7 @@ class NoxLauncherPlayGUI:
         if process.wait():
 
             if process.returncode != 0: 
-
+                
+                self.console.content.controls.clear()
                 self.console.content.controls.append(flet.Text(process.stderr.read(), size= 13, font_family= "NoxLauncher", color= "#FFFFFF"))
                 self.console.update()

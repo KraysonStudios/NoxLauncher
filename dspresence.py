@@ -2,7 +2,7 @@ import time
 import psutil
 import pypresence
 
-from fs import *
+from fs import get_discordrpc
 from threadpool import NOXLAUNCHER_THREADPOOL
 from constants import DISCORD_CLIENT_ID
 
@@ -28,7 +28,7 @@ def _start() -> None:
         
                 RPC.update(
                     state= "Playing NoxLauncher...",
-                    details= "NoxLauncher is a powerful Open Source launcher created by Krayson Studio and its main developers, to provide secure access to a minecraft launcher.",
+                    details= "Powerful and easy to use Minecraft Launcher.",
                     large_image= "discord_rpc",
                     large_text= "Krayson Studio"
                 )
@@ -41,6 +41,7 @@ def _start() -> None:
                 RPC.close()
                 discord_opened = False
                 rpc_connected = False
+                
                 return
 
 def DiscordRPC() -> None:
@@ -62,7 +63,5 @@ def DiscordRPC() -> None:
                         break
 
                 else: discord_opened = False
-
-            time.sleep(15)
 
     NOXLAUNCHER_THREADPOOL.submit(_init)

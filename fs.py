@@ -37,7 +37,7 @@ def check_noxlauncher_filesystem() -> None:
 
             json.dump({
                 "java": "",
-                "jvm-args": ["-Xms1G", f"-Xmx{get_idiomatic_memory_ram()}M"],
+                "jvm-args": ["-Xms1G", f"-Xmx{get_idiomatic_memory_ram()}M", "-Djava.net.preferIPv4Stack=true"],
                 "autoclose": True,
                 "receivenews": True,
                 "discordrpc": True,
@@ -168,11 +168,18 @@ def get_all_java_instances() -> List[flet.dropdown.Option]:
 
             try:
 
-                for root, dirs, _ in os.walk("C:/Program Files/"):
-                    for dir in dirs:
-                        if os.access(os.path.join(root, dir), os.R_OK):
-                            if dir.find("java") != -1 or dir.find("OpenJDK") != -1 or dir.find("jdk") != -1 or dir.find("jre") != -1 or dir.find("Adoptium") != -1 and os.path.exists(f'{root}/{dir}/bin/java.exe'):
-                                options.append(flet.dropdown.Option(f'{root}/{dir}/bin/java.exe', text_style= flet.TextStyle(font_family= "NoxLauncher", size= 14)))
+                def recursive_search(path: str) -> None:
+
+                    with os.scandir(path) as dir:
+
+                        for name in dir:
+
+                            print(name.path)
+
+                            if os.path.isdir(os.path.join(path, name.path)): recursive_search(os.path.join(path, name))
+                            if os.path.isfile(os.path.join(path, name)) and name.find("java.exe") != -1: options.append(flet.dropdown.Option(os.path.join(path, name), text_style= flet.TextStyle(font_family= "NoxLauncher", size= 14)))
+
+                recursive_search("C:/Program Files")
                 
             except Exception as e: error(f"Failed to get all java instances: {e}, {e.args}")
 
@@ -214,7 +221,7 @@ def get_current_jvm_args() -> List[str]:
 
         data = json.load(file)
 
-        return data["jvm-args"] if "jvm-args" in data else ["-Xms1G", f"-Xmx{get_idiomatic_memory_ram()}M"]
+        return data["jvm-args"] if "jvm-args" in data else ["-Xms1G", f"-Xmx{get_idiomatic_memory_ram()}M", "-Djava.net.preferIPv4Stack=true"]
     
 def update_jvm_args(args: List[str]) -> None:
 

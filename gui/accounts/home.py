@@ -21,8 +21,8 @@ class NoxLauncherAccountsGUI:
                             flet.Container(
                                 content= flet.Column(
                                     controls= [
-                                        flet.Image(src= "assets/nopremiumacc.png", width= 240, height= 200, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT), 
-                                        flet.Text("Free Accounts", size= 25, font_family= "NoxLauncher", color= "#FFFFFF"), 
+                                        flet.Image(src= "assets/offlineacc.png", width= 240, height= 200, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT), 
+                                        flet.Text("Offline Accounts", size= 25, font_family= "NoxLauncher", color= "#FFFFFF"), 
                                     ],
                                     expand= True,
                                     expand_loose= True,
@@ -32,7 +32,7 @@ class NoxLauncherAccountsGUI:
                                 border_radius= 20,
                                 width= 360,
                                 height= 280,
-                                on_click= lambda _: self.page.go("/accounts/nopremium")
+                                on_click= lambda _: self.page.go("/accounts/offline")
                             ),
                             flet.Container(
                                 content= flet.Text("Coming Soon...", size= 25, font_family= "NoxLauncher", color= "#FFFFFF"),

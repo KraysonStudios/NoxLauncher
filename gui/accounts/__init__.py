@@ -1,2 +1,2 @@
-from .nopremium import NoxLauncherNoPremiumAccountsGUI
+from .offline import NoxLauncherOfflineAccountsGUI
 from .home import NoxLauncherAccountsGUI

@@ -133,10 +133,7 @@ class NoxLauncherInstallForgeGUI:
             actions= [
                 flet.FilledButton(
                     text= "Cancel",
-                    icon= flet.icons.CLOSE,
-                    icon_color= flet.colors.RED_500,
                     style= flet.ButtonStyle(
-                        icon_size= 22,
                         color= "#FFFFFF",
                         bgcolor= "#148b47",
                         text_style= flet.TextStyle(font_family= "NoxLauncher", size= 18),

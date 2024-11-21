@@ -19,8 +19,10 @@ class Account:
             if "nopremium" not in freeaccs or "premium" not in freeaccs: return None
 
             for acc in freeaccs["nopremium"]:
-                if acc["selected"]:
+                if acc["selected"] and "token" in acc:
                     return (acc, "nopremium")
+                elif acc["selected"] and "token" not in acc:
+                    return (acc, "offline")
                 
             for acc in freeaccs["premium"]:
                 if acc["selected"]:
@@ -35,6 +37,24 @@ class NoPremium:
         self.elyby_auth_api_url: str = "https://authserver.ely.by"
         self.headers: Dict[str, str] = {"User-Agent": "https://github.com/KraysonStudios/NoxLauncher"}
 
+    @staticmethod 
+    def new_offline(name: str) -> None:
+
+        check_noxlauncher_filesystem()
+
+        with open(get_home() + "/accounts.json", "r") as file:
+
+            offaccs = json.load(file)
+
+            if "nopremium" not in offaccs: offaccs["nopremium"] = []
+
+            offaccs["nopremium"].append({
+                "name": name,
+                "selected": False
+            })
+
+        with open(get_home() + "/accounts.json", "w") as file: json.dump(offaccs, file, indent= 4)
+        
     @staticmethod
     def get_accounts() -> List[Dict[str, Any]]:
 
@@ -118,4 +138,3 @@ class NoPremium:
                     break
 
         with open(get_home() + "/accounts.json", "w") as file: json.dump(nopremiumaccs, file, indent= 4)
-    
