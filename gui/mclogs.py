@@ -13,7 +13,7 @@ class NoxLauncherMCLogsGUI:
         self.index: int = len(get_mc_logs()) - 1
         self.mc_logs: List[flet.Text] = get_mc_logs()
         self.logs_column: flet.Column = flet.Column(
-            controls= [self.mc_logs[len(self.mc_logs) - 1]],
+            controls= [self.mc_logs[len(self.mc_logs) - 1]] if len(self.mc_logs) > 0 else [],
             scroll= flet.ScrollMode.AUTO,
             expand= True,
             expand_loose= True
@@ -57,7 +57,7 @@ class NoxLauncherMCLogsGUI:
                                             horizontal_alignment= flet.CrossAxisAlignment.CENTER,
                                             spacing= 5,
                                             run_spacing= 5
-                                        ) if len(self.mc_logs) >= 1 else flet.Container(alignment= flet.alignment.center, content= flet.Text("No logs found!", size= 20, font_family= "NoxLauncher", color= "#FFFFFF"), expand= True, expand_loose= True)
+                                        ) if len(self.mc_logs) >= 1 else flet.Container(alignment= flet.alignment.center, content= flet.Text("No logs found!", size= 30, font_family= "NoxLauncher", color= "#FFFFFF"), expand= True, expand_loose= True)
                                     ],
                                     expand_loose= True,
                                     expand= True
@@ -72,7 +72,7 @@ class NoxLauncherMCLogsGUI:
                         expand= True,
                         expand_loose= True,
                         alignment= flet.MainAxisAlignment.CENTER,
-                        horizontal_alignment= flet.CrossAxisAlignment.CENTER,
+                        horizontal_alignment= flet.CrossAxisAlignment.CENTER
                     )
                 )
             ],

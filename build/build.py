@@ -6,18 +6,13 @@ import platform
 
 if __name__ == "__main__":
 
-    def optimize_linux() -> None:
+    def optimize_linux(path: str) -> None:
 
-        if os.path.exists("linux/NoxLauncher"): 
+        if not os.path.exists(path): return
 
-            process: subprocess.Popen = subprocess.Popen(f"""
-upx --best linux/NoxLauncher/_internal/pydantic_core/_pydantic_core.cpython-312-x86_64-linux-gnu.so &&
-upx --best linux/NoxLauncher/_internal/uvloop/loop.cpython-312-x86_64-linux-gnu.so
-            """, shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True)
-
-            if process.wait(): 
-                print(process.stderr.read()) 
-                exit(1)
+        for name in os.listdir(path):
+            if os.path.isfile(os.path.join(path, name)) and os.path.join(path, name).endswith(".so"): os.system(f"upx --best {os.path.join(path, name)}")
+            if os.path.isdir(os.path.join(path, name)): optimize_linux(os.path.join(path, name))
 
     def build_for_linux() -> None:
 
@@ -30,7 +25,7 @@ upx --best linux/NoxLauncher/_internal/uvloop/loop.cpython-312-x86_64-linux-gnu.
             print(process.stderr.read()) 
             return
 
-        optimize_linux()
+        optimize_linux("linux/NoxLauncher")
 
         print("Build successful for Linux")
 
@@ -39,7 +34,7 @@ upx --best linux/NoxLauncher/_internal/uvloop/loop.cpython-312-x86_64-linux-gnu.
         if os.path.exists("windows/NoxLauncher"): shutil.rmtree("windows/NoxLauncher", ignore_errors= True)
         if os.path.exists("NoxLauncher.spec"): os.remove("NoxLauncher.spec")
 
-        process = subprocess.run(f'pyinstaller --onedir --noconsole --name="NoxLauncher" --optimize=2 --icon="../assets/icon.ico" --workpath="./work" --distpath="./windows" "../main.py"', shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True)
+        process = subprocess.run(f'pyinstaller --onedir --name="NoxLauncher" --optimize=2 --icon="../assets/icon.ico" --workpath="./work" --distpath="./windows" "../main.py"', shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True)
         
         if process.returncode != 0:
             print(process.stderr)
