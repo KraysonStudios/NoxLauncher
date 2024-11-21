@@ -123,7 +123,7 @@ class NoxLauncherHomeAppBar:
             center_title= True,
             actions= [
                 flet.Container(
-                    width= 400,
+                    width= 440,
                     height= 44, 
                     alignment= flet.alignment.center,
                     content= flet.Row(
@@ -141,6 +141,7 @@ class NoxLauncherHomeAppBar:
                             ),
                             flet.VerticalDivider(color= "#717171", width= 1),
                             flet.IconButton(icon= flet.icons.SETTINGS_ROUNDED, icon_color= "#717171", icon_size= 30, on_click= lambda _: self.page.go("/settings")),
+                            flet.IconButton(icon= flet.icons.FOLDER_ZIP, icon_color= "#717171", icon_size= 30, on_click= lambda _: self.page.go("/mclogs")),
                             flet.IconButton(icon= flet.icons.FOLDER_OPEN, icon_color= "#717171", icon_size= 30, on_click= open_home),
                             flet.VerticalDivider(color= "#717171", width= 1),
                             flet.FilledButton(icon= flet.icons.HELP_CENTER, icon_color= "#717171", text= "You need help?", style= flet.ButtonStyle(text_style= flet.TextStyle(font_family= "NoxLauncher", size= 16), bgcolor= "#272727", color= "#FFFFFF"), height= 60)

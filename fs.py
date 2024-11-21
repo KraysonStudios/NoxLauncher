@@ -6,6 +6,7 @@ import json
 import psutil
 import shutil
 import datetime
+import gzip
 import requests
 import minecraft_launcher_lib
 
@@ -387,6 +388,26 @@ def get_minecraft_versions() -> List[flet.dropdown.Option]:
             versions.append(flet.dropdown.Option(version, text_style= flet.TextStyle(font_family= "NoxLauncher", size= 14)))
 
     return versions
+
+def get_mc_logs() -> List[flet.Text]: 
+
+    check_noxlauncher_filesystem()
+
+    logs: List[flet.Text] = []
+
+    if not os.path.exists("logs"): return []
+
+    for log in os.listdir("logs"):
+
+        if os.path.exists(f"logs/{log}") and os.path.isfile(f"logs/{log}") and log.endswith(".log.gz"):
+
+            with gzip.open(f"logs/{log}", "rb") as file: logs.append(flet.Text(file.read().decode("utf-8"), style= flet.TextStyle(font_family= "NoxLauncher", size= 14)))
+
+    if os.path.exists("logs/latest.log"): 
+        
+        with open("logs/latest.log", "r") as file: logs.insert(len(logs), flet.Text(file.read(), style= flet.TextStyle(font_family= "NoxLauncher", size= 14)))
+
+    return logs
 
 @cache            
 def get_available_memory_ram() -> int: return round(0.40 * psutil.virtual_memory().total / (1024 ** 2))

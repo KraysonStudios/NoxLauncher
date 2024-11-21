@@ -43,7 +43,7 @@ class NoxLauncherInstallGUI:
                             flet.Container(
                                 content= flet.Column(
                                     controls= [
-                                        flet.Image(src= "assets/vanilla.png", width= 130, height= 130, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT), 
+                                        flet.Image(src= "assets/vanilla.png", width= 200, height= 150, filter_quality= flet.FilterQuality.HIGH, repeat= flet.ImageRepeat.NO_REPEAT), 
                                         flet.Text("Vanilla", size= 25, font_family= "NoxLauncher", color= "#FFFFFF"), 
                                     ],
                                     expand= True,

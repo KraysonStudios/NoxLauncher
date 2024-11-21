@@ -1,7 +1,7 @@
 import flet
 import sys
 
-from gui import NoxLauncherAccountsGUI, NoxLauncherHelpGUI, NoxLauncherHomeGUI, NoxLauncherInfoGUI, NoxLauncherPlayGUI, NoxLauncherInstallFabricGUI, NoxLauncherInstallForgeGUI, NoxLauncherInstallGUI, NoxLauncherInstallVanillaGUI, NoxLauncherNoPremiumAccountsGUI, NoxLauncherSettingsGUI
+from gui import NoxLauncherAccountsGUI, NoxLauncherHelpGUI, NoxLauncherHomeGUI, NoxLauncherInfoGUI, NoxLauncherPlayGUI, NoxLauncherInstallFabricGUI, NoxLauncherInstallForgeGUI, NoxLauncherInstallGUI, NoxLauncherInstallVanillaGUI, NoxLauncherNoPremiumAccountsGUI, NoxLauncherSettingsGUI, NoxLauncherMCLogsGUI
 from gui.utils import open_github, open_discord
 from logs import error
 
@@ -89,6 +89,7 @@ class Routing:
                 case "/install/fabric": self.append(NoxLauncherInstallFabricGUI(self.page).build())
                 case "/install/forge": self.append(NoxLauncherInstallForgeGUI(self.page).build())
                 case "/install/vanilla": self.append(NoxLauncherInstallVanillaGUI(self.page).build())
+                case "/mclogs": self.append(NoxLauncherMCLogsGUI(self.page).build())
 
             self.page.update()
 

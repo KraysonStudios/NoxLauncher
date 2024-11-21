@@ -1,4 +1,5 @@
 import os
+import platform
 import flet
 import threading
 import subprocess
@@ -186,7 +187,7 @@ class NoxLauncherPlayGUI:
 
     def _execute_mc_in_another_thread(self, minecraft_command: List[str]) -> None:
         
-        subprocess.call(minecraft_command, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True)
+        subprocess.call(minecraft_command, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True, creationflags= 134217728) if platform.system() == "Windows" else subprocess.call(minecraft_command, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True)
 
     def _launch_with_console(self, minecraft_command: List[str]) -> None:
 
@@ -197,10 +198,7 @@ class NoxLauncherPlayGUI:
 
         if process.wait():
 
-            self.console.content.controls.pop(0)
+            if process.returncode != 0: 
 
-            self.console.content.controls.append(flet.Text(process.stdout.read() + process.stderr.read(), size= 13, font_family= "NoxLauncher", color= "#FFFFFF"))
-            
-            self.console.content.update()
-
-            error(process.stdout.read() + "\n\n"+ process.stderr.read())
+                self.console.content.controls.append(flet.Text(process.stderr.read(), size= 13, font_family= "NoxLauncher", color= "#FFFFFF"))
+                self.console.update()

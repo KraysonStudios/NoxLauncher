@@ -96,7 +96,24 @@ class NoxLauncherInstallVanillaGUI:
                 horizontal_alignment= flet.CrossAxisAlignment.CENTER,
                 height= 100,
                 expand_loose= True
-            )
+            ),
+            actions= [
+                flet.FilledButton(
+                    text= "Cancel",
+                    icon= flet.icons.CLOSE,
+                    icon_color= flet.colors.RED_500,
+                    style= flet.ButtonStyle(
+                        icon_size= 22,
+                        color= "#FFFFFF",
+                        bgcolor= "#148b47",
+                        text_style= flet.TextStyle(font_family= "NoxLauncher", size= 18),
+                        shape= flet.RoundedRectangleBorder(radius= 10)
+                    ),
+                    height= 50,
+                    width= 150,
+                    on_click= lambda _: self.page.close(installer_alert)
+                )
+            ]
         )
 
         self.page.open(installer_alert)

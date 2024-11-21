@@ -9,4 +9,5 @@ from gui.accounts import NoxLauncherAccountsGUI
 from gui.accounts import NoxLauncherNoPremiumAccountsGUI
 from gui.help import NoxLauncherHelpGUI
 from gui.play import NoxLauncherPlayGUI
+from gui.mclogs import NoxLauncherMCLogsGUI
 from gui.utils import *
