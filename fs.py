@@ -166,22 +166,10 @@ def get_all_java_instances() -> List[flet.dropdown.Option]:
     match platform.system():
         case "Windows": 
 
-            try:
-
-                def recursive_search(path: str) -> None:
-
-                    with os.scandir(path) as dir:
-
-                        for name in dir:
-
-                            print(name.path)
-
-                            if os.path.isdir(os.path.join(path, name.path)): recursive_search(os.path.join(path, name))
-                            if os.path.isfile(os.path.join(path, name)) and name.find("java.exe") != -1: options.append(flet.dropdown.Option(os.path.join(path, name), text_style= flet.TextStyle(font_family= "NoxLauncher", size= 14)))
-
-                recursive_search("C:/Program Files")
-                
-            except Exception as e: error(f"Failed to get all java instances: {e}, {e.args}")
+            if os.path.exists("C:/Program Files/Eclipse Adoptium"):
+                for java in os.listdir("C:/Program Files/Eclipse Adoptium"): 
+                    if os.path.exists("C:/Program Files/Eclipse Adoptium/" + java + "/bin/java.exe") and os.path.isfile("C:/Program Files/Eclipse Adoptium/" + java + "/bin/java.exe"):
+                        options.append(flet.dropdown.Option("C:/Program Files/Eclipse Adoptium/" + java + "/bin/java.exe", text_style= flet.TextStyle(font_family= "NoxLauncher", size= 14)))
 
             return options
         

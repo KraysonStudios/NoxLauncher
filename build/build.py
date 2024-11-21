@@ -34,7 +34,7 @@ if __name__ == "__main__":
         if os.path.exists("windows/NoxLauncher"): shutil.rmtree("windows/NoxLauncher", ignore_errors= True)
         if os.path.exists("NoxLauncher.spec"): os.remove("NoxLauncher.spec")
 
-        process = subprocess.run(f'pyinstaller --onedir --name="NoxLauncher" --optimize=2 --icon="../assets/icon.ico" --workpath="./work" --distpath="./windows" "../main.py"', shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True)
+        process = subprocess.run(f'pyinstaller --onedir --noconsole --name="NoxLauncher" --optimize=2 --icon="../assets/icon.ico" --workpath="./work" --distpath="./windows" "../main.py"', shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True)
         
         if process.returncode != 0:
             print(process.stderr)

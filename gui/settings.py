@@ -56,18 +56,10 @@ class NoxLauncherSettingsGUI:
                                                             padding= flet.padding.only(left= 40, top= 30)
                                                         ),
                                                         flet.Container(
-                                                            content= flet.Row(
-                                                                controls= [
-                                                                    flet.Dropdown(hint_text= "Select a Java source!", options= get_all_java_instances(), border_color= "#717171", border_radius= 10, border_width= 2, label_style= flet.TextStyle(color= "#ffffff"), value= get_current_java_instance(), on_change= self.update_java),
-                                                                    flet.IconButton(icon= flet.icons.UPLOAD_FILE, icon_color= "#717171", icon_size= 30, on_click= self.upload_java)
-                                                                ],
-                                                                expand_loose= True,
-                                                                spacing= 40,
-                                                                run_spacing= 40
-                                                            ),
+                                                            content= flet.Dropdown(hint_text= "Select a Java source!", options= get_all_java_instances(), border_color= "#717171", border_radius= 10, border_width= 2, label_style= flet.TextStyle(color= "#ffffff"), value= get_current_java_instance(), on_change= self.update_java),
                                                             alignment= flet.alignment.center,
                                                             expand_loose= True,
-                                                            padding= flet.padding.only(left= 40, bottom= 10)
+                                                            padding= flet.padding.only(left= 40, bottom= 10, right= 40)
                                                         ),
                                                         flet.Container(
                                                             content= flet.Text("JVM Arguments", size= 23, font_family= "NoxLauncher"),
@@ -192,19 +184,6 @@ class NoxLauncherSettingsGUI:
         self.jvm_args_input.value = " ".join(get_current_jvm_args())
         self.jvm_args_input.update()
 
-    def upload_java(self, event: flet.ControlEvent) -> None: 
-
-        print("asdas")
-
-        def on_upload(event: flet.FilePickerUploadEvent) -> None:
-
-            print(event.file_name)
-
-        self.page.open(flet.FilePicker(on_upload= on_upload))
-        self.page.update()
-
     def update_autoclose(self, event: flet.ControlEvent) -> None: update_autoclose(event.control.value)
-
     def update_receivenews(self, event: flet.ControlEvent) -> None: update_receivenews(event.control.value)
-
     def update_discordrpc(self, event: flet.ControlEvent) -> None: update_discordrpc(event.control.value)

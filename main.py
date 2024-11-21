@@ -1,5 +1,6 @@
 import os
 import flet
+import sys
 import signal
 
 from fs import check_noxlauncher_filesystem, get_discordrpc
@@ -45,4 +46,4 @@ def main(page: flet.Page) -> None:
 flet.app(target= main, name= f"NoxLauncher {VERSION}")
 
 NOXLAUNCHER_THREADPOOL.shutdown(wait= False, cancel_futures= True)
-os._exit(0)
+sys.exit(0)
