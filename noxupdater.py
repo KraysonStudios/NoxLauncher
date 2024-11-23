@@ -46,72 +46,71 @@ class NoxLauncherUpdater:
             
             self.page.close(self.updater_dialog)
             return
+        
+        latest_beta_url: List[str] | None = self._get_latest_beta()
 
-        match DEPLOYMENT_TYPE:
+        if latest_beta_url is None: return
+        if not self.is_major(latest_beta_url[1]): 
 
-            case "BETA": 
+            info("NoxLauncher is up to date.")
 
-                latest_beta_url: List[str] | None = self._get_latest_beta()
+            self.updater_text.value = "NoxLauncher is up to date."
+            self.updater_text.update()
 
-                if latest_beta_url is None: return
-                if f"NoxLauncher.{platform.system()}.{VERSION}.zip" in latest_beta_url[1]: 
+            time.sleep(2)
 
-                    info("NoxLauncher is up to date.")
+            self.page.close(self.updater_dialog)
 
-                    self.updater_text.value = "NoxLauncher is up to date."
-                    self.updater_text.update()
+            return
+        
+        info(f"Downloading new version: {latest_beta_url[1]}")
 
-                    time.sleep(2)
+        self.updater_text.value = f"Installing {latest_beta_url[1]}"
+        self.updater_text.update()
 
-                    self.page.close(self.updater_dialog)
+        if not os.path.exists(f"{os.getcwd()}/{latest_beta_url[1]}"): 
+            try:
+                beta: requests.Response = requests.get(latest_beta_url[0], headers= self.headers, timeout= 10)
+            except: return
+            
+            if beta.status_code != 200: return
 
-                    return
-                
-                info(f"Downloading new version: {latest_beta_url[1]}")
+            with open(f"{os.getcwd()}/{latest_beta_url[1]}", "wb") as file: file.write(beta.content)
 
-                self.updater_text.value = f"Installing {latest_beta_url[1]}"
-                self.updater_text.update()
+        info(f"New version installed. Pls restart NoxLauncher.")
 
-                if not os.path.exists(f"{os.getcwd()}/{latest_beta_url[1]}"): 
-                    try:
-                        beta: requests.Response = requests.get(latest_beta_url[0], headers= self.headers, timeout= 10)
-                    except: return
-                    
-                    if beta.status_code != 200: return
+        self.updater_text.value = f"New version installed. Pls restart NoxLauncher."
+        self.updater_text.update()
 
-                    with open(f"{os.getcwd()}/{latest_beta_url[1]}", "wb") as file: file.write(beta.content)
+        subprocess.Popen(f"nohup \"{os.getcwd().replace('\\', '/')}/updater\" \"{os.getcwd().replace('\\', '/')}/{latest_beta_url[1]}\" \"{os.getcwd().replace('\\', '/')}\"", shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True) if platform.system() == "Linux" else subprocess.Popen(f"start updater.exe \"{os.getcwd().replace('\\', '/')}/{latest_beta_url[1]}\" \"{os.getcwd().replace('\\', '/')}\"", shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True, creationflags= 134217728)
+        
+        time.sleep(2)
 
-                info(f"New version installed. Pls restart NoxLauncher.")
+        self.page.close(self.updater_dialog)
+        self.page.window.destroy()
 
-                self.updater_text.value = f"New version installed. Pls restart NoxLauncher."
-                self.updater_text.update()
-
-                subprocess.Popen(f"nohup \"{os.getcwd().replace('\\', '/')}/updater\" \"{os.getcwd().replace('\\', '/')}/{latest_beta_url[1]}\"", shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True) if platform.system() == "Linux" else subprocess.Popen(f"start updater.exe \"{os.getcwd().replace('\\', '/')}/{latest_beta_url[1]}\"", shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True, creationflags= 134217728)
-                
-                time.sleep(2)
-
-                self.page.close(self.updater_dialog)
-                self.page.window.destroy()
-
-                return
+        return
                    
-            case "STABLE": ...
-
+        
     def _get_latest_beta(self) -> List[str]:
 
         try:
-            all_releases: requests.Response = requests.get(self.github_releases)
+            all_releases: requests.Response = requests.get(self.github_releases, headers= self.headers, timeout= 10)
         except: return
 
         if all_releases.status_code != 200: return
 
-        return [self._get_beta_url(beta["assets"]) for beta in all_releases.json() if beta["tag_name"] == "Betas"][0] if platform.system() == "Windows" else [self._get_beta_url(beta["assets"]) for beta in all_releases.json() if beta["tag_name"] == "Betas"][0]
+        return [self._get_url(version["assets"]) for version in all_releases.json() if version["tag_name"] == "Betas"][0]
     
-    def _get_beta_url(self, assets: List[Dict[str, Any]]) -> List[str]:
+    def _get_url(self, assets: List[Dict[str, Any]]) -> List[str]:
 
         for version in assets:
             if version["name"].find(platform.system()) != -1:
                 return [version["browser_download_url"], version["name"]]
+            
+    def is_major(self, version: str) -> bool:
+
+        return sum([int(z) for z in version.split(".") if z.isdigit()]) > sum([int(z) for z in VERSION.split(".") if z.isdigit()])
 
     def has_internet(self) -> bool:
 
@@ -119,4 +118,5 @@ class NoxLauncherUpdater:
             return requests.get("https://google.com", timeout= 20).ok
         except:
             return False
+            
         
