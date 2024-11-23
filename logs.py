@@ -10,6 +10,11 @@ class Logging:
             with open("noxlauncher.log", "w") as file: file.write("")
     
         with open("noxlauncher.log", "a") as file: file.write(message + "\n")
+
+def info(message: str) -> None: 
+
+    print(f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} [INFO] {message}")
+    Logging.add_log(f"{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} [INFO] {message}")
     
 def log(message: str) -> None: 
 

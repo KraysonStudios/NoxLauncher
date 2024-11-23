@@ -13,7 +13,6 @@ import minecraft_launcher_lib
 from typing import List
 from functools import cache
 
-from logs import error
 from constants import VERSION
 
 @cache
@@ -21,6 +20,8 @@ def check_noxlauncher_filesystem() -> None:
     
     if not os.path.exists(get_home()): os.mkdir(get_home())
     if not os.path.exists(get_home() + "/mods"): os.mkdir(get_home() + "/mods")
+    if not os.path.exists(get_home() + "/languages"): os.mkdir(get_home() + "/languages")
+    
     if not os.path.exists(get_home() + "/accounts.json"): 
 
         with open(get_home() + "/accounts.json", "w") as file: 

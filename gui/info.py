@@ -61,9 +61,9 @@ class NoxLauncherInfoGUI:
                                             flet.Container(
                                                 content= flet.Row(
                                                     controls= [
-                                                        flet.Container(content= flet.Image(src= "assets/discord.png", width= 52, height= 52, filter_quality= flet.FilterQuality.HIGH), on_click= lambda _: open_discord()),
-                                                        flet.Container(content= flet.Image(src= "assets/github.png", width= 52, height= 52, filter_quality= flet.FilterQuality.HIGH), on_click= lambda _: open_github()),
-                                                        flet.Container(content= flet.Image(src= "assets/kofi.png", width= 52, height= 52, filter_quality= flet.FilterQuality.HIGH), on_click= lambda _: open_kofi())
+                                                        flet.Container(content= flet.Image(src= "assets/discord.png", width= 42, height= 42, filter_quality= flet.FilterQuality.HIGH), on_click= lambda _: open_discord()),
+                                                        flet.Container(content= flet.Image(src= "assets/github.png", width= 42, height= 42, filter_quality= flet.FilterQuality.HIGH), on_click= lambda _: open_github()),
+                                                        flet.Container(content= flet.Image(src= "assets/kofi.png", width= 42, height= 42, filter_quality= flet.FilterQuality.HIGH), on_click= lambda _: open_kofi())
                                                     ],
                                                     run_spacing= 50,
                                                     spacing= 50,
@@ -72,7 +72,8 @@ class NoxLauncherInfoGUI:
                                                     vertical_alignment= flet.CrossAxisAlignment.CENTER
                                                 ),
                                                 alignment= flet.alignment.center,
-                                                expand_loose= True
+                                                expand_loose= True,
+                                                padding= flet.padding.only(top= 5)
                                             )
                                         ],
                                         horizontal_alignment= flet.CrossAxisAlignment.CENTER,

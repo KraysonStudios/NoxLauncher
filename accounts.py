@@ -78,7 +78,6 @@ class NoPremium:
 
             if "nopremium" not in nopremiumaccs: 
                 
-                print("asdasdasdasd")
                 nopremiumaccs["nopremium"] = [] 
 
             ACCOUNT_CREDEANTIALS: Dict[str, Any] = {

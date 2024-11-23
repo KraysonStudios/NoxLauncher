@@ -197,9 +197,15 @@ class NoxLauncherPlayGUI:
     def _update_console(self, process: subprocess.Popen) -> None:
 
         if process.wait():
-
-            if process.returncode != 0: 
+            if process.returncode != 0:
+                if not process.stderr.read().isspace() or process.stderr.read() != "":
                 
-                self.console.content.controls.clear()
-                self.console.content.controls.append(flet.Text(process.stderr.read(), size= 13, font_family= "NoxLauncher", color= "#FFFFFF"))
-                self.console.update()
+                    self.console.content.controls.clear()
+                    self.console.content.controls.append(flet.Text(process.stderr.read(), size= 13, font_family= "NoxLauncher", color= "#FFFFFF"))
+                    self.console.update()
+
+                elif not process.stdout.read().isspace() or process.stdout.read() != "":
+
+                    self.console.content.controls.clear()
+                    self.console.content.controls.append(flet.Text(process.stdout.read(), size= 13, font_family= "NoxLauncher", color= "#FFFFFF"))
+                    self.console.update()

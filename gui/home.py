@@ -35,7 +35,7 @@ class NoxLauncherHomeGUI:
                                                 message= "Select and play the version you want!",
                                                 bgcolor= "#272727",
                                                 text_style= flet.TextStyle(
-                                                    size= 14,
+                                                    size= 16,
                                                     color= "#FFFFFF",
                                                     font_family= "NoxLauncher"
                                                 )
@@ -60,7 +60,7 @@ class NoxLauncherHomeGUI:
                                             message= "Download and install mod loaders like Fabric, Forge or simple Vanilla.",
                                             bgcolor= "#272727",
                                             text_style= flet.TextStyle(
-                                                size= 14,
+                                                size= 16,
                                                 color= "#FFFFFF",
                                                 font_family= "NoxLauncher"
                                             )
@@ -84,7 +84,7 @@ class NoxLauncherHomeGUI:
                                             message= "Change the account or skin.",
                                             bgcolor= "#272727",
                                             text_style= flet.TextStyle(
-                                                size= 14,
+                                                size= 16,
                                                 color= "#FFFFFF",
                                                 font_family= "NoxLauncher"
                                             )
