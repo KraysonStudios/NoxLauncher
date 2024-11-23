@@ -57,7 +57,6 @@ fn main() {
     thread::sleep(Duration::from_secs(10));
 
     let zip_path: PathBuf = PathBuf::from(env::args().nth(1).unwrap());
-    let dest: PathBuf = env::current_dir().unwrap();
 
-    extract_noxlauncher_version(zip_path, dest);
+    extract_noxlauncher_version(zip_path, env::current_dir().unwrap());
 }
