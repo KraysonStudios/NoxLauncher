@@ -8,7 +8,7 @@ from logs import info
 from constants import DEPLOYMENT_TYPE, VERSION
 from launcher import NoxLauncher
 from threadpool import NOXLAUNCHER_THREADPOOL
-from updater import NoxLauncherUpdater
+from noxupdater import NoxLauncherUpdater
 
 from dspresence import DiscordRPC
 

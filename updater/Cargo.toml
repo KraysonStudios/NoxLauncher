@@ -1,5 +1,5 @@
 [package]
-name = "noxlauncher-updater"
+name = "updater"
 description = "NoxLauncher Updater for NoxLauncher"
 version = "0.6.0"
 edition = "2021"

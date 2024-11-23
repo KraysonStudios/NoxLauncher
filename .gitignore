@@ -6,5 +6,4 @@ __pycache__
 noxlauncher.log
 /logs
 build/NoxLauncher.spec
-authlib-injector.log
-/noxlauncher-updater/target/
+/updater/target/

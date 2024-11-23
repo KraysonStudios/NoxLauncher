@@ -1,1 +1,0 @@
-from updater.updater import NoxLauncherUpdater
