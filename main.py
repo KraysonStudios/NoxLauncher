@@ -28,6 +28,15 @@ if get_discordrpc(): DiscordRPC()
 
 def main(page: flet.Page) -> None: 
 
+    def on_close(event: flet.WindowEvent) -> None:
+        if event.data == "close":
+            
+            page.clean()
+            page.window.destroy()
+
+            os.system("exit")
+            os._exit(0)
+
     page.title = f"NoxLauncher ({DEPLOYMENT_TYPE}) - v{VERSION}"
 
     page.window.icon = os.path.join(os.getcwd().replace("\\", "/"), "assets/icon.ico")
@@ -38,6 +47,9 @@ def main(page: flet.Page) -> None:
     
     page.window.width = 1280
     page.window.height = 720
+    page.window.prevent_close = True
+    page.window.on_event = on_close
+
     page.theme_mode = flet.ThemeMode.DARK
 
     page.update()

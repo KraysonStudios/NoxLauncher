@@ -86,14 +86,12 @@ class NoxLauncherUpdater:
                 self.updater_text.value = f"New version installed. Pls restart NoxLauncher."
                 self.updater_text.update()
 
-                subprocess.Popen(f"nohup \"{os.getcwd().replace('\\', '//')}/updater\" \"{os.getcwd().replace('\\', '/')}/{latest_beta_url[1]}\"", shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True) if platform.system() == "Linux" else subprocess.Popen(f"start updater.exe \"{os.getcwd().replace('\\', '/')}/{latest_beta_url[1]}\"", shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True, creationflags= 134217728)
+                subprocess.Popen(f"nohup \"{os.getcwd().replace('\\', '/')}/updater\" \"{os.getcwd().replace('\\', '/')}/{latest_beta_url[1]}\"", shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True) if platform.system() == "Linux" else subprocess.Popen(f"start updater.exe \"{os.getcwd().replace('\\', '/')}/{latest_beta_url[1]}\"", shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True, creationflags= 134217728)
                 
                 time.sleep(2)
 
                 self.page.close(self.updater_dialog)
                 self.page.window.destroy()
-
-                sys.exit(0)
 
                 return
                    
