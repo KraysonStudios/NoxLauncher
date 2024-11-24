@@ -6,10 +6,9 @@ edition = "2021"
 
 [dependencies]
 zip = "2.2.1"
-regex = "1.11.1"
 
 [profile.release]
-opt-level = 3
+opt-level = 'z'
 codegen-units = 1
 lto = true
 panic = "abort"
