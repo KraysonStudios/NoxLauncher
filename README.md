@@ -67,3 +67,28 @@ https://github.com/gitlimes/discord-md-badge?
 
    - Distributions derived from Arch: `sudo pacman -S mpv && sudo ln -s /usr/lib/x86_64-linux-gnu/libmpv.so /usr/lib/libmpv.so.1`
    - Distributions derived from Ubuntu/Debian: `sudo apt install libmpv-dev mpv && sudo ln -s /usr/lib/x86_64-linux-gnu/libmpv.so /usr/lib/libmpv.so.1`
+
+-------------------------------------------
+
+# Build dependencies 🏗️
+
+## Python
+
+- minecraft-launcher-lib==6.5
+- flet==0.24.1
+- pypresence==4.3.0
+- psutil==6.1.0
+- colorama==0.4.6
+
+### python >= 3.12
+
+## Rust
+
+- zip
+
+### rust >= 1.18.0
+
+## Build
+
+- upx https://github.com/upx/upx (for optimization)
+- cargo https://github.com/rust-lang/cargo (for build NoxLauncher Updater)
