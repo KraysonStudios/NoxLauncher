@@ -61,6 +61,3 @@ def main(page: flet.Page) -> None:
     NOXLAUNCHER_THREADPOOL.submit(NoxLauncherUpdater(page).check_for_updates())
 
 flet.app(target= main, name= f"NoxLauncher ({DEPLOYMENT_TYPE}) - v{VERSION}")
-
-NOXLAUNCHER_THREADPOOL.shutdown(wait= False, cancel_futures= True)
-sys.exit(0)
