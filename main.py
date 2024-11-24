@@ -34,6 +34,8 @@ def main(page: flet.Page) -> None:
             page.clean()
             page.window.destroy()
 
+            NOXLAUNCHER_THREADPOOL.shutdown(wait= False, cancel_futures= True)
+
             os.system("exit")
             os._exit(0)
 
