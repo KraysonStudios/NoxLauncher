@@ -59,7 +59,7 @@ https://github.com/gitlimes/discord-md-badge?
 
 # System dependencies 💻
 
-### Linux
+## Linux
 
    - **libmpv.so**
 
