@@ -30,28 +30,28 @@ https://github.com/gitlimes/discord-md-badge?
 - **Fabric** mods
 - **Forge** mods
 
-### It easy-to-use 👑
+### Easy-to-use 👑
 
 - Is **extremely configurable** to launch minecraft.
 
-### It secure 🔐
+### Secure 🔐
 
 - All **sensitive data** is stored **encrypted** on your computer. Nothing is send to **Krayson Studios** 🪐 and his **APIS**.
 
-### It solid as an rock 🪨
+### Solid as an rock 🪨
 
 - The **official** releases are completely stable and almost **problem-free**.
 
-### It fast ⚡
+### Fast ⚡
 
 - On comparasion with others minecraft launchers and mostly with official Minecraft Launcher; **Nox Launcher** is blazingly fast on startup. 
 
-### It multiplatform ✨
+### Multiplatform ✨
 
 - **Windows**
 - **Linux**
 
-### It FOSS 👐
+### FOSS 👐
 
 - If you want to know if the launcher is a *virus*, have the source code at hand, wink wink...
 
