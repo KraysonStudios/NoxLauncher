@@ -4,7 +4,7 @@
 
 <h1 align="center">NoxLauncher</h1>
 
-**NoxLauncher** is a powerful **Open Source** launcher created by **Krayson Studio** and its main developers, to provide secure access to a minecraft launcher. 
+**NoxLauncher** is a powerful **Open Source** launcher created by **Krayson Studio** and its main developers, to provide secure access and fast to a minecraft launcher. 
 
 > [!NOTE]  
 > **This launcher is not affiliated with Mojang Studios and their games.**
