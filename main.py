@@ -28,9 +28,9 @@ if get_discordrpc(): DiscordRPC()
 
 def main(page: flet.Page) -> None: 
 
-    def on_close(event: flet.WindowEvent) -> None:
+    def on_event(event: flet.WindowEvent) -> None:
         if event.data == "close":
-            
+        
             page.clean()
             page.window.destroy()
 
@@ -47,10 +47,11 @@ def main(page: flet.Page) -> None:
         "NoxLauncher": "assets/fonts/minecraft.ttf",
     }
     
-    page.window.width = 1280
-    page.window.height = 720
+    page.window.width = 1380
+    page.window.height = 800
+
     page.window.prevent_close = True
-    page.window.on_event = on_close
+    page.window.on_event = on_event
 
     page.theme_mode = flet.ThemeMode.DARK
 

@@ -30,7 +30,7 @@ class NoxLauncherInfoGUI:
                                         controls= [
                                             flet.Image(src= "assets/icon.png", width= 230, height= 140, filter_quality= flet.FilterQuality.HIGH),
                                             flet.Container(
-                                                content= flet.Text("\" NoxLauncher is a powerful Open Source launcher created by Krayson Studio and its main developers, to provide secure access to a minecraft launcher. \" This launcher is not affiliated with Mojang Studios and their games.", size= 17, font_family= "NoxLauncher"), 
+                                                content= flet.Text("\" NoxLauncher is a powerful Open Source launcher created by Krayson Studio and its main developers, to provide secure access to a minecraft launcher. \" This launcher is not affiliated with Mojang Studios and their games.", size= 16, font_family= "NoxLauncher"), 
                                                 alignment= flet.alignment.center,
                                                 expand_loose= True,
                                                 padding= flet.padding.only(left= 20, right= 20, bottom= 15)
@@ -83,7 +83,7 @@ class NoxLauncherInfoGUI:
                                     bgcolor= "#272727",
                                     alignment= flet.alignment.center,
                                     width= 620,
-                                    height= 500,
+                                    height= 490,
                                     border_radius= 20
                                 ),
                                 expand= True,

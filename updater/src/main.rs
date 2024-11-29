@@ -1,15 +1,16 @@
 use {
     std::{
         env,
-        fs::{self, copy, create_dir_all, File},
+        fs::{copy, create_dir_all, remove_dir_all, File},
         io,
         path::{Path, PathBuf},
-        thread,
+        process, thread,
         time::Duration,
     },
     zip::ZipArchive,
 };
 
+#[inline]
 fn unzip_noxlauncher_version(zip_path: &PathBuf, dest: PathBuf) {
     let mut zip_file: ZipArchive<File> = ZipArchive::new(File::open(zip_path).unwrap()).unwrap();
 
@@ -42,11 +43,21 @@ fn unzip_noxlauncher_version(zip_path: &PathBuf, dest: PathBuf) {
                 .unwrap()
                 .join(file.file_name().unwrap()),
         )
-        .unwrap();
+        .unwrap_or_else(|err| panic!("(!) Failed to copy NoxLauncher files\n {err}"));
     });
 
     if zip_path.exists() {
-        fs::remove_dir_all(zip_path).unwrap();
+        let _ = remove_dir_all(zip_path);
+    }
+
+    if env::consts::OS == "linux" {
+        process::Command::new("chmod")
+            .arg("+x")
+            .arg(dest.join("NoxLauncher"))
+            .spawn()
+            .unwrap_or_else(|err| {
+                panic!("(!) Failed to make NoxLauncher executable on Linux\n {err}")
+            });
     }
 }
 

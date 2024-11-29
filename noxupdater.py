@@ -90,7 +90,6 @@ class NoxLauncherUpdater:
         self.page.window.destroy()
 
         return
-                   
         
     def _get_latest_beta(self) -> List[str]:
 

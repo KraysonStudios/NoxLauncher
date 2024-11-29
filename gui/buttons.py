@@ -19,7 +19,7 @@ class BackToPlayButton:
             content= flet.Container(
                 content= flet.Row(
                     controls= [
-                        flet.Icon(name= flet.icons.ARROW_BACK, color= "#717171", size= 40),
+                        flet.Icon(name= flet.icons.HOME if self.path == "/home" else flet.icons.ARROW_BACK, color= "#717171", size= 40),
                         flet.Container(content= flet.Text(self.text, size= 20, font_family= "NoxLauncher"), expand_loose= True, alignment= flet.alignment.center, padding= flet.padding.only(top= 2))
                     ],
                     height= self.height,
