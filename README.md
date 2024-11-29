@@ -88,7 +88,11 @@ https://github.com/gitlimes/discord-md-badge?
 
 ### rust >= 1.18.0
 
-## Build
+## External tools needed
 
 - upx https://github.com/upx/upx (for optimization)
 - cargo https://github.com/rust-lang/cargo (for build NoxLauncher Updater)
+
+### Command
+
+`python build.py <platform>`
