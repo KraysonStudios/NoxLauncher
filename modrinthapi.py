@@ -13,7 +13,7 @@ class ModrinthAPI:
 
         self.page: flet.Page = page
         self.loader: str = loader
-        self.rate_limiter_data: Dict[str, Any] = {"count": 0, "time": datetime.datetime.now(), "blocked": False}
+        self.rate_limiter_storage: Dict[str, Any] = {"count": 0, "time": datetime.datetime.now(), "blocked": False}
         self.base_api_url: str = "https://api.modrinth.com/v2"
         self.headers: Dict[str, str] = {"User-Agent": "https://github.com/KraysonStudios/NoxLauncher"}
         self.container: flet.Container = flet.Container(expand= True, expand_loose= True, alignment= flet.alignment.center)
@@ -145,22 +145,22 @@ class ModrinthAPI:
 
     def rate_limiter(self) -> bool: 
 
-        if self.rate_limiter_data["count"] >= 5 and not self.rate_limiter_data["blocked"]:
+        if self.rate_limiter_storage["count"] >= 5 and not self.rate_limiter_storage["blocked"]:
 
-            self.rate_limiter_data["time"] =  datetime.datetime.now() + datetime.timedelta(seconds= 15)
-            self.rate_limiter_data["blocked"] = True
+            self.rate_limiter_storage["time"] =  datetime.datetime.now() + datetime.timedelta(seconds= 15)
+            self.rate_limiter_storage["blocked"] = True
             return True
 
-        elif self.rate_limiter_data["time"] <= datetime.datetime.now() and self.rate_limiter_data["blocked"]: 
+        elif self.rate_limiter_storage["time"] <= datetime.datetime.now() and self.rate_limiter_storage["blocked"]: 
 
-            self.rate_limiter_data["count"] = 0
-            self.rate_limiter_data["time"] = datetime.datetime.now()
-            self.rate_limiter_data["blocked"] = False
+            self.rate_limiter_storage["count"] = 0
+            self.rate_limiter_storage["time"] = datetime.datetime.now()
+            self.rate_limiter_storage["blocked"] = False
             return False
         
-        elif self.rate_limiter_data["count"] >= 5: return True
+        elif self.rate_limiter_storage["count"] >= 5: return True
 
-        self.rate_limiter_data["count"] += 1
+        self.rate_limiter_storage["count"] += 1
         
         return False
     

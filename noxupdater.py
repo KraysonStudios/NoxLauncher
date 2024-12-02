@@ -2,13 +2,12 @@ import flet
 import platform
 import requests
 import subprocess
-import sys
 import time
 import os
 
 from logs import info
 from typing import List, Dict, Any
-from constants import DEPLOYMENT_TYPE, VERSION
+from constants import VERSION
 
 class NoxLauncherUpdater:
 

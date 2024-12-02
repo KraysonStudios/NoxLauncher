@@ -164,24 +164,9 @@ def get_all_java_instances() -> List[flet.dropdown.Option]:
 
     options: List[flet.dropdown.Option] = [flet.dropdown.Option("System", text_style= flet.TextStyle(font_family= "NoxLauncher", size= 14))]
 
-    match platform.system():
-        case "Windows": 
+    options.extend([flet.dropdown.Option(instance, text_style= flet.TextStyle(font_family= "NoxLauncher", size= 14)) for instance in minecraft_launcher_lib.java_utils.find_system_java_versions()])
 
-            if os.path.exists("C:/Program Files/Eclipse Adoptium"):
-                for java in os.listdir("C:/Program Files/Eclipse Adoptium"): 
-                    if os.path.exists("C:/Program Files/Eclipse Adoptium/" + java + "/bin/java.exe") and os.path.isfile("C:/Program Files/Eclipse Adoptium/" + java + "/bin/java.exe"):
-                        options.append(flet.dropdown.Option("C:/Program Files/Eclipse Adoptium/" + java + "/bin/java.exe", text_style= flet.TextStyle(font_family= "NoxLauncher", size= 14)))
-
-            return options
-        
-        case "Linux":
-
-            for java in [java for java in os.listdir("/usr/lib/jvm/") if os.path.isdir("/usr/lib/jvm/" + java)]:
-
-                if os.path.exists("/usr/lib/jvm/" + java + "/bin/java") and os.path.isfile("/usr/lib/jvm/" + java + "/bin/java"):
-                    options.append(flet.dropdown.Option("/usr/lib/jvm/" + java + "/bin/java", text_style= flet.TextStyle(font_family= "NoxLauncher", size= 14)))
-
-            return options
+    return options
         
 def get_current_java_instance() -> str | None:
 
