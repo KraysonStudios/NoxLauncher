@@ -4,13 +4,13 @@ use {
         fs::{copy, create_dir_all, remove_dir_all, File},
         io,
         path::{Path, PathBuf},
-        process, thread,
+        process::{Child, Command},
+        thread,
         time::Duration,
     },
     zip::ZipArchive,
 };
 
-#[inline]
 fn unzip_noxlauncher_version(zip_path: &PathBuf, dest: PathBuf) {
     let mut zip_file: ZipArchive<File> = ZipArchive::new(File::open(zip_path).unwrap()).unwrap();
 
@@ -50,15 +50,13 @@ fn unzip_noxlauncher_version(zip_path: &PathBuf, dest: PathBuf) {
         let _ = remove_dir_all(zip_path);
     }
 
-    if env::consts::OS == "linux" {
-        process::Command::new("chmod")
-            .arg("+x")
-            .arg(dest.join("NoxLauncher"))
-            .spawn()
-            .unwrap_or_else(|err| {
-                panic!("(!) Failed to make NoxLauncher executable on Linux\n {err}")
-            });
-    }
+    Command::new("chmod")
+        .arg("+x")
+        .arg(dest.join("NoxLauncher"))
+        .spawn()
+        .unwrap_or_else(|err| {
+            panic!("(!) Failed to make NoxLauncher executable on Linux.\n {err}")
+        });
 }
 
 fn main() {
@@ -70,14 +68,33 @@ fn main() {
         let dest: PathBuf = PathBuf::from(env::args().nth(2).unwrap());
 
         if !file.exists() || !dest.exists() {
-            panic!("Zipfile path or destination path don't exist. Check your paths.")
+            panic!("(!) ZipFile path or destination path don't exist. Check your paths for update NoxLauncher on Linux.")
         }
 
         unzip_noxlauncher_version(&file, dest);
         return;
     }
 
-    process::Command::new(file).arg("/SP").arg("/CURRENTUSER").arg("/SILENT").spawn().unwrap_or_else(|err| {
-        panic!("Error executing NoxLauncher Windows Installer\n \"{}\"", err);
+    let mut windows_installer: Child = Command::new(&file)
+        .arg("/SP")
+        .arg("/CURRENTUSER")
+        .arg("/SILENT")
+        .spawn()
+        .unwrap_or_else(|err| {
+            panic!(
+                "(!) Error executing NoxLauncher Windows Installer.\n \"{}\"",
+                err
+            );
+        });
+
+    windows_installer.wait().unwrap_or_else(|err| {
+        panic!(
+            "(!) Error waiting intallation process by NoxLauncher Windows Installer.\n \"{}\"",
+            err
+        )
     });
+
+    if file.exists() {
+        let _ = remove_dir_all(file);
+    }
 }
