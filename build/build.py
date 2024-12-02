@@ -3,6 +3,7 @@ import os
 import subprocess
 import shutil
 import platform
+import getpass
 
 if __name__ == "__main__":
 
@@ -39,8 +40,8 @@ if __name__ == "__main__":
         if os.path.exists("windows/NoxLauncher"): shutil.rmtree("windows/NoxLauncher", ignore_errors= True)
         if os.path.exists("NoxLauncher.spec"): os.remove("NoxLauncher.spec")
 
-        pyinstaller_process = subprocess.run(f'pyinstaller --onedir --noconsole --manifest="windows.xml" --name="NoxLauncher" --optimize=2 --icon="../assets/icon.ico" --workpath="./work" --distpath="./windows" "../main.py"', shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True)
-        updater_process = subprocess.run(f'cargo build --release --manifest-path="{os.path.dirname(os.getcwd().replace("\\", "/"))}/updater/Cargo.toml" && upx --best "{os.path.dirname(os.getcwd().replace("\\", "/"))}/updater/target/release/updater.exe"', shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True)
+        pyinstaller_process = subprocess.run(f'pyinstaller --onedir --noconsole --name="NoxLauncher" --optimize=2 --icon="../assets/icon.ico" --workpath="./work" --distpath="./windows" "../main.py"', shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True)
+        updater_process = subprocess.run(f'cargo build --release --manifest-path="{os.path.dirname(os.getcwd().replace("\\", "/"))}/updater/Cargo.toml" && "C:/Users/{getpass.getuser()}/Documents/upx-4.2.4-win64/upx.exe" --best "{os.path.dirname(os.getcwd().replace("\\", "/"))}/updater/target/release/updater.exe"', shell= True, stdout= subprocess.PIPE, stderr= subprocess.PIPE, stdin= subprocess.PIPE, text= True)
         
         if pyinstaller_process.returncode != 0:
             print(pyinstaller_process.stderr)

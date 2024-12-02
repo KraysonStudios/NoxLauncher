@@ -64,12 +64,20 @@ fn unzip_noxlauncher_version(zip_path: &PathBuf, dest: PathBuf) {
 fn main() {
     thread::sleep(Duration::from_secs(5));
 
-    let zipfile: PathBuf = PathBuf::from(env::args().nth(1).unwrap());
-    let dest: PathBuf = PathBuf::from(env::args().nth(2).unwrap());
+    let file: PathBuf = PathBuf::from(env::args().nth(1).unwrap());
 
-    if !zipfile.exists() || !dest.exists() {
-        panic!("Zipfile path or destination path don't exist. Check your paths.")
+    if env::consts::OS == "linux" {
+        let dest: PathBuf = PathBuf::from(env::args().nth(2).unwrap());
+
+        if !file.exists() || !dest.exists() {
+            panic!("Zipfile path or destination path don't exist. Check your paths.")
+        }
+
+        unzip_noxlauncher_version(&file, dest);
+        return;
     }
 
-    unzip_noxlauncher_version(&zipfile, dest);
+    process::Command::new(file).arg("/SP").arg("/CURRENTUSER").arg("/SILENT").spawn().unwrap_or_else(|err| {
+        panic!("Error executing NoxLauncher Windows Installer\n \"{}\"", err);
+    });
 }
