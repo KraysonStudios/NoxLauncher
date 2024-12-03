@@ -80,7 +80,10 @@ class ModrinthAPI:
                                         flet.Text(project["downloads"], size= 18, font_family= "NoxLauncher")
                                     ],
                                     expand_loose= True,
-                                    spacing= 20
+                                    expand= True,
+                                    alignment= flet.MainAxisAlignment.START,
+                                    run_spacing= 10,
+                                    spacing= 10
                                 ),
                                 alignment= flet.alignment.center_left,
                                 expand_loose= True,
@@ -90,10 +93,11 @@ class ModrinthAPI:
                                 content= flet.Row(
                                     controls= [
                                         flet.Image(src= "mods.png", width= 50, height= 50, filter_quality= flet.FilterQuality.HIGH),
-                                        flet.Text(", ".join(project["versions"]), size= 16, font_family= "NoxLauncher")
+                                        flet.Text(", ".join(reversed(project["versions"])), size= 16, font_family= "NoxLauncher")
                                     ],
                                     expand_loose= True,
-                                    spacing= 20,
+                                    spacing= 10,
+                                    run_spacing= 10,
                                     scroll= flet.ScrollMode.AUTO,
                                     alignment= flet.MainAxisAlignment.START
                                 ),
