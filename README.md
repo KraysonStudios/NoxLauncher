@@ -4,6 +4,10 @@
 
 <h1 align="center">NoxLauncher</h1>
 
+<p align="center">
+   <img alt= "NoxLauncher Home page" src= "https://github.com/KraysonStudios/NoxLauncher/blob/master/github-assets/home.png" style= "width: 75%; height: 55%;">
+</p>
+
 **NoxLauncher** is a powerful **Open Source** launcher created by **Krayson Studio** and its main developers, to provide secure access and fast to a minecraft launcher. 
 
 > [!NOTE]  
@@ -30,13 +34,25 @@ https://github.com/gitlimes/discord-md-badge?
 - **Fabric** mods
 - **Forge** mods
 
-### Easy-to-use 👑
+<p align="center">
+   <img alt= "NoxLauncher Modrinth page" src= "https://github.com/KraysonStudios/NoxLauncher/blob/master/github-assets/modrinth.png" style= "width: 75%; height: 55%;">
+</p>
 
-- Is **extremely configurable** to launch minecraft.
+<p align="center">
+   <img alt= "NoxLauncher Modrinth page" src= "https://github.com/KraysonStudios/NoxLauncher/blob/master/github-assets/modrinth-dropdown.png" style= "width: 75%; height: 55%;">
+</p>
 
-### Secure 🔐
+### Easy to Use and configurable 👑
 
-- All **sensitive data** is stored **encrypted** on your computer. Nothing is send to **Krayson Studios** 🪐 and his **APIS**.
+- Is **extremely configurable** launcher of Minecraft.
+
+<p align="center">
+   <img alt= "NoxLauncher Settings page" src= "https://github.com/KraysonStudios/NoxLauncher/blob/master/github-assets/settings.png" style= "width: 75%; height: 55%;">
+</p>
+
+<p align="center">
+   <img alt= "NoxLauncher Customization page" src= "https://github.com/KraysonStudios/NoxLauncher/blob/master/github-assets/customization.png" style= "width: 75%; height: 55%;">
+</p>
 
 ### Solid as an rock 🪨
 
