@@ -92,6 +92,7 @@ https://github.com/gitlimes/discord-md-badge?
 
 - minecraft-launcher-lib==6.5
 - flet==0.24.1
+- flet-contrib==2024.3.6
 - pypresence==4.3.0
 - psutil==6.1.0
 - colorama==0.4.6
