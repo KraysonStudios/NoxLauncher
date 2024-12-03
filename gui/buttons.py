@@ -2,12 +2,14 @@ import flet
 
 class BackToPlayButton:
 
-    def __init__(self, page: flet.Page, width: int = 240, height: int = 90, text: str = "Back to home", path: str = "/home", bgcolor: str | None = "#272727") -> None:
+    def __init__(self, page: flet.Page, width: int = 240, height: int = 90, text: str = "Back to home", path: str = "/home", bgcolor: str | None = "#272727", text_color: str = "#FFFFFF", icon_color: str = "#717171") -> None:
 
         self.page: flet.Page = page
         self.height: int = height
         self.width: int = width
         self.text: str = text
+        self.text_color: str = text_color
+        self.icon_color: str = icon_color
         self.path: str = path
         self.bgcolor: str | None = bgcolor
         
@@ -19,8 +21,8 @@ class BackToPlayButton:
             content= flet.Container(
                 content= flet.Row(
                     controls= [
-                        flet.Icon(name= flet.icons.HOME if self.path == "/home" else flet.icons.ARROW_BACK, color= "#717171", size= 40),
-                        flet.Container(content= flet.Text(self.text, size= 20, font_family= "NoxLauncher"), expand_loose= True, alignment= flet.alignment.center, padding= flet.padding.only(top= 2))
+                        flet.Icon(name= flet.icons.HOME if self.path == "/home" else flet.icons.ARROW_BACK, color= self.icon_color, size= 40),
+                        flet.Container(content= flet.Text(self.text, size= 20, font_family= "NoxLauncher", color= self.text_color), expand_loose= True, alignment= flet.alignment.center, padding= flet.padding.only(top= 2))
                     ],
                     height= self.height,
                     width= self.width,

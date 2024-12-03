@@ -75,6 +75,21 @@ class NoxLauncherInstallFabricGUI:
                                         content= flet.Column(
                                             controls= [
                                                 flet.Container(
+                                                    content= flet.Row(
+                                                        controls= [
+                                                            flet.Image(src= "assets/modrinth.png", width= 100, height= 80, filter_quality= flet.FilterQuality.HIGH),
+                                                            flet.Text("Modrinth", size= 30, font_family= "NoxLauncher", color= "#FFFFFF")
+                                                        ],
+                                                        expand_loose= True,  
+                                                        alignment= flet.MainAxisAlignment.CENTER,
+                                                        run_spacing= 0,
+                                                        spacing= 0
+                                                    ),
+                                                    alignment= flet.alignment.center,
+                                                    expand_loose= True,
+                                                    height= 80,
+                                                ),
+                                                flet.Container(
                                                     content= flet.TextField(multiline= False, expand_loose= True, height= 70, border_radius= 10, border_color= "#717171", label= "Search Mods", label_style= flet.TextStyle(size= 16, font_family= "NoxLauncher", color= "#FFFFFF"), hint_text= "Search mods by name", hint_style= flet.TextStyle(size= 16, font_family= "NoxLauncher"), text_style= flet.TextStyle(size= 14, font_family= "NoxLauncher", color= "#FFFFFF"), on_submit= self.search_mods),
                                                     alignment= flet.alignment.center,
                                                     expand_loose= True
@@ -86,7 +101,7 @@ class NoxLauncherInstallFabricGUI:
                                             horizontal_alignment= flet.CrossAxisAlignment.CENTER,
                                             spacing= 30
                                         ),
-                                        width= 500,
+                                        width= 550,
                                         height= 570,
                                         bgcolor= "#272727",
                                         border_radius= 20,

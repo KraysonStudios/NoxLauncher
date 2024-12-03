@@ -11,7 +11,7 @@ import requests
 import minecraft_launcher_lib
 
 from typing import List
-from functools import cache
+from functools import cache, lru_cache
 
 from constants import VERSION
 
@@ -38,12 +38,14 @@ def check_noxlauncher_filesystem() -> None:
 
             json.dump({
                 "java": "",
-                "jvm-args": ["-Xms1G", f"-Xmx{get_idiomatic_memory_ram()}M", "-Djava.net.preferIPv4Stack=true"],
+                "jvm-args": ["-Xms1G", "-Xmx2G", "-Djava.net.preferIPv4Stack=true"],
                 "autoclose": True,
                 "receivenews": True,
                 "discordrpc": True,
                 "version": VERSION
             }, file, indent= 4)
+
+    ConfigChecker(get_home() + "/config.json").check_and_repair()
 
     if not os.path.exists(get_home() + "/launcher_profiles.json"):
 
@@ -195,7 +197,7 @@ def get_current_jvm_args() -> List[str]:
 
         data = json.load(file)
 
-        return data["jvm-args"] if "jvm-args" in data else ["-Xms1G", f"-Xmx{get_idiomatic_memory_ram()}M", "-Djava.net.preferIPv4Stack=true"]
+        return data["jvm-args"] if "jvm-args" in data else ["-Xms1G", "-Xmx2G", "-Djava.net.preferIPv4Stack=true"]
     
 def update_jvm_args(args: List[str]) -> None:
 
@@ -390,22 +392,185 @@ def get_mc_logs() -> List[flet.Text]:
 
     return logs
 
-@cache            
-def get_available_memory_ram() -> int: return round(0.40 * psutil.virtual_memory().total / (1024 ** 2))
+def get_theme() -> str:
 
-@cache
-def get_idiomatic_memory_ram() -> int:
-    memory_available: int = get_available_memory_ram()
+    check_noxlauncher_filesystem()
 
-    if memory_available <= 2048: return memory_available
-    else: return round(memory_available / 2) if not round(memory_available / 2) <= 2048 else memory_available
+    with open(get_home() + "/config.json", "r") as file:
+
+        data = json.load(file)
+
+        if "customization" not in data: 
+            ConfigChecker(get_home() + "/config.json").check_and_repair()
+            return "Dark"
+        
+        if "theme" not in data["customization"]: 
+            ConfigChecker(get_home() + "/config.json").check_and_repair()
+            return "Dark"
+
+        return data["customization"]["theme"]
+    
+def get_titlescolor() -> str: 
+
+    check_noxlauncher_filesystem()
+
+    with open(get_home() + "/config.json", "r") as file:
+
+        data = json.load(file)
+
+        if "customization" not in data: 
+            ConfigChecker(get_home() + "/config.json").check_and_repair()
+            return "#FFFFFF"
+
+        if "titles-color" not in data["customization"]: 
+            ConfigChecker(get_home() + "/config.json").check_and_repair()
+            return "#FFFFFF"
+
+        return data["customization"]["titles-color"]
+    
+def update_titlescolor(color: str) -> None:
+
+    check_noxlauncher_filesystem()
+
+    with open(get_home() + "/config.json", "r") as file: 
+
+        data = json.load(file)
+
+        if "customization" not in data: 
+            ConfigChecker(get_home() + "/config.json").check_and_repair()
+            return
+
+        data["customization"]["titles-color"] = color
+
+    with open(get_home() + "/config.json", "w") as file: json.dump(data, file, indent= 4)
+    
+def get_subtitlescolor() -> str: 
+
+    check_noxlauncher_filesystem()
+
+    with open(get_home() + "/config.json", "r") as file:
+
+        data = json.load(file)
+
+        if "customization" not in data: 
+            ConfigChecker(get_home() + "/config.json").check_and_repair()
+            return "#717171"
+
+        if "titles-color" not in data["customization"]: 
+            ConfigChecker(get_home() + "/config.json").check_and_repair()
+            return "#717171"
+
+        return data["customization"]["subtitles-color"]
+        
+    
+def update_subtitlescolor(color: str) -> None:
+
+    check_noxlauncher_filesystem()
+
+    with open(get_home() + "/config.json", "r") as file: 
+
+        data = json.load(file)
+
+        if "customization" not in data: 
+            ConfigChecker(get_home() + "/config.json").check_and_repair()
+            return
+
+        data["customization"]["subtitles-color"] = color
+
+    with open(get_home() + "/config.json", "w") as file: json.dump(data, file, indent= 4)
+
+def get_bgcolor() -> str: 
+
+    check_noxlauncher_filesystem()
+
+    with open(get_home() + "/config.json", "r") as file:
+
+        data = json.load(file)
+
+        if "customization" not in data: 
+            ConfigChecker(get_home() + "/config.json").check_and_repair()
+            return "#272727"
+
+        if "bg-color" not in data["customization"]: 
+            ConfigChecker(get_home() + "/config.json").check_and_repair()
+            return "#272727"
+
+        return data["customization"]["bg-color"]
+    
+def update_bgcolor(color: str) -> None:
+
+    check_noxlauncher_filesystem()
+
+    with open(get_home() + "/config.json", "r") as file: 
+
+        data = json.load(file)
+
+        if "customization" not in data: 
+            ConfigChecker(get_home() + "/config.json").check_and_repair()
+            return
+
+        data["customization"]["bg-color"] = color
+
+    with open(get_home() + "/config.json", "w") as file: json.dump(data, file, indent= 4)
+    
+def get_filledcolor() -> str: 
+
+    check_noxlauncher_filesystem()
+
+    with open(get_home() + "/config.json", "r") as file:
+
+        data = json.load(file)
+
+        if "customization" not in data: 
+            ConfigChecker(get_home() + "/config.json").check_and_repair()
+            return "#148b47"
+
+        if "filled-color" not in data["customization"]: 
+            ConfigChecker(get_home() + "/config.json").check_and_repair()
+            return "#148b47"
+
+        return data["customization"]["filled-color"]
+    
+def update_filledcolor(color: str) -> None:
+
+    check_noxlauncher_filesystem()
+
+    with open(get_home() + "/config.json", "r") as file: 
+
+        data = json.load(file)
+
+        if "customization" not in data: 
+            ConfigChecker(get_home() + "/config.json").check_and_repair()
+            return
+
+        data["customization"]["filled-color"] = color
+
+    with open(get_home() + "/config.json", "w") as file: json.dump(data, file, indent= 4)
+
+def update_theme(theme: str) -> None:
+
+    check_noxlauncher_filesystem()
+
+    with open(get_home() + "/config.json", "r") as file: 
+
+        data = json.load(file)
+
+        if "customization" not in data: 
+            ConfigChecker(get_home() + "/config.json").check_and_repair()
+            return
+
+        data["customization"]["theme"] = theme
+
+    with open(get_home() + "/config.json", "w") as file: json.dump(data, file, indent= 4)
+
+@lru_cache          
+def get_available_memory_ram() -> int: return round(0.60 * psutil.virtual_memory().total / (1024 ** 2))
 
 def parse_memory(args: List[str]) -> int: 
     for arg in [arg for arg in args if isinstance(arg, str)]:
         if arg.startswith("-Xmx") and arg.find("M") != -1 and arg.index("M") == len(arg) - 1: return int(arg.replace("-Xmx", "").replace("M", ""))
     else: return 2048
 
-    
 @cache
 def has_internet() -> bool:
 
@@ -413,3 +578,75 @@ def has_internet() -> bool:
         return requests.get("https://google.com", timeout= 20).ok
     except:
         return False
+    
+class ConfigChecker:
+
+    def __init__(self, path: str) -> None:
+
+        self.path: str = path
+        self.keys: List[str] = [
+            "java",
+            "jvm-args",
+            "autoclose",
+            "receivenews",
+            "discordrpc",
+            "customization",
+            "version"
+        ]
+
+        self.customization_keys: List[str] = [
+            "titles-color",
+            "subtitles-color",
+            "bg-color",
+            "filled-color",
+            "theme"
+        ]
+
+    def check_and_repair(self):
+
+        if not os.path.exists(self.path): check_noxlauncher_filesystem()
+
+        with open(self.path, "r") as file: data = json.load(file)
+            
+        for key in self.keys: 
+            if key not in data.keys(): 
+                match key:
+                    case "customization": data[key] = {
+                        "titles-color": "#FFFFFF",
+                        "subtitles-color": "#717171",
+                        "bg-color": "#272727",
+                        "filled-color": "#148b47",
+                        "theme": "Dark"
+                    }
+                    case "version": data[key] = VERSION
+                    case "java": data[key] = get_system_java_instance()
+                    case "jvm-args": data[key] = ["-Xms1G", "-Xmx2G", "-Djava.net.preferIPv4Stack=true"]
+                    case "autoclose": data[key] = True
+                    case "receivenews": data[key] = True
+                    case "discordrpc": data[key] = True
+
+            match key:
+
+                case "customization":
+    
+                    if not isinstance(data[key], dict):
+
+                        data[key] = {
+                            "titles-color": "#FFFFFF",
+                            "subtitles-color": "#717171",
+                            "bg-color": "#272727",
+                            "filled-color": "#148b47",
+                            "theme": "Dark"
+                        }
+
+                    for valid_key in self.customization_keys:
+                        if valid_key not in data[key].keys():
+                            match valid_key:
+                                case "titles-color": data["customization"][valid_key] = "#FFFFFF"
+                                case "subtitles-color": data["customization"][valid_key] = "#717171"
+                                case "bg-color": data["customization"][valid_key] = "#272727"
+                                case "filled-color": data["customization"][valid_key] = "#148b47"
+                                case "theme": data["customization"][valid_key] = "Dark"
+
+        with open(self.path, "w") as file: json.dump(data, file, indent= 4)
+

@@ -107,7 +107,7 @@ class ModrinthAPI:
                                 expand_loose= True
                             ),
                             flet.Container(
-                                content= flet.Dropdown(hint_text= "Install the mod!", options= [flet.dropdown.Option(version, text_style= flet.TextStyle(size= 14, font_family= "NoxLauncher")) for version in project["versions"]], border_color= "#717171", border_radius= 10, border_width= 2, hint_style= flet.TextStyle(size= 14, font_family= "NoxLauncher"), on_change= self.install_mod, data= {"slug": project["id"], "icon": project["icon"]}),
+                                content= flet.Dropdown(hint_text= "Install the mod!", options= [flet.dropdown.Option(version, text_style= flet.TextStyle(size= 14, font_family= "NoxLauncher")) for version in reversed(project["versions"])], border_color= "#717171", border_radius= 10, border_width= 2, hint_style= flet.TextStyle(size= 14, font_family= "NoxLauncher"), on_change= self.install_mod, data= {"slug": project["id"], "icon": project["icon"]}),
                                 expand_loose= True,
                                 alignment= flet.alignment.center,
                                 padding= 5
@@ -195,50 +195,78 @@ class ModrinthAPI:
 
         matching_versions.sort(key= lambda date: date["date_published"], reverse= True)
 
-        file: requests.Response = requests.get(matching_versions[0]["files"][0]["url"], headers= self.headers, timeout= 60*2)
-
-        if file.status_code != 200: 
-
-            event.control.parent.content = flet.Row(
-                controls= [
-                    flet.Container(height= 60, width= 10, bgcolor= "#eb3434"),
-                    flet.Text("Something went wrong attempting to download the mod. Please try again later.", size= 15, font_family= "NoxLauncher")
-                ],
-                spacing= 20,
-                run_spacing= 20,
-                expand_loose= True
-            )
-
-            event.control.parent.update()
-
-            time.sleep(3)
-            
-            return
-
-        check_noxlauncher_filesystem()
-
-        with open(f"{get_home()}/mods/{matching_versions[0]["files"][0]["filename"]}", "wb") as jar: jar.write(file.content)
-
-        successful_install: flet.AlertDialog = flet.AlertDialog(
-            icon= flet.Image(src= event.control.data["icon"], width= 60, height= 60, filter_quality= flet.FilterQuality.HIGH),
+        install_text_info: flet.Text = flet.Text(value= "Downloading and installing...", size= 16, font_family= "NoxLauncher", color= "#FFFFFF")
+        install_progress_bar: flet.ProgressBar = flet.ProgressBar(width= 200, color= "#148b47")
+        
+        install: flet.AlertDialog = flet.AlertDialog(
+            modal= True,
+            icon= flet.Image(src= event.control.data["icon"], width= 80, height= 80, filter_quality= flet.FilterQuality.HIGH),
             title= flet.Container(
-                content= flet.Text(event.control.data["slug"].capitalize(), size= 18, font_family= "NoxLauncher", color= "#FFFFFF"),
+                content= flet.Text(event.control.data["slug"].capitalize(), size= 25, font_family= "NoxLauncher", color= "#FFFFFF"),
                 alignment= flet.alignment.center,
-                expand_loose= True
+                expand_loose= True,
+                height= 30,
             ),
             bgcolor= "#272727",
             content= flet.Column(
                 [
-                    flet.Text(value= matching_versions[0]["files"][0]["filename"], size= 18, font_family= "NoxLauncher", color= "#717171"),
-                    flet.Text(value= "Has been installed!", size= 16, font_family= "NoxLauncher", color= "#FFFFFF")
+                    flet.Text(value= matching_versions[0]["files"][0]["filename"], size= 21, font_family= "NoxLauncher", color= "#717171"),
+                    install_text_info,
+                    install_progress_bar
                 ],
                 alignment= flet.MainAxisAlignment.CENTER,
                 horizontal_alignment= flet.CrossAxisAlignment.CENTER,
-                height= 130,
+                height= 100,
                 expand_loose= True
             ),
-            on_dismiss= lambda _: self.page.close(successful_install)
-            
+            actions= [
+                flet.FilledButton(
+                    text= "Cancel",
+                    style= flet.ButtonStyle(
+                        color= "#FFFFFF",
+                        bgcolor= "#148b47",
+                        text_style= flet.TextStyle(font_family= "NoxLauncher", size= 18),
+                        shape= flet.RoundedRectangleBorder(radius= 10)
+                    ),
+                    height= 50,
+                    width= 150,
+                    on_click= lambda _: self.page.close(install)
+                )
+            ],
+            on_dismiss= lambda _: None
         )
 
-        self.page.open(successful_install)
+        self.page.open(install)
+
+        file: requests.Response = requests.get(matching_versions[0]["files"][0]["url"], headers= self.headers, timeout= 60*2)
+
+        if file.status_code != 200: 
+
+            install_text_info.value = "Something went wrong. Please try again later."
+            install_text_info.size = 20
+            install_text_info.update()
+
+            install_progress_bar.value = 0
+            install_progress_bar.update()
+            time.sleep(3)
+
+            self.page.close(install)
+            
+            return
+        
+        check_noxlauncher_filesystem()
+
+        with open(f"{get_home()}/mods/{matching_versions[0]["files"][0]["filename"]}", "wb") as jar: jar.write(file.content)
+
+        install_text_info.value = "Installed."
+        install_text_info.size = 20
+        install_text_info.update()
+
+        install_progress_bar.value = 100
+        install_progress_bar.update()
+
+        time.sleep(3)
+
+        self.page.close(install)
+
+        self.page.update()

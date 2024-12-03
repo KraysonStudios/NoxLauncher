@@ -3,7 +3,7 @@ import flet
 import sys
 import signal
 
-from fs import check_noxlauncher_filesystem, get_discordrpc
+from fs import check_noxlauncher_filesystem, get_discordrpc, get_theme
 from logs import info
 from constants import DEPLOYMENT_TYPE, VERSION
 from launcher import NoxLauncher
@@ -53,7 +53,7 @@ def main(page: flet.Page) -> None:
     page.window.prevent_close = True
     page.window.on_event = on_event
 
-    page.theme_mode = flet.ThemeMode.DARK
+    page.theme_mode = flet.ThemeMode.DARK if get_theme() == "Dark" else flet.ThemeMode.LIGHT
 
     page.update()
 

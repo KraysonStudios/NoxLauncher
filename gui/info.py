@@ -33,7 +33,7 @@ class NoxLauncherInfoGUI:
                                                 content= flet.Text("\" NoxLauncher is a powerful Open Source launcher created by Krayson Studio and its main developers, to provide secure access to a minecraft launcher. \" This launcher is not affiliated with Mojang Studios and their games.", size= 16, font_family= "NoxLauncher"), 
                                                 alignment= flet.alignment.center,
                                                 expand_loose= True,
-                                                padding= flet.padding.only(left= 20, right= 20, bottom= 15)
+                                                padding= flet.padding.only(left= 25, right= 25, bottom= 15)
                                             ),
                                             flet.Container(
                                                 content= flet.Row(
