@@ -24,7 +24,7 @@ https://github.com/gitlimes/discord-md-badge?
 
 ## Features 🎉
 
-### Support the almost popular modloaders 🔥
+### Support the almost popular modloaders 🕹️
 
 - **[Fabric](https://fabricmc.net/)**
 - **[Forge](https://files.minecraftforge.net/net/minecraftforge/forge/)**
@@ -62,7 +62,7 @@ https://github.com/gitlimes/discord-md-badge?
 
 - On comparasion with others minecraft launchers and mostly with official Minecraft Launcher; **Nox Launcher** is blazingly fast on startup. 
 
-### Multiplatform ✨
+### Multiplatform 💻
 
 - **Windows**
 - **Linux**
