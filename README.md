@@ -8,7 +8,7 @@
    <img alt= "NoxLauncher Home page" src= "https://github.com/KraysonStudios/NoxLauncher/blob/master/github-assets/home.png" style= "width: 75%; height: 55%;">
 </p>
 
-**NoxLauncher** is a powerful **Open Source** launcher created by **Krayson Studio** and its main developers, to provide secure access and fast to a minecraft launcher. 
+A **Minecraft launcher** that focuses on aesthetics, intuition, and being a safety hangar for frequent Minecraft users.
 
 > [!NOTE]  
 > **This launcher is not affiliated with Mojang Studios and their games.**
